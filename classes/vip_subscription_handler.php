@@ -100,7 +100,7 @@ class VipSubscriptionHandler {
                     <li>Conversion Type: VIP Subscription</li>
                     <li>Date: " . date('Y-m-d H:i:s') . "</li>
                 </ul>
-                <p>Login to your dashboard to view detailed analytics: <a href='http://localhost/business/partner_dashboard.html'>Partner Dashboard</a></p>
+                <p>Login to your dashboard to view detailed analytics: <a href='http://localhost/business/index.php'>Partner Dashboard</a></p>
                 <p>Keep up the great work!</p>
                 ";
                 

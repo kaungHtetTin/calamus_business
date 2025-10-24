@@ -67,7 +67,7 @@ class PartnerAuth {
     
     // Login partner
     public function loginPartner($email, $password) {
-        $partner = $this->db->read("SELECT * FROM partners WHERE email = '$email' AND status = 'active'");
+        $partner = $this->db->read("SELECT * FROM partners WHERE email = '$email' LIMIT 1");
         
         if (!$partner) {
             return ['success' => false, 'message' => 'Invalid credentials'];
@@ -95,6 +95,13 @@ class PartnerAuth {
         if ($this->db->save($sessionQuery)) {
             // Update last login
             $this->db->save("UPDATE partners SET last_login = NOW() WHERE id = '{$partner['id']}'");
+            
+            // Store session token in PHP session
+            if (session_status() === PHP_SESSION_NONE) {
+                session_start();
+            }
+            $_SESSION['partner_session_token'] = $sessionToken;
+            $_SESSION['partner_id'] = $partner['id'];
             
             return [
                 'success' => true, 
@@ -184,7 +191,16 @@ class PartnerAuth {
     // Logout
     public function logout($sessionToken) {
         $query = "DELETE FROM partner_sessions WHERE session_token = '$sessionToken'";
-        return $this->db->save($query);
+        $result = $this->db->save($query);
+        
+        // Clear PHP session
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+        unset($_SESSION['partner_session_token']);
+        unset($_SESSION['partner_id']);
+        
+        return $result;
     }
     
     // Send verification email
@@ -356,17 +372,7 @@ class PartnerAuth {
         $query = "UPDATE partner_sessions SET expires_at = '$newExpiry' WHERE session_token = '$sessionToken'";
         return $this->db->save($query);
     }
-    
-    // Log login attempts
-    public function logLoginAttempt($email, $success, $message = '') {
-        $logEntry = date('Y-m-d H:i:s') . " - Login attempt for: $email, Success: " . ($success ? 'Yes' : 'No');
-        if ($message) {
-            $logEntry .= ", Message: $message";
-        }
-        $logEntry .= "\n";
-        
-        file_put_contents(__DIR__ . '/logs/login.log', $logEntry, FILE_APPEND | LOCK_EX);
-    }
+
     
     // Get partner by ID
     public function getPartnerById($partnerId) {

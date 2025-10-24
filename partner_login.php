@@ -162,7 +162,7 @@
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
             
-            fetch('api/login_partner.php', {
+            fetch('api/login_partner.php?endpoint=login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -171,12 +171,11 @@
             })
             .then(response => response.json())
             .then(data => {
+                console.log(data);
                 if (data.success) {
                     // Store session token
                     localStorage.setItem('partner_session_token', data.session_token);
-                    
-                    // Redirect to dashboard
-                    window.location.href = 'partner_dashboard.html';
+                    window.location.href = 'index.php';
                 } else {
                     showAlert(data.message);
                 }
@@ -236,7 +235,7 @@
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
-                        window.location.href = 'partner_dashboard.html';
+                        window.location.href = 'index.php';
                     } else {
                         localStorage.removeItem('partner_session_token');
                     }

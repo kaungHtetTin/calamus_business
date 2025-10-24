@@ -8,7 +8,6 @@ $dashboard = new PartnerDashboard();
 $codeManager = new PromotionCodeManager();
 
 // Check if user is logged in
-session_start();
 $sessionToken = $_SESSION['partner_session_token'] ?? '';
 
 if (empty($sessionToken)) {

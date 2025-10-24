@@ -1,153 +1,189 @@
 <?php
-require_once 'partner_auth.php';
-require_once 'partner_dashboard.php';
-require_once 'affiliate_tracker.php';
+/**
+ * API Index - Available Endpoints
+ * 
+ * This file provides information about all available API endpoints.
+ */
 
 header('Content-Type: application/json');
+header('Access-Control-Allow-Origin: *');
 
-// Get request method and data
-$method = $_SERVER['REQUEST_METHOD'];
-$input = json_decode(file_get_contents('php://input'), true);
+$endpoints = [
+    'authentication' => [
+        'login' => [
+            'url' => '/api/login_partner.php?endpoint=login',
+            'method' => 'POST',
+            'description' => 'Partner login',
+            'parameters' => ['email', 'password', 'remember']
+        ],
+        'logout' => [
+            'url' => '/api/login_partner.php?endpoint=logout',
+            'method' => 'POST',
+            'description' => 'Partner logout',
+            'parameters' => ['session_token']
+        ],
+        'validate_session' => [
+            'url' => '/api/validate_session.php',
+            'method' => 'POST',
+            'description' => 'Validate session token',
+            'parameters' => ['session_token']
+        ],
+        'forgot_password' => [
+            'url' => '/api/login_partner.php?endpoint=forgot_password',
+            'method' => 'POST',
+            'description' => 'Request password reset',
+            'parameters' => ['email']
+        ],
+        'reset_password' => [
+            'url' => '/api/login_partner.php?endpoint=reset_password',
+            'method' => 'POST',
+            'description' => 'Reset password with token',
+            'parameters' => ['token', 'new_password', 'confirm_password']
+        ],
+        'change_password' => [
+            'url' => '/api/login_partner.php?endpoint=change_password',
+            'method' => 'POST',
+            'description' => 'Change password for authenticated user',
+            'parameters' => ['session_token', 'current_password', 'new_password', 'confirm_password']
+        ]
+    ],
+    'registration' => [
+        'register' => [
+            'url' => '/api/register_partner.php?endpoint=register',
+            'method' => 'POST',
+            'description' => 'Register new partner',
+            'parameters' => ['company_name', 'contact_name', 'email', 'phone', 'password', 'commission_rate', 'code_prefix']
+        ],
+        'verify_email' => [
+            'url' => '/api/register_partner.php?endpoint=verify_email',
+            'method' => 'POST',
+            'description' => 'Verify email with code',
+            'parameters' => ['email', 'verification_code']
+        ],
+        'resend_verification' => [
+            'url' => '/api/register_partner.php?endpoint=resend_verification',
+            'method' => 'POST',
+            'description' => 'Resend verification email',
+            'parameters' => ['email']
+        ],
+        'check_email' => [
+            'url' => '/api/register_partner.php?endpoint=check_email',
+            'method' => 'POST',
+            'description' => 'Check if email is available',
+            'parameters' => ['email']
+        ],
+        'check_code_prefix' => [
+            'url' => '/api/register_partner.php?endpoint=check_code_prefix',
+            'method' => 'POST',
+            'description' => 'Check if code prefix is available',
+            'parameters' => ['code_prefix']
+        ]
+    ],
+    'profile_management' => [
+        'get_partner_info' => [
+            'url' => '/api/login_partner.php?endpoint=get_partner_info',
+            'method' => 'POST',
+            'description' => 'Get partner information',
+            'parameters' => ['session_token']
+        ],
+        'update_profile' => [
+            'url' => '/api/login_partner.php?endpoint=update_profile',
+            'method' => 'POST',
+            'description' => 'Update partner profile',
+            'parameters' => ['session_token', 'update_data']
+        ]
+    ],
+    'promotion_codes' => [
+        'validate_code' => [
+            'url' => '/api/code_validation.php?endpoint=validate_code',
+            'method' => 'POST',
+            'description' => 'Validate promotion code',
+            'parameters' => ['code']
+        ],
+        'use_code' => [
+            'url' => '/api/code_validation.php?endpoint=use_code',
+            'method' => 'POST',
+            'description' => 'Use promotion code',
+            'parameters' => ['code', 'learner_phone']
+        ],
+        'process_vip_with_code' => [
+            'url' => '/api/code_validation.php?endpoint=process_vip_with_code',
+            'method' => 'POST',
+            'description' => 'Process VIP subscription with promotion code',
+            'parameters' => ['code', 'learner_phone', 'course_id', 'amount']
+        ],
+        'process_package_with_code' => [
+            'url' => '/api/code_validation.php?endpoint=process_package_with_code',
+            'method' => 'POST',
+            'description' => 'Process package purchase with promotion code',
+            'parameters' => ['code', 'learner_phone', 'package_id', 'amount']
+        ]
+    ],
+    'promotion_management' => [
+        'generate_code' => [
+            'url' => '/api/promotion_codes.php?endpoint=generate_code',
+            'method' => 'POST',
+            'description' => 'Generate new promotion code',
+            'parameters' => ['session_token', 'code_type', 'target_course_id', 'target_package_id', 'client_name', 'expires_at']
+        ],
+        'get_codes' => [
+            'url' => '/api/promotion_codes.php?endpoint=get_codes',
+            'method' => 'POST',
+            'description' => 'Get partner promotion codes',
+            'parameters' => ['session_token']
+        ],
+        'cancel_code' => [
+            'url' => '/api/promotion_codes.php?endpoint=cancel_code',
+            'method' => 'POST',
+            'description' => 'Cancel promotion code',
+            'parameters' => ['session_token', 'code_id']
+        ]
+    ]
+];
 
-// Initialize classes
-$auth = new PartnerAuth();
-$dashboard = new PartnerDashboard();
-$tracker = new AffiliateTracker();
+$response = [
+    'success' => true,
+    'message' => 'Affiliate System API Endpoints',
+    'version' => '1.0.0',
+    'base_url' => 'http://localhost/business',
+    'endpoints' => $endpoints,
+    'usage_examples' => [
+        'login' => [
+            'url' => 'http://localhost/business/api/login_partner.php?endpoint=login',
+            'method' => 'POST',
+            'body' => [
+                'email' => 'partner@example.com',
+                'password' => 'password123',
+                'remember' => false
+            ]
+        ],
+        'validate_session' => [
+            'url' => 'http://localhost/business/api/validate_session.php',
+            'method' => 'POST',
+            'body' => [
+                'session_token' => 'your_session_token_here'
+            ]
+        ],
+        'register' => [
+            'url' => 'http://localhost/business/api/register_partner.php?endpoint=register',
+            'method' => 'POST',
+            'body' => [
+                'company_name' => 'ABC Corp',
+                'contact_name' => 'John Doe',
+                'email' => 'john@abc.com',
+                'phone' => '+1234567890',
+                'password' => 'password123',
+                'commission_rate' => 10,
+                'code_prefix' => 'ABC'
+            ]
+        ]
+    ],
+    'testing' => [
+        'test_login_api' => 'http://localhost/business/test_login_api.php',
+        'test_autoloader' => 'http://localhost/business/test_autoloader.php',
+        'verify_autoloader' => 'http://localhost/business/verify_autoloader.php'
+    ]
+];
 
-// Route requests
-$endpoint = $_GET['endpoint'] ?? '';
-
-switch ($endpoint) {
-    case 'validate_session':
-        if ($method === 'POST') {
-            $sessionToken = $input['session_token'] ?? '';
-            $result = $auth->validateSession($sessionToken);
-            echo json_encode($result);
-        }
-        break;
-        
-    case 'dashboard_data':
-        if ($method === 'POST') {
-            $sessionToken = $input['session_token'] ?? '';
-            $session = $auth->validateSession($sessionToken);
-            
-            if ($session['success']) {
-                $data = $dashboard->getDashboardData($session['partner']['id']);
-                echo json_encode(['success' => true, 'data' => $data]);
-            } else {
-                echo json_encode(['success' => false, 'message' => 'Invalid session']);
-            }
-        }
-        break;
-        
-    case 'create_affiliate_link':
-        if ($method === 'POST') {
-            $sessionToken = $input['session_token'] ?? '';
-            $session = $auth->validateSession($sessionToken);
-            
-            if ($session['success']) {
-                $partnerId = $session['partner']['id'];
-                $result = $dashboard->createAffiliateLink(
-                    $partnerId,
-                    $input['campaign_name'],
-                    $input['target_course_id'] ?? null,
-                    $input['target_major'] ?? null,
-                    $input['custom_url'] ?? ''
-                );
-                echo json_encode($result);
-            } else {
-                echo json_encode(['success' => false, 'message' => 'Invalid session']);
-            }
-        }
-        break;
-        
-    case 'get_affiliate_links':
-        if ($method === 'POST') {
-            $sessionToken = $input['session_token'] ?? '';
-            $session = $auth->validateSession($sessionToken);
-            
-            if ($session['success']) {
-                $links = $dashboard->getAffiliateLinks($session['partner']['id']);
-                echo json_encode(['success' => true, 'links' => $links]);
-            } else {
-                echo json_encode(['success' => false, 'message' => 'Invalid session']);
-            }
-        }
-        break;
-        
-    case 'get_conversions':
-        if ($method === 'POST') {
-            $sessionToken = $input['session_token'] ?? '';
-            $session = $auth->validateSession($sessionToken);
-            
-            if ($session['success']) {
-                $page = $input['page'] ?? 1;
-                $conversions = $dashboard->getConversionHistory($session['partner']['id'], $page);
-                echo json_encode(['success' => true, 'conversions' => $conversions]);
-            } else {
-                echo json_encode(['success' => false, 'message' => 'Invalid session']);
-            }
-        }
-        break;
-        
-    case 'get_payments':
-        if ($method === 'POST') {
-            $sessionToken = $input['session_token'] ?? '';
-            $session = $auth->validateSession($sessionToken);
-            
-            if ($session['success']) {
-                $payments = $dashboard->getPaymentHistory($session['partner']['id']);
-                echo json_encode(['success' => true, 'payments' => $payments]);
-            } else {
-                echo json_encode(['success' => false, 'message' => 'Invalid session']);
-            }
-        }
-        break;
-        
-    case 'update_profile':
-        if ($method === 'POST') {
-            $sessionToken = $input['session_token'] ?? '';
-            $session = $auth->validateSession($sessionToken);
-            
-            if ($session['success']) {
-                $profileData = $input;
-                unset($profileData['session_token']);
-                $result = $dashboard->updateProfile($session['partner']['id'], $profileData);
-                echo json_encode($result);
-            } else {
-                echo json_encode(['success' => false, 'message' => 'Invalid session']);
-            }
-        }
-        break;
-        
-    case 'track_conversion':
-        if ($method === 'POST') {
-            $userId = $input['user_id'] ?? '';
-            $conversionType = $input['conversion_type'] ?? 'vip_subscription';
-            $conversionValue = $input['conversion_value'] ?? 0;
-            
-            $result = $tracker->trackConversion($userId, $conversionType, $conversionValue);
-            echo json_encode($result);
-        }
-        break;
-        
-    case 'get_partner_stats':
-        if ($method === 'POST') {
-            $sessionToken = $input['session_token'] ?? '';
-            $session = $auth->validateSession($sessionToken);
-            
-            if ($session['success']) {
-                $period = $input['period'] ?? '30';
-                $stats = $tracker->getPartnerStats($session['partner']['id'], $period);
-                echo json_encode(['success' => true, 'stats' => $stats]);
-            } else {
-                echo json_encode(['success' => false, 'message' => 'Invalid session']);
-            }
-        }
-        break;
-        
-    default:
-        echo json_encode(['success' => false, 'message' => 'Invalid endpoint']);
-        break;
-}
+echo json_encode($response, JSON_PRETTY_PRINT);
 ?>

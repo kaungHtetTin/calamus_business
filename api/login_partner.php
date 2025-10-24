@@ -44,7 +44,7 @@ switch ($endpoint) {
                 ]);
                 break;
             }
-            
+        
             // Attempt login
             $result = $auth->loginPartner($email, $password);
             
@@ -56,9 +56,6 @@ switch ($endpoint) {
                     $auth->extendSession($result['session_token'], $extendedExpiry);
                 }
                 
-                // Log successful login
-                $auth->logLoginAttempt($email, true, 'Login successful');
-                
                 echo json_encode([
                     'success' => true,
                     'message' => $result['message'],
@@ -67,8 +64,6 @@ switch ($endpoint) {
                     'redirect_url' => '../index.php'
                 ]);
             } else {
-                // Log failed login
-                $auth->logLoginAttempt($email, false, $result['message']);
                 
                 echo json_encode([
                     'success' => false,
