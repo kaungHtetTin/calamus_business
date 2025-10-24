@@ -3,6 +3,7 @@ $pageTitle = 'Dashboard';
 include 'layout/header.php';
 ?>
 
+
 <!-- Dashboard Section -->
 <div class="content-section">
     <div class="d-flex justify-content-between align-items-center mb-4">
@@ -10,13 +11,6 @@ include 'layout/header.php';
         <div class="text-muted">
             <small>Welcome to your partner dashboard</small>
         </div>
-    </div>
-
-    <!-- Debug Test Button -->
-    <div class="alert alert-info mb-4">
-        <h6>Debug: Side Navigation Test</h6>
-        <p class="mb-2">If the side navigation drawer is not working, click the menu button (☰) in the top-left corner.</p>
-        <button class="btn btn-sm btn-outline-primary" onclick="testOffcanvas()">Test Offcanvas</button>
     </div>
 
     <!-- Welcome Message -->
@@ -47,7 +41,7 @@ include 'layout/header.php';
             </div>
         </div>
     </div>
-
+ 
     <!-- Quick Stats -->
     <div class="row mb-4">
         <div class="col-md-4 mb-3">
@@ -79,6 +73,8 @@ include 'layout/header.php';
         </div>
     </div>
 
+
+
     <!-- Recent Promotion Codes -->
     <div class="card">
         <div class="card-header d-flex justify-content-between align-items-center">
@@ -106,8 +102,8 @@ include 'layout/header.php';
                                 <code class="bg-light p-1 rounded"><?php echo htmlspecialchars($code['code']); ?></code>
                             </td>
                             <td>
-                                <span class="badge bg-<?php echo $code['code_type'] == 'vip_subscription' ? 'primary' : 'info'; ?>">
-                                    <?php echo ucfirst(str_replace('_', ' ', $code['code_type'])); ?>
+                                <span class="badge bg-<?php echo $code['target_course_id'] == 0 ? 'primary' : 'info'; ?>">
+                                    <?php echo $code['target_course_id'] == 0 ? 'Course' : 'Package'; ?>
                                 </span>
                             </td>
                             <td>
@@ -133,5 +129,9 @@ include 'layout/header.php';
         </div>
     </div>
 </div>
+
+
+
+<!-- Load dashboard-specific JavaScript -->
 
 <?php include 'layout/footer.php'; ?>

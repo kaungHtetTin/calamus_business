@@ -39,6 +39,43 @@ $codeStats = $codeManager->getPartnerCodeStats($currentPartner['id']);
 $recentCodes = $codeManager->getPartnerPromotionCodes($currentPartner['id'], null, 10);
 ?>
 
+
+
+<?php
+// Helper functions
+function getStatusColor($status) {
+    $colors = [
+        'pending' => 'warning',
+        'approved' => 'success',
+        'paid' => 'info',
+        'cancelled' => 'danger'
+    ];
+    return $colors[$status] ?? 'secondary';
+}
+
+function getPaymentStatusColor($status) {
+    $colors = [
+        'pending' => 'warning',
+        'processing' => 'info',
+        'completed' => 'success',
+        'failed' => 'danger'
+    ];
+    return $colors[$status] ?? 'secondary';
+}
+
+function getCodeStatusColor($status) {
+    $colors = [
+        'active' => 'success',
+        'used' => 'info',
+        'expired' => 'warning',
+        'cancelled' => 'danger',
+        'pending' => 'warning'
+    ];
+    return $colors[$status] ?? 'secondary';
+}
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
