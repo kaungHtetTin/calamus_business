@@ -11,13 +11,13 @@ header('Access-Control-Allow-Origin: *');
 $endpoints = [
     'authentication' => [
         'login' => [
-            'url' => '/api/login_partner.php?endpoint=login',
+            'url' => '/api/login.php?endpoint=login',
             'method' => 'POST',
             'description' => 'Partner login',
             'parameters' => ['email', 'password', 'remember']
         ],
         'logout' => [
-            'url' => '/api/login_partner.php?endpoint=logout',
+            'url' => '/api/login.php?endpoint=logout',
             'method' => 'POST',
             'description' => 'Partner logout',
             'parameters' => ['session_token']
@@ -29,19 +29,19 @@ $endpoints = [
             'parameters' => ['session_token']
         ],
         'forgot_password' => [
-            'url' => '/api/login_partner.php?endpoint=forgot_password',
+            'url' => '/api/login.php?endpoint=forgot_password',
             'method' => 'POST',
             'description' => 'Request password reset',
             'parameters' => ['email']
         ],
         'reset_password' => [
-            'url' => '/api/login_partner.php?endpoint=reset_password',
+            'url' => '/api/login.php?endpoint=reset_password',
             'method' => 'POST',
             'description' => 'Reset password with token',
             'parameters' => ['token', 'new_password', 'confirm_password']
         ],
         'change_password' => [
-            'url' => '/api/login_partner.php?endpoint=change_password',
+            'url' => '/api/login.php?endpoint=change_password',
             'method' => 'POST',
             'description' => 'Change password for authenticated user',
             'parameters' => ['session_token', 'current_password', 'new_password', 'confirm_password']
@@ -49,31 +49,31 @@ $endpoints = [
     ],
     'registration' => [
         'register' => [
-            'url' => '/api/register_partner.php?endpoint=register',
+            'url' => '/api/register.php?endpoint=register',
             'method' => 'POST',
             'description' => 'Register new partner',
             'parameters' => ['company_name', 'contact_name', 'email', 'phone', 'password', 'commission_rate', 'code_prefix']
         ],
         'verify_email' => [
-            'url' => '/api/register_partner.php?endpoint=verify_email',
+            'url' => '/api/register.php?endpoint=verify_email',
             'method' => 'POST',
             'description' => 'Verify email with code',
             'parameters' => ['email', 'verification_code']
         ],
         'resend_verification' => [
-            'url' => '/api/register_partner.php?endpoint=resend_verification',
+            'url' => '/api/register.php?endpoint=resend_verification',
             'method' => 'POST',
             'description' => 'Resend verification email',
             'parameters' => ['email']
         ],
         'check_email' => [
-            'url' => '/api/register_partner.php?endpoint=check_email',
+            'url' => '/api/register.php?endpoint=check_email',
             'method' => 'POST',
             'description' => 'Check if email is available',
             'parameters' => ['email']
         ],
         'check_code_prefix' => [
-            'url' => '/api/register_partner.php?endpoint=check_code_prefix',
+            'url' => '/api/register.php?endpoint=check_code_prefix',
             'method' => 'POST',
             'description' => 'Check if code prefix is available',
             'parameters' => ['code_prefix']
@@ -81,13 +81,13 @@ $endpoints = [
     ],
     'profile_management' => [
         'get_partner_info' => [
-            'url' => '/api/login_partner.php?endpoint=get_partner_info',
+            'url' => '/api/login.php?endpoint=get_partner_info',
             'method' => 'POST',
             'description' => 'Get partner information',
             'parameters' => ['session_token']
         ],
         'update_profile' => [
-            'url' => '/api/login_partner.php?endpoint=update_profile',
+            'url' => '/api/login.php?endpoint=update_profile',
             'method' => 'POST',
             'description' => 'Update partner profile',
             'parameters' => ['session_token', 'update_data']
@@ -149,7 +149,7 @@ $response = [
     'endpoints' => $endpoints,
     'usage_examples' => [
         'login' => [
-            'url' => 'http://localhost/business/api/login_partner.php?endpoint=login',
+            'url' => 'http://localhost/business/api/login.php?endpoint=login',
             'method' => 'POST',
             'body' => [
                 'email' => 'partner@example.com',
@@ -165,7 +165,7 @@ $response = [
             ]
         ],
         'register' => [
-            'url' => 'http://localhost/business/api/register_partner.php?endpoint=register',
+            'url' => 'http://localhost/business/api/register.php?endpoint=register',
             'method' => 'POST',
             'body' => [
                 'company_name' => 'ABC Corp',

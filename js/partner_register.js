@@ -181,7 +181,7 @@ function setupAvailabilityChecks() {
 
 // Check email availability
 function checkEmailAvailability(email) {
-    fetch('api/register_partner.php?endpoint=check_email', {
+    fetch('api/register.php?endpoint=check_email', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -208,7 +208,7 @@ function checkEmailAvailability(email) {
 
 // Check code prefix availability
 function checkCodePrefixAvailability(prefix) {
-    fetch('api/register_partner.php?endpoint=check_code_prefix', {
+    fetch('api/register.php?endpoint=check_code_prefix', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -266,7 +266,7 @@ function setupFormSubmission() {
         submitBtn.disabled = true;
         
         // Submit registration
-        fetch('api/register_partner.php?endpoint=register', {
+        fetch('api/register.php?endpoint=register', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

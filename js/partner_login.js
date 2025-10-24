@@ -58,7 +58,7 @@ function setupLoginForm() {
         submitBtn.textContent = 'Logging in...';
         submitBtn.disabled = true;
         
-        fetch('api/login_partner.php?endpoint=login', {
+        fetch('api/login.php?endpoint=login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -109,7 +109,7 @@ function setupForgotPasswordForm() {
         submitBtn.textContent = 'Sending...';
         submitBtn.disabled = true;
         
-        fetch('api/login_partner.php?endpoint=forgot_password', {
+        fetch('api/login.php?endpoint=forgot_password', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

@@ -1,0 +1,37 @@
+# Deny access to PHP files in profile_images directory
+
+<Files "\*.php">
+Order Deny,Allow
+Deny from all
+</Files>
+
+# Deny access to executable files
+
+<Files "\*.exe">
+Order Deny,Allow
+Deny from all
+</Files>
+
+<Files "\*.bat">
+Order Deny,Allow
+Deny from all
+</Files>
+
+<Files "\*.sh">
+Order Deny,Allow
+Deny from all
+</Files>
+
+# Allow only image files
+
+<FilesMatch "\.(jpg|jpeg|png|gif|webp)$">
+Order Allow,Deny
+Allow from all
+</FilesMatch>
+
+# Deny all other file types
+
+<FilesMatch "^(?!._\.(jpg|jpeg|png|gif|webp)$)._$">
+Order Deny,Allow
+Deny from all
+</FilesMatch>

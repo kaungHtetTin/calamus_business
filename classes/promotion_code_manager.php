@@ -182,12 +182,8 @@ class PromotionCodeManager {
         $stats['usage_rate'] = $stats['total_generated'] > 0 ? 
             round(($stats['used_codes'] / $stats['total_generated']) * 100, 2) : 0;
         
-        // Commission earned from codes
-        $commissionEarned = $this->db->read("SELECT SUM(c.commission_amount) as total 
-                                           FROM conversions c 
-                                           JOIN promotion_codes pc ON c.promotion_code_id = pc.id 
-                                           WHERE pc.partner_id = '$partnerId' AND c.status = 'approved'");
-        $stats['commission_earned'] = $commissionEarned[0]['total'] ?? 0;
+        // Commission earned from codes (set to 0 since conversions table is removed)
+        $stats['commission_earned'] = 0;
         
         return $stats;
     }
@@ -217,10 +213,8 @@ class PromotionCodeManager {
     
     // Get code usage history
     public function getCodeUsageHistory($partnerId, $limit = 20) {
-        $query = "SELECT pc.*, c.conversion_date, c.conversion_value, c.commission_amount, c.status as conversion_status,
-                        l.learner_name, l.learner_email
+        $query = "SELECT pc.*, l.learner_name, l.learner_email
                  FROM promotion_codes pc 
-                 LEFT JOIN conversions c ON pc.conversion_id = c.id 
                  LEFT JOIN learners l ON pc.used_by = l.id 
                  WHERE pc.partner_id = '$partnerId' AND pc.status = 'used'
                  ORDER BY pc.used_at DESC 

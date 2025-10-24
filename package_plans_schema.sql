@@ -30,45 +30,6 @@ CREATE TABLE IF NOT EXISTS package_plan_courses (
     UNIQUE KEY unique_package_course (package_id, course_id)
 );
 
--- Package Purchases (when user buys a package)
-CREATE TABLE IF NOT EXISTS package_purchases (
-    id INT(11) AUTO_INCREMENT PRIMARY KEY,
-    learner_phone BIGINT(20) NOT NULL,
-    package_id INT(11) NOT NULL,
-    purchase_price DECIMAL(10,2) NOT NULL,
-    purchase_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    expiry_date TIMESTAMP NULL, -- When package expires
-    status ENUM('active', 'expired', 'cancelled') DEFAULT 'active',
-    payment_method VARCHAR(50),
-    transaction_id VARCHAR(255), -- Payment gateway transaction ID
-    promotion_code_id INT(11), -- If purchased with promotion code
-    FOREIGN KEY (learner_phone) REFERENCES learners(learner_phone) ON DELETE CASCADE,
-    FOREIGN KEY (package_id) REFERENCES package_plans(id) ON DELETE CASCADE,
-    FOREIGN KEY (promotion_code_id) REFERENCES promotion_codes(id) ON DELETE SET NULL
-);
-
--- Package Course Access (tracks which courses user has accessed from package)
-CREATE TABLE IF NOT EXISTS package_course_access (
-    id INT(11) AUTO_INCREMENT PRIMARY KEY,
-    purchase_id INT(11) NOT NULL,
-    course_id SMALLINT(3) NOT NULL,
-    access_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    access_count INT(11) DEFAULT 1,
-    FOREIGN KEY (purchase_id) REFERENCES package_purchases(id) ON DELETE CASCADE,
-    FOREIGN KEY (course_id) REFERENCES courses(course_id) ON DELETE CASCADE,
-    UNIQUE KEY unique_purchase_course (purchase_id, course_id)
-);
-
--- Update promotion_codes table to support package purchases
-ALTER TABLE promotion_codes 
-ADD COLUMN package_id INT(11) AFTER target_course_id,
-ADD FOREIGN KEY (package_id) REFERENCES package_plans(id) ON DELETE CASCADE;
-
--- Update conversions table to support package purchases
-ALTER TABLE conversions 
-ADD COLUMN package_id INT(11) AFTER target_course_id,
-ADD FOREIGN KEY (package_id) REFERENCES package_plans(id) ON DELETE CASCADE;
-
 -- Create indexes for better performance
 CREATE INDEX idx_package_plans_major ON package_plans(major);
 CREATE INDEX idx_package_plans_status ON package_plans(status);

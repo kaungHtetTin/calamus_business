@@ -52,6 +52,62 @@ $recentCodes = $codeManager->getPartnerPromotionCodes($currentPartner['id'], nul
     <link rel="stylesheet" href="css/app.css">
 </head>
 <body>
+    <!-- Top Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary sticky-top">
+        <div class="container-fluid">
+            <!-- Brand/Logo -->
+            <a class="navbar-brand fw-bold" href="dashboard.php">
+                <i class="fas fa-handshake me-2"></i>Partner Portal
+            </a>
+            
+            <!-- Mobile toggle button -->
+            <button class="navbar-toggler d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileSidebar" aria-controls="mobileSidebar">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+        
+            
+            <!-- Quick Stats & User Info -->
+            <div class="navbar-nav ms-auto d-none d-md-flex align-items-center">
+                <!-- Quick Stats Display -->
+                <div class="nav-item me-3">
+                    <span class="navbar-text text-white">
+                        <i class="fas fa-ticket-alt me-1"></i>
+                        <strong><?php echo number_format($codeStats['total_generated'] ?? 0); ?></strong>
+                        <small class="text-white-50">codes</small>
+                    </span>
+                </div>
+                
+                <!-- User Dropdown -->
+                <div class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle text-white d-flex align-items-center" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <?php if (!empty($currentPartner['profile_image']) && file_exists($currentPartner['profile_image'])): ?>
+                            <img src="<?php echo htmlspecialchars($currentPartner['profile_image']); ?>" 
+                                 alt="Profile" 
+                                 class="navbar-profile-image me-2">
+                        <?php else: ?>
+                            <i class="fas fa-user-circle me-1"></i>
+                        <?php endif; ?>
+                        <?php echo htmlspecialchars($currentPartner['contact_name']); ?>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item" href="profile.php"><i class="fas fa-user me-2"></i>Profile</a></li>
+                        <li><a class="dropdown-item" href="dashboard.php"><i class="fas fa-tachometer-alt me-2"></i>Dashboard</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item text-danger" href="logout.php"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- Mobile User Info -->
+            <div class="d-md-none">
+                <span class="navbar-text text-white">
+                    <i class="fas fa-user-circle me-1"></i>
+                    <?php echo htmlspecialchars($currentPartner['contact_name']); ?>
+                </span>
+            </div>
+        </div>
+    </nav>
+
     <!-- Bootstrap Offcanvas for Mobile Navigation -->
     <div class="offcanvas offcanvas-start" tabindex="-1" id="mobileSidebar" aria-labelledby="mobileSidebarLabel">
         <div class="offcanvas-header">
@@ -68,17 +124,8 @@ $recentCodes = $codeManager->getPartnerPromotionCodes($currentPartner['id'], nul
                 <a class="nav-link <?php echo basename($_SERVER['PHP_SELF']) == 'dashboard.php' ? 'active' : ''; ?>" href="dashboard.php">
                     <i class="fas fa-tachometer-alt me-2"></i>Dashboard
                 </a>
-                <a class="nav-link <?php echo basename($_SERVER['PHP_SELF']) == 'links.php' ? 'active' : ''; ?>" href="links.php">
-                    <i class="fas fa-link me-2"></i>Affiliate Links
-                </a>
                 <a class="nav-link <?php echo basename($_SERVER['PHP_SELF']) == 'codes.php' ? 'active' : ''; ?>" href="codes.php">
                     <i class="fas fa-ticket-alt me-2"></i>Promotion Codes
-                </a>
-                <a class="nav-link <?php echo basename($_SERVER['PHP_SELF']) == 'conversions.php' ? 'active' : ''; ?>" href="conversions.php">
-                    <i class="fas fa-chart-line me-2"></i>Conversions
-                </a>
-                <a class="nav-link <?php echo basename($_SERVER['PHP_SELF']) == 'payments.php' ? 'active' : ''; ?>" href="payments.php">
-                    <i class="fas fa-money-bill-wave me-2"></i>Payments
                 </a>
                 <a class="nav-link <?php echo basename($_SERVER['PHP_SELF']) == 'profile.php' ? 'active' : ''; ?>" href="profile.php">
                     <i class="fas fa-user me-2"></i>Profile
@@ -91,11 +138,6 @@ $recentCodes = $codeManager->getPartnerPromotionCodes($currentPartner['id'], nul
     </div>
     
     <div class="container-fluid">
-        <!-- Mobile Navigation Toggle -->
-        <button class="btn btn-primary d-md-none mb-3" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileSidebar" aria-controls="mobileSidebar">
-            <i class="fas fa-bars me-2"></i>Menu
-        </button>
-        
         <div class="row">
             <!-- Desktop Sidebar -->
             <div class="col-md-3 col-lg-2 sidebar p-0 d-none d-md-block" id="sidebar">
@@ -112,17 +154,8 @@ $recentCodes = $codeManager->getPartnerPromotionCodes($currentPartner['id'], nul
                         <a class="nav-link <?php echo basename($_SERVER['PHP_SELF']) == 'dashboard.php' ? 'active' : ''; ?>" href="dashboard.php">
                             <i class="fas fa-tachometer-alt me-2"></i>Dashboard
                         </a>
-                        <a class="nav-link <?php echo basename($_SERVER['PHP_SELF']) == 'links.php' ? 'active' : ''; ?>" href="links.php">
-                            <i class="fas fa-link me-2"></i>Affiliate Links
-                        </a>
                         <a class="nav-link <?php echo basename($_SERVER['PHP_SELF']) == 'codes.php' ? 'active' : ''; ?>" href="codes.php">
                             <i class="fas fa-ticket-alt me-2"></i>Promotion Codes
-                        </a>
-                        <a class="nav-link <?php echo basename($_SERVER['PHP_SELF']) == 'conversions.php' ? 'active' : ''; ?>" href="conversions.php">
-                            <i class="fas fa-chart-line me-2"></i>Conversions
-                        </a>
-                        <a class="nav-link <?php echo basename($_SERVER['PHP_SELF']) == 'payments.php' ? 'active' : ''; ?>" href="payments.php">
-                            <i class="fas fa-money-bill-wave me-2"></i>Payments
                         </a>
                         <a class="nav-link <?php echo basename($_SERVER['PHP_SELF']) == 'profile.php' ? 'active' : ''; ?>" href="profile.php">
                             <i class="fas fa-user me-2"></i>Profile
@@ -136,16 +169,39 @@ $recentCodes = $codeManager->getPartnerPromotionCodes($currentPartner['id'], nul
 
             <!-- Main Content -->
             <div class="col-md-9 col-lg-10 p-4 main-content">
+                <!-- Breadcrumb Navigation -->
+                <nav aria-label="breadcrumb" class="mb-3">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item">
+                            <a href="dashboard.php" class="text-decoration-none">
+                                <i class="fas fa-home me-1"></i>Dashboard
+                            </a>
+                        </li>
+                        <?php
+                        $currentPage = basename($_SERVER['PHP_SELF']);
+                        $pageNames = [
+                            'dashboard.php' => 'Dashboard',
+                            'codes.php' => 'Promotion Codes',
+                            'profile.php' => 'Profile'
+                        ];
+                        
+                        if ($currentPage !== 'dashboard.php' && isset($pageNames[$currentPage])) {
+                            echo '<li class="breadcrumb-item active" aria-current="page">' . $pageNames[$currentPage] . '</li>';
+                        }
+                        ?>
+                    </ol>
+                </nav>
+                
                 <!-- Welcome Banner -->
                 <div class="welcome-banner">
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
                             <h5 class="mb-1">Welcome back, <?php echo htmlspecialchars($currentPartner['contact_name']); ?>!</h5>
-                            <small>Track your affiliate performance and earnings</small>
+                            <small>Manage your promotion codes and profile settings</small>
                         </div>
                         <div class="text-end">
-                            <div class="h4 mb-0">$<?php echo number_format($dashboardData['stats']['total_earnings'], 2); ?></div>
-                            <small>Total Earnings</small>
+                            <div class="h4 mb-0"><?php echo number_format($codeStats['total_generated'] ?? 0); ?></div>
+                            <small>Total Codes Generated</small>
                         </div>
                     </div>
                 </div>

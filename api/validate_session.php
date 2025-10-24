@@ -3,7 +3,7 @@
  * Session Validation API Endpoint
  * 
  * This is a dedicated endpoint for session validation.
- * It's a wrapper around the login_partner.php API for convenience.
+ * It's a wrapper around the login.php API for convenience.
  */
 
 require_once __DIR__ . '/../classes/autoload.php';
