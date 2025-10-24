@@ -8,7 +8,7 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #4a5568 0%, #718096 100%);
             min-height: 100vh;
         }
         .registration-container {
@@ -26,7 +26,7 @@
             width: 100%;
         }
         .registration-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #4a5568 0%, #718096 100%);
             color: white;
             padding: 2rem;
             text-align: center;
@@ -35,7 +35,7 @@
             padding: 2rem;
         }
         .btn-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #4a5568 0%, #718096 100%);
             border: none;
             border-radius: 10px;
             padding: 12px 30px;
@@ -43,11 +43,11 @@
         }
         .btn-primary:hover {
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 5px 15px rgba(74, 85, 104, 0.4);
         }
         .form-control:focus {
-            border-color: #667eea;
-            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+            border-color: #4a5568;
+            box-shadow: 0 0 0 0.2rem rgba(74, 85, 104, 0.25);
         }
         .step-indicator {
             display: flex;
@@ -67,11 +67,11 @@
             color: #6c757d;
         }
         .step.active {
-            background: #667eea;
+            background: #4a5568;
             color: white;
         }
         .step.completed {
-            background: #28a745;
+            background: #38a169;
             color: white;
         }
     </style>

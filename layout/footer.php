@@ -8,10 +8,24 @@
     <script>
         window.sessionToken = '<?php echo $sessionToken; ?>';
         window.monthlyEarningsData = <?php echo json_encode($dashboardData['monthly_earnings']); ?>;
+        
+        // Ensure Bootstrap is loaded before initializing dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            // Wait for Bootstrap to be available
+            function waitForBootstrap() {
+                if (typeof bootstrap !== 'undefined') {
+                    // Bootstrap is ready, load dashboard script
+                    const script = document.createElement('script');
+                    script.src = 'js/dashboard.js';
+                    document.head.appendChild(script);
+                } else {
+                    // Retry after a short delay
+                    setTimeout(waitForBootstrap, 50);
+                }
+            }
+            waitForBootstrap();
+        });
     </script>
-    
-    <!-- Load dashboard JavaScript -->
-    <script src="js/dashboard.js"></script>
 </body>
 </html>
 

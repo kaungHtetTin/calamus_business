@@ -8,208 +8,224 @@ $partnerCommissionRate = $currentPartner['commission_rate'] ?? 0;
 
 <!-- Promotion Code Generator Section -->
 <div class="content-section">
-    <div class="text-center mb-5">
-        <h1 class="display-4 text-primary mb-3">
-            <i class="fas fa-magic me-3"></i>Promotion Code Generator
-        </h1>
-        <p class="lead text-muted">Create targeted promotion codes for your courses and packages</p>
-    </div>
-
-    <!-- Generator Form -->
-    <div class="row justify-content-center">
-        <div class="col-lg-8">
-            <div class="card shadow-lg border-0">
-                <div class="card-header bg-gradient-theme text-white text-center py-4">
-                    <h3 class="mb-0">
-                        <i class="fas fa-ticket-alt me-2"></i>Generate New Code
-                    </h3>
-                    <small class="opacity-75">Commission Rate: <?php echo $partnerCommissionRate; ?>%</small>
-                </div>
-                <div class="card-body p-5">
-                    <!-- Horizontal Step Progress -->
-                    <div class="step-progress mb-5">
-                        <div class="row">
-                            <div class="col-3">
-                                <div class="step-item text-center" data-step="1">
-                                    <div class="step-circle bg-theme-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-2" style="width: 50px; height: 50px;">
-                                        <span class="fw-bold">1</span>
-                                    </div>
-                                    <h6 class="mb-0">Category</h6>
-                                    <small class="text-muted">Select Language</small>
-                                </div>
-                            </div>
-                            <div class="col-3">
-                                <div class="step-item text-center" data-step="2">
-                                    <div class="step-circle bg-secondary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-2" style="width: 50px; height: 50px;">
-                                        <span class="fw-bold">2</span>
-                                    </div>
-                                    <h6 class="mb-0">Type</h6>
-                                    <small class="text-muted">Course/Package</small>
-                                </div>
-                            </div>
-                            <div class="col-3">
-                                <div class="step-item text-center" data-step="3">
-                                    <div class="step-circle bg-secondary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-2" style="width: 50px; height: 50px;">
-                                        <span class="fw-bold">3</span>
-                                    </div>
-                                    <h6 class="mb-0">Target</h6>
-                                    <small class="text-muted">Select Item</small>
-                                </div>
-                            </div>
-                            <div class="col-3">
-                                <div class="step-item text-center" data-step="4">
-                                    <div class="step-circle bg-secondary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-2" style="width: 50px; height: 50px;">
-                                        <span class="fw-bold">4</span>
-                                    </div>
-                                    <h6 class="mb-0">Generate</h6>
-                                    <small class="text-muted">Create Code</small>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="progress mt-3" style="height: 4px;">
-                            <div class="progress-bar bg-theme-primary" role="progressbar" style="width: 25%" id="progressBar"></div>
-                        </div>
-                    </div>
-
-                    <form id="promotionCodeForm">
-                        <!-- Step 1: Category Selection -->
-                        <div class="step-content show" id="step1">
-                            <h4 class="text-center mb-4">Select Course Category</h4>
-                            <div class="row">
-                                <div class="col-md-4 mb-3">
-                                    <div class="category-card" data-category="1">
-                                        <div class="card h-100 border-2 category-option" style="cursor: pointer;">
-                                            <div class="card-body text-center p-4">
-                                                <img src="https://www.calamuseducation.com/appthumbs/eemainicon.png" 
-                                                     alt="English" class="mb-3" style="width: 60px; height: 60px;">
-                                                <h5 class="card-title">English Language</h5>
-                                                <p class="card-text text-muted">Easy English Courses</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-4 mb-3">
-                                    <div class="category-card" data-category="2">
-                                        <div class="card h-100 border-2 category-option" style="cursor: pointer;">
-                                            <div class="card-body text-center p-4">
-                                                <img src="https://www.calamuseducation.com/appthumbs/kommmainicon.png" 
-                                                     alt="Korean" class="mb-3" style="width: 60px; height: 60px;">
-                                                <h5 class="card-title">Korean Language</h5>
-                                                <p class="card-text text-muted">Easy Korean Courses</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-4 mb-3">
-                                    <div class="category-card" data-category="3">
-                                        <div class="card h-100 border-2 category-option" style="cursor: pointer;">
-                                            <div class="card-body text-center p-4">
-                                                <img src="https://www.calamuseducation.com/uploads/icons/easyjapanesemainicon.png" 
-                                                     alt="Japanese" class="mb-3" style="width: 60px; height: 60px;">
-                                                <h5 class="card-title">Japanese Language</h5>
-                                                <p class="card-text text-muted">Easy Japanese Courses</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <input type="hidden" id="selectedCategory" name="category_id">
-                        </div>
-
-                        <!-- Step 2: Code Type Selection -->
-                        <div class="step-content" id="step2" style="display: none;">
-                            <h4 class="text-center mb-4">Select Code Type</h4>
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <div class="type-card" data-type="course_purchase">
-                                        <div class="card h-100 border-2 type-option" style="cursor: pointer;">
-                                            <div class="card-body text-center p-4">
-                                                <i class="fas fa-graduation-cap fa-3x text-theme-primary mb-3"></i>
-                                                <h5 class="card-title">Course Purchase</h5>
-                                                <p class="card-text text-muted">Generate code for individual courses</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <div class="type-card" data-type="package_purchase">
-                                        <div class="card h-100 border-2 type-option" style="cursor: pointer;">
-                                            <div class="card-body text-center p-4">
-                                                <i class="fas fa-box fa-3x text-info mb-3"></i>
-                                                <h5 class="card-title">Package Purchase</h5>
-                                                <p class="card-text text-muted">Generate code for course packages</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <input type="hidden" id="selectedType" name="code_type">
-                        </div>
-
-                        <!-- Step 3: Target Selection -->
-                        <div class="step-content" id="step3" style="display: none;">
-                            <h4 class="text-center mb-4">Select Target</h4>
-                            <div class="mb-3">
-                                <label for="targetSelect" class="form-label fw-bold">Choose Course/Package</label>
-                                <select class="form-select form-select-lg" id="targetSelect" name="target_id">
-                                    <option value="">Select...</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <!-- Step 4: Generate Button -->
-                        <div class="step-content" id="step4" style="display: none;">
-                            <h4 class="text-center mb-4">Ready to Generate</h4>
-                            <div class="text-center">
-                                <div class="alert alert-info mb-4">
-                                    <i class="fas fa-info-circle me-2"></i>
-                                    <strong>Price:</strong> $0.00 (Free promotion code)<br>
-                                    <strong>Commission:</strong> <?php echo $partnerCommissionRate; ?>%
-                                </div>
-                                <button type="submit" class="btn btn-theme-primary btn-lg px-5 py-3">
-                                    <i class="fas fa-magic me-2"></i>Generate Promotion Code
-                                </button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
+    <!-- Header -->
+    <div class="page-header mb-4">
+        <div class="d-flex align-items-center justify-content-between">
+            <div>
+                <h1 class="page-title mb-1">Promotion Code Generator</h1>
+                <p class="page-subtitle text-muted">Create targeted promotion codes for your courses and packages</p>
+            </div>
+            <div class="commission-badge">
+                <span class="badge bg-light text-dark"><?php echo $partnerCommissionRate; ?>% Commission</span>
             </div>
         </div>
     </div>
 
-    <!-- Generated Code Display -->
-    <div class="row justify-content-center mt-5" id="generatedCodeSection" style="display: none;">
-        <div class="col-lg-6">
-            <div class="card border-success shadow-lg">
-                <div class="card-header bg-success text-white text-center">
-                    <h4 class="mb-0">
-                        <i class="fas fa-check-circle me-2"></i>Code Generated Successfully!
-                    </h4>
+    <!-- Generator Form -->
+    <div class="generator-container">
+        <div class="generator-card">
+            <!-- Step Progress -->
+            <div class="step-progress">
+                <div class="step-track">
+                    <div class="step-item" data-step="1">
+                        <div class="step-circle">
+                            <span class="step-number">1</span>
+                        </div>
+                        <div class="step-label">
+                            <span class="step-title">Category</span>
+                            <span class="step-desc">Language</span>
+                        </div>
+                    </div>
+                    <div class="step-item" data-step="2">
+                        <div class="step-circle">
+                            <span class="step-number">2</span>
+                        </div>
+                        <div class="step-label">
+                            <span class="step-title">Type</span>
+                            <span class="step-desc">Course/Package</span>
+                        </div>
+                    </div>
+                    <div class="step-item" data-step="3">
+                        <div class="step-circle">
+                            <span class="step-number">3</span>
+                        </div>
+                        <div class="step-label">
+                            <span class="step-title">Target</span>
+                            <span class="step-desc">Select Item</span>
+                        </div>
+                    </div>
+                    <div class="step-item" data-step="4">
+                        <div class="step-circle">
+                            <span class="step-number">4</span>
+                        </div>
+                        <div class="step-label">
+                            <span class="step-title">Generate</span>
+                            <span class="step-desc">Create Code</span>
+                        </div>
+                    </div>
                 </div>
-                <div class="card-body text-center p-5">
-                    <div class="mb-4">
-                        <h5 class="text-muted mb-3">Your Promotion Code:</h5>
-                        <div class="code-display bg-light border rounded p-4 mb-3">
-                            <code id="generatedCode" class="fs-3 fw-bold text-primary"></code>
+                <div class="progress-line">
+                    <div class="progress-fill" id="progressBar"></div>
+                </div>
+            </div>
+
+            <!-- Form Content -->
+            <form id="promotionCodeForm">
+                <!-- Step 1: Category Selection -->
+                <div class="step-content show" id="step1">
+                    <div class="step-header">
+                        <h3 class="step-title">Select Course Category</h3>
+                        <p class="step-description">Choose the language category for your promotion code</p>
+                    </div>
+                    <div class="category-grid">
+                        <div class="category-card" data-category="1">
+                            <div class="category-option">
+                                <div class="category-icon">
+                                    <img src="https://www.calamuseducation.com/appthumbs/eemainicon.png" alt="English">
+                                </div>
+                                <div class="category-info">
+                                    <h4 class="category-name">English Language</h4>
+                                    <p class="category-desc">Easy English Courses</p>
+                                </div>
+                            </div>
                         </div>
-                        <div class="mb-3">
-                            <small class="text-muted">
-                                <i class="fas fa-shield-alt me-1"></i>
-                                This code is base64 encrypted for security
-                            </small>
+                        <div class="category-card" data-category="2">
+                            <div class="category-option">
+                                <div class="category-icon">
+                                    <img src="https://www.calamuseducation.com/appthumbs/kommmainicon.png" alt="Korean">
+                                </div>
+                                <div class="category-info">
+                                    <h4 class="category-name">Korean Language</h4>
+                                    <p class="category-desc">Easy Korean Courses</p>
+                                </div>
+                            </div>
                         </div>
-                        <div class="d-flex gap-2 justify-content-center">
-                            <button class="btn btn-outline-theme-primary" id="copyCodeBtn">
-                                <i class="fas fa-copy me-2"></i>Copy to Clipboard
-                            </button>
+                        <div class="category-card" data-category="3">
+                            <div class="category-option">
+                                <div class="category-icon">
+                                    <img src="https://www.calamuseducation.com/uploads/icons/easyjapanesemainicon.png" alt="Japanese">
+                                </div>
+                                <div class="category-info">
+                                    <h4 class="category-name">Japanese Language</h4>
+                                    <p class="category-desc">Easy Japanese Courses</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div class="alert alert-info">
-                        <i class="fas fa-info-circle me-2"></i>
-                        <strong>Expires:</strong> <span id="expirationDate"></span>
+                    <input type="hidden" id="selectedCategory" name="category_id">
+                </div>
+
+                <!-- Step 2: Code Type Selection -->
+                <div class="step-content" id="step2" style="display: none;">
+                    <div class="step-header">
+                        <h3 class="step-title">Select Code Type</h3>
+                        <p class="step-description">Choose whether to generate a code for individual courses or packages</p>
                     </div>
-                    <button class="btn btn-theme-primary" onclick="generateNewCode()">
-                        <i class="fas fa-plus me-2"></i>Generate Another Code
+                    <div class="type-grid">
+                        <div class="type-card" data-type="course_purchase">
+                            <div class="type-option">
+                                <div class="type-icon">
+                                    <i class="fas fa-graduation-cap"></i>
+                                </div>
+                                <div class="type-info">
+                                    <h4 class="type-name">Course Purchase</h4>
+                                    <p class="type-desc">Generate code for individual courses</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="type-card" data-type="package_purchase">
+                            <div class="type-option">
+                                <div class="type-icon">
+                                    <i class="fas fa-box"></i>
+                                </div>
+                                <div class="type-info">
+                                    <h4 class="type-name">Package Purchase</h4>
+                                    <p class="type-desc">Generate code for course packages</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <input type="hidden" id="selectedType" name="code_type">
+                </div>
+
+                <!-- Step 3: Target Selection -->
+                <div class="step-content" id="step3" style="display: none;">
+                    <div class="step-header">
+                        <h3 class="step-title">Select Target</h3>
+                        <p class="step-description">Choose the specific course or package for your promotion code</p>
+                    </div>
+                    <div class="target-selection">
+                        <label for="targetSelect" class="form-label">Course/Package</label>
+                        <select class="form-select" id="targetSelect" name="target_id">
+                            <option value="">Select...</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Step 4: Generate Button -->
+                <div class="step-content" id="step4" style="display: none;">
+                    <div class="step-header">
+                        <h3 class="step-title">Ready to Generate</h3>
+                        <p class="step-description">Review your settings and generate the promotion code</p>
+                    </div>
+                    <div class="generation-summary">
+                        <div class="summary-item">
+                            <span class="summary-label">Price:</span>
+                            <span class="summary-value">$0.00 (Free)</span>
+                        </div>
+                        <div class="summary-item">
+                            <span class="summary-label">Commission:</span>
+                            <span class="summary-value"><?php echo $partnerCommissionRate; ?>%</span>
+                        </div>
+                    </div>
+                    <div class="generate-action">
+                        <button type="submit" class="btn-generate">
+                            <i class="fas fa-magic"></i>
+                            <span>Generate Promotion Code</span>
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Generated Code Display -->
+    <div class="result-container" id="generatedCodeSection" style="display: none;">
+        <div class="result-card">
+            <div class="result-header">
+                <div class="result-icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <div class="result-info">
+                    <h3 class="result-title">Code Generated Successfully!</h3>
+                    <p class="result-subtitle">Your promotion code is ready to use</p>
+                </div>
+            </div>
+            <div class="result-content">
+                <div class="code-display">
+                    <div class="code-label">Promotion Code:</div>
+                    <div class="code-value" id="generatedCode"></div>
+                    <div class="code-security">
+                        <i class="fas fa-shield-alt"></i>
+                        <span>Base64 encrypted for security</span>
+                    </div>
+                </div>
+                <div class="code-actions">
+                    <button class="btn-copy" id="copyCodeBtn">
+                        <i class="fas fa-copy"></i>
+                        <span>Copy to Clipboard</span>
+                    </button>
+                </div>
+                <div class="code-info">
+                    <div class="info-item">
+                        <i class="fas fa-clock"></i>
+                        <span>Expires: <strong id="expirationDate"></strong></span>
+                    </div>
+                </div>
+                <div class="result-actions">
+                    <button class="btn-secondary" onclick="generateNewCode()">
+                        <i class="fas fa-plus"></i>
+                        <span>Generate Another Code</span>
                     </button>
                 </div>
             </div>
@@ -218,141 +234,651 @@ $partnerCommissionRate = $currentPartner['commission_rate'] ?? 0;
 </div>
 
 <style>
-/* Theme Colors */
+/* Modern Clean Design - Light Gray Theme */
 :root {
-    --theme-primary: #667eea;
-    --theme-secondary: #764ba2;
-    --theme-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --primary: #4a5568;
+    --primary-dark: #2d3748;
+    --primary-light: #718096;
+    --secondary: #718096;
+    --secondary-dark: #4a5568;
+    --secondary-light: #a0aec0;
+    --accent: #4a5568;
+    --accent-dark: #2d3748;
+    --success: #38a169;
+    --success-dark: #2f855a;
+    --warning: #ed8936;
+    --warning-dark: #dd6b20;
+    --danger: #e53e3e;
+    --danger-dark: #c53030;
+    --gray-50: #f9fafb;
+    --gray-100: #f3f4f6;
+    --gray-200: #e5e7eb;
+    --gray-300: #d1d5db;
+    --gray-400: #9ca3af;
+    --gray-500: #6b7280;
+    --gray-600: #4b5563;
+    --gray-700: #374151;
+    --gray-800: #1f2937;
+    --gray-900: #111827;
+    --white: #ffffff;
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    --radius: 8px;
+    --radius-lg: 12px;
 }
 
-.bg-theme-primary {
-    background-color: var(--theme-primary) !important;
+/* Page Header */
+.page-header {
+    margin-bottom: 2rem;
 }
 
-.bg-gradient-theme {
-    background: var(--theme-gradient) !important;
+.page-title {
+    font-size: 1.875rem;
+    font-weight: 700;
+    color: var(--gray-900);
+    margin: 0;
 }
 
-.text-theme-primary {
-    color: var(--theme-primary) !important;
+.page-subtitle {
+    font-size: 1rem;
+    color: var(--gray-500);
+    margin: 0;
 }
 
-.btn-theme-primary {
-    background-color: var(--theme-primary);
-    border-color: var(--theme-primary);
-    color: white;
+.commission-badge .badge {
+    font-size: 0.875rem;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius);
 }
 
-.btn-theme-primary:hover {
-    background-color: var(--theme-secondary);
-    border-color: var(--theme-secondary);
-    color: white;
+/* Generator Container */
+.generator-container {
+    max-width: 800px;
+    margin: 0 auto;
 }
 
-.btn-outline-theme-primary {
-    color: var(--theme-primary);
-    border-color: var(--theme-primary);
+.generator-card {
+    background: var(--white);
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius-lg);
+    padding: 2rem;
+    box-shadow: var(--shadow-sm);
 }
 
-.btn-outline-theme-primary:hover {
-    background-color: var(--theme-primary);
-    border-color: var(--theme-primary);
-    color: white;
-}
-
-.category-option:hover, .type-option:hover {
-    border-color: var(--theme-primary) !important;
-    transform: translateY(-2px);
-    transition: all 0.3s ease;
-}
-
-.category-option.selected, .type-option.selected {
-    border-color: var(--theme-primary) !important;
-    background-color: #f8f9ff;
-}
-
-/* Horizontal Step Progress Styles */
+/* Step Progress */
 .step-progress {
+    margin-bottom: 3rem;
+}
+
+.step-track {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     position: relative;
+    margin-bottom: 1rem;
 }
 
 .step-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     position: relative;
-    transition: all 0.3s ease;
+    z-index: 2;
 }
 
 .step-circle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--gray-200);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 0.5rem;
     transition: all 0.3s ease;
-    font-size: 1.2rem;
+}
+
+.step-number {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--gray-500);
 }
 
 .step-item.active .step-circle {
-    background-color: var(--theme-primary) !important;
-    transform: scale(1.1);
+    background: var(--primary);
+}
+
+.step-item.active .step-number {
+    color: var(--white);
 }
 
 .step-item.completed .step-circle {
-    background-color: #198754 !important;
+    background: var(--success);
 }
 
-.step-item.completed .step-circle::after {
-    content: "✓";
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 1rem;
+.step-item.completed .step-number {
+    color: var(--white);
 }
 
+.step-label {
+    text-align: center;
+}
+
+.step-title {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--gray-700);
+    margin: 0;
+}
+
+.step-desc {
+    font-size: 0.75rem;
+    color: var(--gray-500);
+    margin: 0;
+}
+
+.progress-line {
+    height: 2px;
+    background: var(--gray-200);
+    border-radius: 1px;
+    position: relative;
+}
+
+.progress-fill {
+    height: 100%;
+    background: var(--primary);
+    border-radius: 1px;
+    transition: width 0.5s ease;
+    width: 25%;
+}
+
+/* Step Content */
 .step-content {
     opacity: 0;
-    transform: translateX(20px);
-    transition: all 0.5s ease;
+    transform: translateY(20px);
+    transition: all 0.4s ease;
     min-height: 300px;
 }
 
 .step-content.show {
     opacity: 1;
-    transform: translateX(0);
+    transform: translateY(0);
 }
 
-.progress {
-    background-color: #e9ecef;
+.step-header {
+    margin-bottom: 2rem;
 }
 
-.progress-bar {
-    transition: width 0.5s ease;
+.step-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--gray-900);
+    margin: 0 0 0.5rem 0;
 }
 
+.step-description {
+    font-size: 1rem;
+    color: var(--gray-500);
+    margin: 0;
+}
+
+/* Category Grid */
+.category-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+}
+
+.category-card {
+    cursor: pointer;
+}
+
+.category-option {
+    padding: 1.5rem;
+    border: 2px solid var(--gray-200);
+    border-radius: var(--radius);
+    background: var(--white);
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.category-option:hover {
+    border-color: var(--primary);
+    box-shadow: var(--shadow);
+}
+
+.category-option.selected {
+    border-color: var(--primary);
+    background: rgba(102, 126, 234, 0.05);
+}
+
+.category-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: var(--radius);
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.category-icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.category-info {
+    flex: 1;
+}
+
+.category-name {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--gray-900);
+    margin: 0 0 0.25rem 0;
+}
+
+.category-desc {
+    font-size: 0.875rem;
+    color: var(--gray-500);
+    margin: 0;
+}
+
+/* Type Grid */
+.type-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+}
+
+.type-card {
+    cursor: pointer;
+}
+
+.type-option {
+    padding: 1.5rem;
+    border: 2px solid var(--gray-200);
+    border-radius: var(--radius);
+    background: var(--white);
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.type-option:hover {
+    border-color: var(--primary);
+    box-shadow: var(--shadow);
+}
+
+.type-option.selected {
+    border-color: var(--primary);
+    background: rgba(102, 126, 234, 0.05);
+}
+
+.type-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: var(--radius);
+    background: var(--gray-100);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.type-icon i {
+    font-size: 1.5rem;
+    color: var(--primary);
+}
+
+.type-info {
+    flex: 1;
+}
+
+.type-name {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--gray-900);
+    margin: 0 0 0.25rem 0;
+}
+
+.type-desc {
+    font-size: 0.875rem;
+    color: var(--gray-500);
+    margin: 0;
+}
+
+/* Target Selection */
+.target-selection {
+    max-width: 400px;
+}
+
+.form-label {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--gray-700);
+    margin-bottom: 0.5rem;
+}
+
+.form-select {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--gray-300);
+    border-radius: var(--radius);
+    background: var(--white);
+    font-size: 1rem;
+    transition: border-color 0.2s ease;
+}
+
+.form-select:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+/* Generation Summary */
+.generation-summary {
+    background: var(--gray-50);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.summary-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.summary-item:last-child {
+    margin-bottom: 0;
+}
+
+.summary-label {
+    font-size: 0.875rem;
+    color: var(--gray-600);
+}
+
+.summary-value {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--gray-900);
+}
+
+/* Generate Button */
+.generate-action {
+    text-align: center;
+}
+
+.btn-generate {
+    background: var(--primary);
+    color: var(--white);
+    border: none;
+    border-radius: var(--radius);
+    padding: 1rem 2rem;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.btn-generate:hover {
+    background: var(--primary-dark);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+}
+
+/* Result Container */
+.result-container {
+    max-width: 600px;
+    margin: 2rem auto 0;
+}
+
+.result-card {
+    background: var(--white);
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius-lg);
+    padding: 2rem;
+    box-shadow: var(--shadow-sm);
+}
+
+.result-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.result-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: var(--success);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.result-icon i {
+    font-size: 1.5rem;
+    color: var(--white);
+}
+
+.result-info {
+    flex: 1;
+}
+
+.result-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--gray-900);
+    margin: 0 0 0.25rem 0;
+}
+
+.result-subtitle {
+    font-size: 0.875rem;
+    color: var(--gray-500);
+    margin: 0;
+}
+
+/* Code Display */
 .code-display {
-    font-family: 'Courier New', monospace;
-    letter-spacing: 2px;
+    background: var(--gray-50);
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    text-align: center;
 }
 
-#copyCodeBtn.copied {
-    background-color: #198754;
-    border-color: #198754;
-    color: white;
+.code-label {
+    font-size: 0.875rem;
+    color: var(--gray-600);
+    margin-bottom: 0.5rem;
 }
 
-#copyCodeBtn.copied::after {
-    content: " ✓";
+.code-value {
+    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--primary);
+    letter-spacing: 1px;
+    margin-bottom: 0.5rem;
+    word-break: break-all;
 }
 
-/* Responsive adjustments */
+.code-security {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    font-size: 0.75rem;
+    color: var(--gray-500);
+}
+
+.code-security i {
+    color: var(--success);
+}
+
+/* Code Actions */
+.code-actions {
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+.btn-copy {
+    background: var(--white);
+    color: var(--primary);
+    border: 1px solid var(--primary);
+    border-radius: var(--radius);
+    padding: 0.75rem 1.5rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.btn-copy:hover {
+    background: var(--primary);
+    color: var(--white);
+}
+
+.btn-copy.copied {
+    background: var(--success);
+    border-color: var(--success);
+    color: var(--white);
+}
+
+/* Code Info */
+.code-info {
+    margin-bottom: 2rem;
+}
+
+.info-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    color: var(--gray-600);
+}
+
+.info-item i {
+    color: var(--warning);
+}
+
+/* Result Actions */
+.result-actions {
+    text-align: center;
+}
+
+.btn-secondary {
+    background: var(--gray-100);
+    color: var(--gray-700);
+    border: 1px solid var(--gray-300);
+    border-radius: var(--radius);
+    padding: 0.75rem 1.5rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.btn-secondary:hover {
+    background: var(--gray-200);
+    border-color: var(--gray-400);
+}
+
+/* Responsive Design */
 @media (max-width: 768px) {
-    .step-item h6 {
-        font-size: 0.9rem;
+    .generator-card {
+        padding: 1.5rem;
+        margin: 0 1rem;
     }
     
-    .step-item small {
-        font-size: 0.75rem;
+    .page-header {
+        padding: 0 1rem;
+    }
+    
+    .step-track {
+        flex-direction: column;
+        gap: 1rem;
+    }
+    
+    .step-item {
+        flex-direction: row;
+        gap: 0.75rem;
     }
     
     .step-circle {
-        width: 40px !important;
-        height: 40px !important;
+        width: 32px;
+        height: 32px;
+    }
+    
+    .step-number {
+        font-size: 0.75rem;
+    }
+    
+    .step-title {
+        font-size: 0.75rem;
+    }
+    
+    .step-desc {
+        font-size: 0.625rem;
+    }
+    
+    .category-grid,
+    .type-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .category-option,
+    .type-option {
+        padding: 1rem;
+    }
+    
+    .result-card {
+        margin: 1rem;
+        padding: 1.5rem;
+    }
+    
+    .code-value {
         font-size: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .generator-card {
+        padding: 1rem;
+        margin: 0 0.5rem;
+    }
+    
+    .page-title {
+        font-size: 1.5rem;
+    }
+    
+    .step-title {
+        font-size: 1.25rem;
+    }
+    
+    .result-card {
+        margin: 0.5rem;
+        padding: 1rem;
     }
 }
 </style>
@@ -411,13 +937,10 @@ function updateStepProgress() {
         
         if (stepNumber < currentStep) {
             $stepItem.addClass('completed').removeClass('active');
-            $stepCircle.removeClass('bg-theme-primary bg-secondary').addClass('bg-success');
         } else if (stepNumber === currentStep) {
             $stepItem.addClass('active').removeClass('completed');
-            $stepCircle.removeClass('bg-secondary bg-success').addClass('bg-theme-primary');
         } else {
             $stepItem.removeClass('active completed');
-            $stepCircle.removeClass('bg-theme-primary bg-success').addClass('bg-secondary');
         }
     });
     

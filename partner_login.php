@@ -8,7 +8,7 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #4a5568 0%, #718096 100%);
             min-height: 100vh;
         }
         .login-container {
@@ -26,7 +26,7 @@
             width: 100%;
         }
         .login-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #4a5568 0%, #718096 100%);
             color: white;
             padding: 2rem;
             text-align: center;
@@ -41,11 +41,11 @@
             transition: all 0.3s;
         }
         .form-control:focus {
-            border-color: #667eea;
-            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+            border-color: #4a5568;
+            box-shadow: 0 0 0 0.2rem rgba(74, 85, 104, 0.25);
         }
         .btn-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #4a5568 0%, #718096 100%);
             border: none;
             border-radius: 10px;
             padding: 12px 30px;

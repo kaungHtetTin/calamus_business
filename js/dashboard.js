@@ -13,11 +13,21 @@ $(document).ready(function() {
     // Get session token from PHP
     sessionToken = window.sessionToken || '';
     
-    // Setup navigation
-    setupNavigation();
+    // Wait for Bootstrap to be available
+    function initializeDashboard() {
+        if (typeof bootstrap !== 'undefined') {
+            // Setup navigation
+            setupNavigation();
+            
+            // Setup mobile navigation (Bootstrap offcanvas)
+            setupMobileNavigation();
+        } else {
+            // Retry after a short delay
+            setTimeout(initializeDashboard, 100);
+        }
+    }
     
-    // Setup mobile navigation (Bootstrap offcanvas)
-    setupMobileNavigation();
+    initializeDashboard();
 });
 
 // Setup navigation
@@ -38,6 +48,23 @@ function setupNavigation() {
 
 // Setup mobile navigation using Bootstrap offcanvas
 function setupMobileNavigation() {
+    console.log('Setting up mobile navigation...');
+    
+    // Check if Bootstrap is available
+    if (typeof bootstrap === 'undefined') {
+        console.error('Bootstrap is not available');
+        return;
+    }
+    
+    // Check if offcanvas element exists
+    const offcanvasElement = document.getElementById('mobileSidebar');
+    if (!offcanvasElement) {
+        console.error('Mobile sidebar element not found');
+        return;
+    }
+    
+    console.log('Mobile sidebar element found:', offcanvasElement);
+    
     // Handle offcanvas events
     $('#mobileSidebar').on('show.bs.offcanvas', function() {
         console.log('Mobile sidebar opening');
@@ -46,6 +73,17 @@ function setupMobileNavigation() {
     $('#mobileSidebar').on('hide.bs.offcanvas', function() {
         console.log('Mobile sidebar closing');
     });
+    
+    // Test if the toggle button works
+    const toggleButton = document.querySelector('[data-bs-toggle="offcanvas"][data-bs-target="#mobileSidebar"]');
+    if (toggleButton) {
+        console.log('Toggle button found:', toggleButton);
+        toggleButton.addEventListener('click', function() {
+            console.log('Toggle button clicked');
+        });
+    } else {
+        console.error('Toggle button not found');
+    }
 }
 
 // Show specific section
@@ -59,9 +97,19 @@ function showSection(section) {
 
 // Close mobile sidebar
 function closeMobileSidebar() {
-    const offcanvas = bootstrap.Offcanvas.getInstance(document.getElementById('mobileSidebar'));
-    if (offcanvas) {
-        offcanvas.hide();
+    // Wait for Bootstrap to be available
+    if (typeof bootstrap !== 'undefined' && bootstrap.Offcanvas) {
+        const offcanvas = bootstrap.Offcanvas.getInstance(document.getElementById('mobileSidebar'));
+        if (offcanvas) {
+            offcanvas.hide();
+        }
+    } else {
+        // Fallback: manually hide the offcanvas
+        const offcanvasElement = document.getElementById('mobileSidebar');
+        if (offcanvasElement) {
+            offcanvasElement.classList.remove('show');
+            document.body.classList.remove('offcanvas-open');
+        }
     }
 }
 
@@ -76,7 +124,7 @@ function copyToClipboard(element) {
         // Show success feedback
         const originalText = element.value;
         element.value = 'Copied!';
-        element.style.color = '#28a745';
+        element.style.color = '#38a169';
         
         setTimeout(() => {
             element.value = originalText;
@@ -109,4 +157,32 @@ function showAlert(message, type = 'info') {
     setTimeout(function() {
         $('.alert').fadeOut();
     }, 5000);
+}
+
+// Test offcanvas functionality
+function testOffcanvas() {
+    console.log('Testing offcanvas...');
+    
+    // Check if Bootstrap is available
+    if (typeof bootstrap === 'undefined') {
+        alert('Bootstrap is not available!');
+        return;
+    }
+    
+    // Check if offcanvas element exists
+    const offcanvasElement = document.getElementById('mobileSidebar');
+    if (!offcanvasElement) {
+        alert('Mobile sidebar element not found!');
+        return;
+    }
+    
+    // Try to show the offcanvas
+    try {
+        const offcanvas = new bootstrap.Offcanvas(offcanvasElement);
+        offcanvas.show();
+        console.log('Offcanvas shown successfully');
+    } catch (error) {
+        console.error('Error showing offcanvas:', error);
+        alert('Error showing offcanvas: ' + error.message);
+    }
 }

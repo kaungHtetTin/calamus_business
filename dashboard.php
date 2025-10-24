@@ -12,6 +12,13 @@ include 'layout/header.php';
         </div>
     </div>
 
+    <!-- Debug Test Button -->
+    <div class="alert alert-info mb-4">
+        <h6>Debug: Side Navigation Test</h6>
+        <p class="mb-2">If the side navigation drawer is not working, click the menu button (☰) in the top-left corner.</p>
+        <button class="btn btn-sm btn-outline-primary" onclick="testOffcanvas()">Test Offcanvas</button>
+    </div>
+
     <!-- Welcome Message -->
     <div class="row mb-4">
         <div class="col-12">

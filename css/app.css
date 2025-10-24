@@ -1,6 +1,61 @@
+/* Override Bootstrap Primary Colors */
+.btn-primary {
+    background-color: #4a5568 !important;
+    border-color: #4a5568 !important;
+}
+
+.btn-primary:hover {
+    background-color: #2d3748 !important;
+    border-color: #2d3748 !important;
+}
+
+.btn-primary:focus {
+    background-color: #2d3748 !important;
+    border-color: #2d3748 !important;
+    box-shadow: 0 0 0 0.2rem rgba(74, 85, 104, 0.25) !important;
+}
+
+.bg-primary {
+    background-color: #4a5568 !important;
+}
+
+.text-primary {
+    color: #4a5568 !important;
+}
+
+.border-primary {
+    border-color: #4a5568 !important;
+}
+
+.navbar-dark.bg-primary {
+    background: linear-gradient(135deg, #4a5568 0%, #718096 100%) !important;
+}
+
+/* Menu Button Styles */
+.navbar-toggler {
+    border: none;
+    padding: 0.25rem 0.5rem;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 6px;
+    transition: all 0.3s ease;
+}
+
+.navbar-toggler:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: scale(1.05);
+}
+
+.navbar-toggler:focus {
+    box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0.25);
+}
+
+.navbar-toggler-icon {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 1%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+}
+
 /* Top Navigation Bar Styles */
 .navbar {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+    background: linear-gradient(135deg, #4a5568 0%, #718096 100%) !important;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     z-index: 1030;
 }
@@ -34,11 +89,13 @@
 /* Quick stats in navbar */
 .navbar-text {
     font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.9);
 }
 
 .navbar-text strong {
     font-size: 1rem;
     font-weight: 600;
+    color: white;
 }
 
 /* Navbar Profile Image */
@@ -65,16 +122,16 @@
 }
 
 .breadcrumb-item a {
-    color: #667eea;
+    color: #4a5568;
     transition: color 0.3s ease;
 }
 
 .breadcrumb-item a:hover {
-    color: #764ba2;
+    color: #2d3748;
 }
 
 .breadcrumb-item.active {
-    color: #6c757d;
+    color: #718096;
 }
 
 /* Profile Image Styles */
@@ -91,7 +148,7 @@
 }
 
 .profile-image:hover {
-    border-color: #667eea;
+    border-color: #4a5568;
     transform: scale(1.05);
 }
 
@@ -106,7 +163,7 @@
 
 .profile-image-placeholder:hover {
     background-color: #e9ecef;
-    border-color: #667eea;
+    border-color: #4a5568;
 }
 
 .profile-image-preview {
@@ -164,7 +221,7 @@
 
 .sidebar {
     min-height: calc(100vh - 56px); /* Account for navbar height */
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #4a5568 0%, #718096 100%);
     transition: transform 0.3s ease-in-out;
 }
 
@@ -189,7 +246,7 @@
 }
 
 .stat-card {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #4a5568 0%, #718096 100%);
     color: white;
 }
 
@@ -215,11 +272,11 @@
 }
 
 .copy-btn:hover {
-    color: #007bff;
+    color: #4a5568;
 }
 
 .welcome-banner {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #4a5568 0%, #718096 100%);
     color: white;
     padding: 1rem;
     border-radius: 10px;
@@ -228,7 +285,8 @@
 
 /* Bootstrap Offcanvas Customization */
 .offcanvas {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #4a5568 0%, #718096 100%);
+    width: 280px !important;
 }
 
 .offcanvas .nav-link {
@@ -243,6 +301,20 @@
 .offcanvas .nav-link.active {
     color: white;
     background: rgba(255, 255, 255, 0.1);
+}
+
+/* Ensure offcanvas backdrop is visible */
+.offcanvas-backdrop {
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+/* Fix for offcanvas positioning */
+.offcanvas-start {
+    transform: translateX(-100%);
+}
+
+.offcanvas-start.show {
+    transform: translateX(0);
 }
 
 /* Mobile Responsive */

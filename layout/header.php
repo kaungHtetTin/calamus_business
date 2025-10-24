@@ -55,16 +55,15 @@ $recentCodes = $codeManager->getPartnerPromotionCodes($currentPartner['id'], nul
     <!-- Top Navigation Bar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary sticky-top">
         <div class="container-fluid">
-            <!-- Brand/Logo -->
-            <a class="navbar-brand fw-bold" href="dashboard.php">
-                <i class="fas fa-handshake me-2"></i>Partner Portal
-            </a>
-            
-            <!-- Mobile toggle button -->
-            <button class="navbar-toggler d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileSidebar" aria-controls="mobileSidebar">
+            <!-- Menu Button - Always visible on leftmost side -->
+            <button class="navbar-toggler me-3" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileSidebar" aria-controls="mobileSidebar">
                 <span class="navbar-toggler-icon"></span>
             </button>
-        
+            
+            <!-- Brand/Logo -->
+            <a class="navbar-brand fw-bold" href="dashboard.php">
+                Calamus
+            </a>
             
             <!-- Quick Stats & User Info -->
             <div class="navbar-nav ms-auto d-none d-md-flex align-items-center">
@@ -108,12 +107,12 @@ $recentCodes = $codeManager->getPartnerPromotionCodes($currentPartner['id'], nul
         </div>
     </nav>
 
-    <!-- Bootstrap Offcanvas for Mobile Navigation -->
+    <!-- Bootstrap Offcanvas for Navigation (Mobile & Desktop) -->
     <div class="offcanvas offcanvas-start" tabindex="-1" id="mobileSidebar" aria-labelledby="mobileSidebarLabel">
         <div class="offcanvas-header">
-            <h5 class="offcanvas-title text-white" id="mobileSidebarLabel">
+            <strong class="offcanvas-title text-white" id="mobileSidebarLabel">
                 <i class="fas fa-handshake me-2"></i>Partner Portal
-            </h5>
+            </strong>
             <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
         </div>
         <div class="offcanvas-body">
@@ -143,9 +142,9 @@ $recentCodes = $codeManager->getPartnerPromotionCodes($currentPartner['id'], nul
             <div class="col-md-3 col-lg-2 sidebar p-0 d-none d-md-block" id="sidebar">
                 <div class="p-3">
                     <div class="d-flex justify-content-between align-items-center mb-4">
-                        <h4 class="text-white mb-0">
+                        <h5 class="text-white mb-0">
                             <i class="fas fa-handshake me-2"></i>Partner Portal
-                        </h4>
+                        </h5>
                     </div>
                     <div class="text-white-50 mb-3">
                         <small>Welcome, <?php echo htmlspecialchars($currentPartner['contact_name']); ?></small>
