@@ -85,11 +85,12 @@ class PartnerAuth {
             return ['success' => false, 'message' => 'Invalid credentials'];
         }
         
+        
         // Create session
         $sessionToken = bin2hex(random_bytes(32));
         $expiresAt = date('Y-m-d H:i:s', strtotime('+7 days'));
         
-        $sessionQuery = "INSERT INTO partner_sessions (partner_id, session_token, expires_at) 
+        $sessionQuery = "INSERT INTO partner_sessions (partner_id, session_token, expired_at) 
                         VALUES ('{$partner['id']}', '$sessionToken', '$expiresAt')";
         
         if ($this->db->save($sessionQuery)) {
@@ -103,6 +104,7 @@ class PartnerAuth {
             $_SESSION['partner_session_token'] = $sessionToken;
             $_SESSION['partner_id'] = $partner['id'];
             
+
             return [
                 'success' => true, 
                 'message' => 'Login successful',
@@ -177,9 +179,9 @@ class PartnerAuth {
     
     // Validate session
     public function validateSession($sessionToken) {
-        $session = $this->db->read("SELECT p.*, ps.expires_at FROM partners p 
+        $session = $this->db->read("SELECT p.*, ps.expired_at FROM partners p 
                                   JOIN partner_sessions ps ON p.id = ps.partner_id 
-                                  WHERE ps.session_token = '$sessionToken' AND ps.expires_at > NOW()");
+                                  WHERE ps.session_token = '$sessionToken' AND ps.expired_at > NOW()");
         
         if (!$session) {
             return ['success' => false, 'message' => 'Invalid or expired session'];
@@ -369,7 +371,7 @@ class PartnerAuth {
     
     // Extend session expiry
     public function extendSession($sessionToken, $newExpiry) {
-        $query = "UPDATE partner_sessions SET expires_at = '$newExpiry' WHERE session_token = '$sessionToken'";
+        $query = "UPDATE partner_sessions SET expired_at = '$newExpiry' WHERE session_token = '$sessionToken'";
         return $this->db->save($query);
     }
 

@@ -124,7 +124,7 @@ $endpoints = [
             'url' => '/api/promotion_codes.php?endpoint=generate_code',
             'method' => 'POST',
             'description' => 'Generate new promotion code',
-            'parameters' => ['session_token', 'code_type', 'target_course_id', 'target_package_id', 'client_name', 'expires_at']
+            'parameters' => ['session_token', 'code_type', 'target_course_id', 'target_package_id', 'client_name', 'expired_at']
         ],
         'get_codes' => [
             'url' => '/api/promotion_codes.php?endpoint=get_codes',

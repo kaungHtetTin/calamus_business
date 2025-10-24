@@ -9,7 +9,7 @@ class PromotionCodeManager {
     }
     
     // Generate a new promotion code
-    public function generatePromotionCode($partnerId, $codeType, $targetCourseId = null, $targetMajor = null, $packageId = null, $clientName = '', $expiresAt = null) {
+    public function generatePromotionCode($partnerId, $codeType, $categoryId, $targetCourseId = null, $targetPackageId = null, $price, $commissionRate = null, $expiresAt = null) {
         // Get partner details
         $partner = $this->db->read("SELECT * FROM partners WHERE id = '$partnerId'");
         if (!$partner) {
@@ -19,18 +19,23 @@ class PromotionCodeManager {
         $partner = $partner[0];
         $codePrefix = $partner['code_prefix'] ?? 'PART';
         
+        // Use partner's commission rate if not provided
+        if ($commissionRate === null) {
+            $commissionRate = $partner['commission_rate'];
+        }
+        
         // Generate unique code
-        $code = $this->generateUniqueCode($codePrefix, $codeType, $targetCourseId, $targetMajor, $packageId);
+        $code = $this->generateUniqueCode($codePrefix, $codeType, $categoryId, $targetCourseId, $targetPackageId);
         
-        // Get commission rate
-        $commissionRate = $partner['commission_rate'];
+        // Set expiration date (3 days from now if not provided)
+        if (!$expiresAt) {
+            $expiresAt = date('Y-m-d H:i:s', strtotime('+3 days'));
+        }
         
-        // Insert promotion code
+        // Insert promotion code with amount_received = 0
         $query = "INSERT INTO promotion_codes 
-                 (partner_id, code, code_type, target_course_id, target_major, package_id, commission_rate, 
-                  generated_by, generated_for, expires_at) 
-                 VALUES ('$partnerId', '$code', '$codeType', '$targetCourseId', '$targetMajor', '$packageId', 
-                         '$commissionRate', '$partnerId', '$clientName', '$expiresAt')";
+                 (partner_id, code, target_course_id, target_package_id, price, commission_rate, amount_received, expired_at) 
+                 VALUES ('$partnerId', '$code', '$targetCourseId', '$targetPackageId', '$price', '$commissionRate', '0.00', '$expiresAt')";
         
         if ($this->db->save($query)) {
             // Update partner code count
@@ -39,6 +44,7 @@ class PromotionCodeManager {
             return [
                 'success' => true,
                 'code' => $code,
+                'expired_at' => $expiresAt,
                 'message' => 'Promotion code generated successfully'
             ];
         }
@@ -47,188 +53,242 @@ class PromotionCodeManager {
     }
     
     // Generate unique code
-    private function generateUniqueCode($prefix, $codeType, $targetCourseId, $targetMajor, $packageId = null) {
+    private function generateUniqueCode($prefix, $codeType, $categoryId, $targetCourseId, $targetPackageId) {
         do {
-            // Format: PREFIX-TYPE-COURSE/PACKAGE-RANDOM
-            $typeCode = $this->getTypeCode($codeType);
+            // Create code format: PREFIX-TYPE-CATEGORY-TARGET-RANDOM
+            $typeCode = $codeType === 'course_purchase' ? 'C' : 'P';
+            $categoryCode = strtoupper(substr($categoryId, 0, 2)); // First 2 chars of category ID
+            $targetCode = $targetCourseId ? $targetCourseId : ($targetPackageId ? $targetPackageId : '000');
+            $randomCode = strtoupper(substr(md5(uniqid()), 0, 4));
             
-            if ($packageId) {
-                $targetCode = str_pad($packageId, 3, '0', STR_PAD_LEFT);
-            } else {
-                $targetCode = $targetCourseId ? str_pad($targetCourseId, 3, '0', STR_PAD_LEFT) : '000';
-            }
+            // Create the raw code string
+            $rawCode = $prefix . '-' . $typeCode . '-' . $categoryCode . '-' . $targetCode . '-' . $randomCode;
             
-            $randomCode = str_pad(rand(1000, 9999), 4, '0', STR_PAD_LEFT);
+            // Encode the code using base64
+            $code = base64_encode($rawCode);
             
-            $code = $prefix . '-' . $typeCode . '-' . $targetCode . '-' . $randomCode;
-            
-            // Check if code already exists
-            $existing = $this->db->read("SELECT id FROM promotion_codes WHERE code = '$code'");
-        } while ($existing);
+            $exists = $this->db->read("SELECT id FROM promotion_codes WHERE code = '$code'");
+        } while ($exists);
         
         return $code;
     }
     
-    // Get type code for code generation
-    private function getTypeCode($codeType) {
-        $typeCodes = [
-            'vip_subscription' => 'VIP',
-            'course_purchase' => 'CRS',
-            'package_purchase' => 'PKG'
-        ];
-        return $typeCodes[$codeType] ?? 'GEN';
-    }
-    
-    // Validate promotion code
-    public function validatePromotionCode($code) {
-        $promoCode = $this->db->read("SELECT pc.*, p.contact_name, p.company_name 
-                                    FROM promotion_codes pc 
-                                    JOIN partners p ON pc.partner_id = p.id 
-                                    WHERE pc.code = '$code'");
-        
-        if (!$promoCode) {
-            return ['valid' => false, 'message' => 'Invalid promotion code'];
-        }
-        
-        $promoCode = $promoCode[0];
-        
-        // Check if code is active
-        if ($promoCode['status'] !== 'active') {
-            return ['valid' => false, 'message' => 'Promotion code is not active'];
-        }
-        
-        // Check if code has expired
-        if ($promoCode['expires_at'] && strtotime($promoCode['expires_at']) < time()) {
-            // Mark as expired
-            $this->db->save("UPDATE promotion_codes SET status = 'expired' WHERE id = '{$promoCode['id']}'");
-            return ['valid' => false, 'message' => 'Promotion code has expired'];
-        }
-        
-        return [
-            'valid' => true,
-            'code_data' => $promoCode,
-            'message' => 'Valid promotion code'
-        ];
-    }
-    
-    // Use promotion code (mark as used)
-    public function usePromotionCode($code, $learnerPhone) {
-        $validation = $this->validatePromotionCode($code);
-        
-        if (!$validation['valid']) {
-            return $validation;
-        }
-        
-        $codeData = $validation['code_data'];
-        
-        // Mark code as used
-        $query = "UPDATE promotion_codes 
-                 SET status = 'used', used_at = NOW(), used_by = '$learnerPhone' 
-                 WHERE code = '$code'";
-        
-        if ($this->db->save($query)) {
-            // Update partner used code count
-            $this->db->save("UPDATE partners SET total_codes_used = total_codes_used + 1 WHERE id = '{$codeData['partner_id']}'");
+    // Decode base64 promotion code
+    public function decodePromotionCode($encodedCode) {
+        try {
+            $decodedCode = base64_decode($encodedCode);
+            if ($decodedCode === false) {
+                return ['success' => false, 'message' => 'Invalid code format'];
+            }
+            
+            // Parse the decoded code
+            $parts = explode('-', $decodedCode);
+            if (count($parts) !== 5) {
+                return ['success' => false, 'message' => 'Invalid code structure'];
+            }
             
             return [
                 'success' => true,
-                'code_data' => $codeData,
-                'message' => 'Promotion code used successfully'
+                'prefix' => $parts[0],
+                'type' => $parts[1],
+                'category' => $parts[2],
+                'target' => $parts[3],
+                'random' => $parts[4],
+                'raw_code' => $decodedCode
             ];
+        } catch (Exception $e) {
+            return ['success' => false, 'message' => 'Code decoding failed'];
         }
-        
-        return ['success' => false, 'message' => 'Failed to use promotion code'];
     }
     
     // Get partner's promotion codes
-    public function getPartnerPromotionCodes($partnerId, $status = null, $limit = 50) {
+    public function getPartnerPromotionCodes($partnerId, $status = null, $limit = 20) {
         $whereClause = "WHERE partner_id = '$partnerId'";
-        
         if ($status) {
             $whereClause .= " AND status = '$status'";
         }
         
-        $query = "SELECT pc.*, c.title as course_title 
-                 FROM promotion_codes pc 
-                 LEFT JOIN courses c ON pc.target_course_id = c.course_id 
-                 $whereClause 
-                 ORDER BY pc.created_at DESC 
-                 LIMIT $limit";
+        $query = "SELECT * FROM promotion_codes $whereClause ORDER BY created_at DESC LIMIT $limit";
+        $result = $this->db->read($query);
         
-        return $this->db->read($query);
+        // Return empty array if no results
+        return $result ? $result : [];
     }
     
-    // Get promotion code statistics for partner
+    // Get partner's code management records (now just uses promotion_codes table)
+    public function getPartnerCodeManagement($partnerId, $status = null, $limit = 20) {
+        $whereClause = "WHERE partner_id = '$partnerId'";
+        if ($status) {
+            $whereClause .= " AND status = '$status'";
+        }
+        
+        $query = "SELECT pc.*, l.learner_name as user_name, pc.learner_phone as user_phone
+                 FROM promotion_codes pc 
+                 LEFT JOIN learners l ON pc.learner_phone = l.learner_phone 
+                 $whereClause ORDER BY pc.created_at DESC LIMIT $limit";
+        $result = $this->db->read($query);
+        
+        // Return empty array if no results
+        return $result ? $result : [];
+    }
+    
+    // Get partner code statistics
     public function getPartnerCodeStats($partnerId) {
         $stats = [];
         
+        // Initialize default values
+        $stats['total_generated'] = 0;
+        $stats['pending'] = 0;
+        $stats['approved'] = 0;
+        $stats['rejected'] = 0;
+        $stats['expired'] = 0;
+        $stats['usage_rate'] = 0;
+        $stats['commission_earned'] = 0;
+        
         // Total codes generated
         $totalGenerated = $this->db->read("SELECT COUNT(*) as total FROM promotion_codes WHERE partner_id = '$partnerId'");
-        $stats['total_generated'] = $totalGenerated[0]['total'] ?? 0;
+        if ($totalGenerated && isset($totalGenerated[0]['total'])) {
+            $stats['total_generated'] = (int)$totalGenerated[0]['total'];
+        }
         
-        // Active codes
-        $activeCodes = $this->db->read("SELECT COUNT(*) as total FROM promotion_codes WHERE partner_id = '$partnerId' AND status = 'active'");
-        $stats['active_codes'] = $activeCodes[0]['total'] ?? 0;
+        // If no codes exist, return default stats
+        if ($stats['total_generated'] === 0) {
+            return $stats;
+        }
         
-        // Used codes
-        $usedCodes = $this->db->read("SELECT COUNT(*) as total FROM promotion_codes WHERE partner_id = '$partnerId' AND status = 'used'");
-        $stats['used_codes'] = $usedCodes[0]['total'] ?? 0;
+        // Codes by status
+        $statusCounts = $this->db->read("SELECT status, COUNT(*) as count FROM promotion_codes WHERE partner_id = '$partnerId' GROUP BY status");
         
-        // Expired codes
-        $expiredCodes = $this->db->read("SELECT COUNT(*) as total FROM promotion_codes WHERE partner_id = '$partnerId' AND status = 'expired'");
-        $stats['expired_codes'] = $expiredCodes[0]['total'] ?? 0;
+        if ($statusCounts) {
+            foreach ($statusCounts as $statusCount) {
+                if (isset($statusCount['status']) && isset($statusCount['count'])) {
+                    $stats[$statusCount['status']] = (int)$statusCount['count'];
+                }
+            }
+        }
         
         // Usage rate
+        $usedCodes = $stats['approved'];
         $stats['usage_rate'] = $stats['total_generated'] > 0 ? 
-            round(($stats['used_codes'] / $stats['total_generated']) * 100, 2) : 0;
-        
-        // Commission earned from codes (set to 0 since conversions table is removed)
-        $stats['commission_earned'] = 0;
+            round(($usedCodes / $stats['total_generated']) * 100, 2) : 0;
         
         return $stats;
     }
     
-    // Cancel promotion code
-    public function cancelPromotionCode($codeId, $partnerId) {
-        $code = $this->db->read("SELECT * FROM promotion_codes WHERE id = '$codeId' AND partner_id = '$partnerId'");
-        
+    // Approve promotion code
+    public function approvePromotionCode($codeId, $learnerPhone) {
+        // Get code details
+        $code = $this->db->read("SELECT * FROM promotion_codes WHERE id = '$codeId'");
         if (!$code) {
-            return ['success' => false, 'message' => 'Promotion code not found'];
+            return ['success' => false, 'message' => 'Code not found'];
         }
         
         $code = $code[0];
         
-        if ($code['status'] !== 'active') {
-            return ['success' => false, 'message' => 'Only active codes can be cancelled'];
+        // Check if code is still valid
+        if ($code['status'] !== 'pending') {
+            return ['success' => false, 'message' => 'Code is not in pending status'];
         }
         
-        $query = "UPDATE promotion_codes SET status = 'cancelled' WHERE id = '$codeId'";
-        
-        if ($this->db->save($query)) {
-            return ['success' => true, 'message' => 'Promotion code cancelled successfully'];
+        if (strtotime($code['expired_at']) < time()) {
+            return ['success' => false, 'message' => 'Code has expired'];
         }
         
-        return ['success' => false, 'message' => 'Failed to cancel promotion code'];
+        // Get learner name from learners table
+        $learner = $this->db->read("SELECT learner_name FROM learners WHERE learner_phone = '$learnerPhone'");
+        $learnerName = $learner ? $learner[0]['learner_name'] : 'Unknown';
+        
+        // Calculate commission amount
+        $commissionAmount = ($code['price'] * $code['commission_rate']) / 100;
+        
+        // Update promotion_codes table
+        $updateQuery = "UPDATE promotion_codes SET 
+                        status = 'approved', 
+                        learner_phone = '$learnerPhone',
+                        amount_received = '$commissionAmount',
+                        updated_at = NOW() 
+                        WHERE id = '$codeId'";
+        
+        if ($this->db->save($updateQuery)) {
+            // Update partner code count
+            $this->db->save("UPDATE partners SET total_codes_used = total_codes_used + 1 WHERE id = '{$code['partner_id']}'");
+            
+            return [
+                'success' => true, 
+                'message' => 'Code approved successfully',
+                'commission_amount' => $commissionAmount
+            ];
+        }
+        
+        return ['success' => false, 'message' => 'Failed to approve code'];
     }
     
-    // Get code usage history
-    public function getCodeUsageHistory($partnerId, $limit = 20) {
-        $query = "SELECT pc.*, l.learner_name, l.learner_email
-                 FROM promotion_codes pc 
-                 LEFT JOIN learners l ON pc.used_by = l.id 
-                 WHERE pc.partner_id = '$partnerId' AND pc.status = 'used'
-                 ORDER BY pc.used_at DESC 
-                 LIMIT $limit";
+    // Reject promotion code
+    public function rejectPromotionCode($codeId) {
+        // Get code details
+        $code = $this->db->read("SELECT * FROM promotion_codes WHERE id = '$codeId'");
+        if (!$code) {
+            return ['success' => false, 'message' => 'Code not found'];
+        }
         
-        return $this->db->read($query);
+        $code = $code[0];
+        
+        // Update promotion_codes table
+        $updateQuery = "UPDATE promotion_codes SET 
+                        status = 'rejected', 
+                        updated_at = NOW() 
+                        WHERE id = '$codeId'";
+        
+        if ($this->db->save($updateQuery)) {
+            return ['success' => true, 'message' => 'Code rejected successfully'];
+        }
+        
+        return ['success' => false, 'message' => 'Failed to reject code'];
+    }
+    
+    // Delete promotion code (only if pending)
+    public function deletePromotionCode($codeId) {
+        // Get code details
+        $code = $this->db->read("SELECT * FROM promotion_codes WHERE id = '$codeId'");
+        if (!$code) {
+            return ['success' => false, 'message' => 'Code not found'];
+        }
+        
+        $code = $code[0];
+        
+        // Check if code is pending
+        if ($code['status'] !== 'pending') {
+            return ['success' => false, 'message' => 'Can only delete codes in pending status'];
+        }
+        
+        // Delete from promotion_codes table
+        $deleteQuery = "DELETE FROM promotion_codes WHERE id = '$codeId'";
+        
+        if ($this->db->save($deleteQuery)) {
+            return ['success' => true, 'message' => 'Code deleted successfully'];
+        }
+        
+        return ['success' => false, 'message' => 'Failed to delete code'];
+    }
+    
+    // Check if code exists and is valid
+    public function validatePromotionCode($code) {
+        $query = "SELECT * FROM promotion_codes WHERE code = '$code' AND status = 'pending' AND expired_at > NOW()";
+        $result = $this->db->read($query);
+        
+        if ($result) {
+            return [
+                'valid' => true,
+                'code_data' => $result[0]
+            ];
+        }
+        
+        return ['valid' => false, 'message' => 'Invalid or expired code'];
     }
     
     // Update partner code prefix
     public function updatePartnerCodePrefix($partnerId, $newPrefix) {
-        // Validate prefix (3-6 characters, alphanumeric)
-        if (!preg_match('/^[A-Z0-9]{3,6}$/', $newPrefix)) {
-            return ['success' => false, 'message' => 'Prefix must be 3-6 uppercase letters/numbers'];
-        }
+        $newPrefix = $this->db->connect()->real_escape_string($newPrefix);
         
         $query = "UPDATE partners SET code_prefix = '$newPrefix' WHERE id = '$partnerId'";
         
@@ -237,6 +297,30 @@ class PromotionCodeManager {
         }
         
         return ['success' => false, 'message' => 'Failed to update code prefix'];
+    }
+    
+    // Get code usage history
+    public function getCodeUsageHistory($partnerId, $limit = 20) {
+        $query = "SELECT pc.*, l.learner_name, l.learner_email
+                 FROM promotion_codes pc 
+                 LEFT JOIN learners l ON pc.learner_phone = l.learner_phone 
+                 WHERE pc.partner_id = '$partnerId' AND pc.status = 'approved'
+                 ORDER BY pc.updated_at DESC 
+                 LIMIT $limit";
+        
+        $result = $this->db->read($query);
+        
+        // Return empty array if no results
+        return $result ? $result : [];
+    }
+    
+    // Clean up expired codes
+    public function cleanupExpiredCodes() {
+        $expiredQuery = "UPDATE promotion_codes SET status = 'expired' WHERE expired_at < NOW() AND status = 'pending'";
+        
+        $this->db->save($expiredQuery);
+        
+        return ['success' => true, 'message' => 'Expired codes cleaned up'];
     }
 }
 ?>

@@ -124,7 +124,7 @@ switch ($endpoint) {
                     'target_major' => $codeData['target_major'],
                     'commission_rate' => $codeData['commission_rate'],
                     'generated_for' => $codeData['generated_for'],
-                    'expires_at' => $codeData['expires_at'],
+                    'expired_at' => $codeData['expired_at'],
                     'created_at' => $codeData['created_at']
                 ];
                 

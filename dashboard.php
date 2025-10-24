@@ -24,9 +24,9 @@ include 'layout/header.php';
                     </p>
                     <div class="row">
                         <div class="col-md-6 mb-3">
-                            <a href="codes.php" class="btn btn-outline-primary btn-lg w-100">
-                                <i class="fas fa-ticket-alt me-2"></i>
-                                Manage Promotion Codes
+                            <a href="promotion_code_generator.php" class="btn btn-outline-primary btn-lg w-100">
+                                <i class="fas fa-magic me-2"></i>
+                                Generate Promotion Code
                             </a>
                         </div>
                         <div class="col-md-6 mb-3">
@@ -56,7 +56,7 @@ include 'layout/header.php';
             <div class="card stat-card">
                 <div class="card-body text-center">
                     <i class="fas fa-check-circle fa-2x mb-2"></i>
-                    <div class="stat-number"><?php echo number_format($codeStats['used_codes'] ?? 0); ?></div>
+                    <div class="stat-number"><?php echo number_format($codeStats['approved'] ?? 0); ?></div>
                     <div>Codes Used</div>
                 </div>
             </div>
