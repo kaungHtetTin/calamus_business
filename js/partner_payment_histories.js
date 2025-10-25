@@ -42,6 +42,11 @@ class PartnerPaymentHistories {
             this.hasMore = true;
         }
         
+        // Show loading state on initial load
+        if (reset && this.currentOffset === 0) {
+            this.showLoadingState();
+        }
+        
         try {
             const response = await this.makeRequest('get_payment_histories', {
                 status: this.currentFilters.status,
@@ -68,10 +73,12 @@ class PartnerPaymentHistories {
                 this.updateStats();
             } else {
                 this.showAlert('Error loading payment histories: ' + response.message, 'danger');
+                this.showEmptyState();
             }
         } catch (error) {
             console.error('Error:', error);
             this.showAlert('An error occurred while loading payment histories', 'danger');
+            this.showEmptyState();
         } finally {
             this.isLoading = false;
         }
@@ -87,9 +94,9 @@ class PartnerPaymentHistories {
             
             if (response.success) {
                 const stats = response.stats;
-                document.getElementById('totalReceived').textContent = '$' + stats.total_received.toFixed(2);
-                document.getElementById('totalPending').textContent = '$' + stats.total_pending.toFixed(2);
-                document.getElementById('totalRejected').textContent = '$' + stats.total_rejected.toFixed(2);
+                document.getElementById('totalReceived').textContent = stats.total_received.toFixed(2) + ' MMK';
+                document.getElementById('totalPending').textContent = stats.total_pending.toFixed(2) + ' MMK';
+                document.getElementById('totalRejected').textContent = stats.total_rejected.toFixed(2) + ' MMK';
                 document.getElementById('totalPayments').textContent = stats.total_payments.toLocaleString();
             }
         } catch (error) {
@@ -101,17 +108,13 @@ class PartnerPaymentHistories {
         const tbody = document.getElementById('paymentHistoriesTableBody');
         
         if (payments.length === 0) {
-            tbody.innerHTML = `
-                <tr>
-                    <td colspan="6" class="text-center py-5">
-                        <i class="fas fa-credit-card fa-3x text-muted mb-3"></i>
-                        <h5 class="text-muted">No Payment History</h5>
-                        <p class="text-muted">No payments found matching your criteria.</p>
-                    </td>
-                </tr>
-            `;
+            this.showEmptyState();
             return;
         }
+        
+        // Hide loading state and show table
+        this.hideLoadingState();
+        this.showTableState();
         
         tbody.innerHTML = payments.map(payment => this.createPaymentRow(payment)).join('');
     }
@@ -119,11 +122,9 @@ class PartnerPaymentHistories {
     appendToTable(payments) {
         const tbody = document.getElementById('paymentHistoriesTableBody');
         
-        // Remove "no data" row if it exists
-        const noDataRow = tbody.querySelector('td[colspan="6"]');
-        if (noDataRow) {
-            noDataRow.parentElement.remove();
-        }
+        // Hide loading state and show table if not already shown
+        this.hideLoadingState();
+        this.showTableState();
         
         payments.forEach(payment => {
             tbody.insertAdjacentHTML('beforeend', this.createPaymentRow(payment));
@@ -163,7 +164,7 @@ class PartnerPaymentHistories {
                 </td>
                 <td>
                     <div class="text-success fw-bold">
-                        $${parseFloat(payment.amount).toFixed(2)}
+                        ${parseFloat(payment.amount).toFixed(2)} MMK
                     </div>
                 </td>
                 <td>
@@ -339,7 +340,7 @@ class PartnerPaymentHistories {
                                 </tr>
                                 <tr>
                                     <td><strong>Amount:</strong></td>
-                                    <td class="text-success fw-bold">$${parseFloat(payment.amount).toFixed(2)}</td>
+                                    <td class="text-success fw-bold">${parseFloat(payment.amount).toFixed(2)} MMK</td>
                                 </tr>
                                 <tr>
                                     <td><strong>Status:</strong></td>
@@ -517,6 +518,29 @@ class PartnerPaymentHistories {
         const div = document.createElement('div');
         div.textContent = text;
         return div.innerHTML;
+    }
+    
+    // State management methods
+    showLoadingState() {
+        document.getElementById('loadingState').style.display = 'block';
+        document.getElementById('emptyState').style.display = 'none';
+        document.getElementById('tableContainer').style.display = 'none';
+    }
+    
+    hideLoadingState() {
+        document.getElementById('loadingState').style.display = 'none';
+    }
+    
+    showEmptyState() {
+        document.getElementById('loadingState').style.display = 'none';
+        document.getElementById('emptyState').style.display = 'block';
+        document.getElementById('tableContainer').style.display = 'none';
+    }
+    
+    showTableState() {
+        document.getElementById('loadingState').style.display = 'none';
+        document.getElementById('emptyState').style.display = 'none';
+        document.getElementById('tableContainer').style.display = 'block';
     }
 }
 

@@ -25,25 +25,25 @@ class PartnerEarningsManager {
             'total_earnings' => 0,
             'total_transactions' => 0,
             'this_month_earnings' => 0,
-            'pending_earnings' => 0
+            'pending_earnings' => 0,
+            'paid_earnings' => 0
         ];
         
-        // Total earnings (paid only)
+        // Total earnings (all statuses - paid + pending)
         $totalQuery = "SELECT SUM(amount_received) as total FROM partner_earnings 
-                      WHERE partner_id = '$partnerId' AND status = 'paid'";
+                      WHERE partner_id = '$partnerId'";
         $totalResult = $this->db->read($totalQuery);
         $stats['total_earnings'] = $totalResult ? (float)$totalResult[0]['total'] : 0.00;
         
-        // Total transactions
+        // Total transactions (all statuses)
         $countQuery = "SELECT COUNT(*) as total FROM partner_earnings 
-                      WHERE partner_id = '$partnerId' AND status = 'paid'";
+                      WHERE partner_id = '$partnerId'";
         $countResult = $this->db->read($countQuery);
         $stats['total_transactions'] = $countResult ? (int)$countResult[0]['total'] : 0;
         
-        // This month earnings
+        // This month earnings (all statuses)
         $monthQuery = "SELECT SUM(amount_received) as total FROM partner_earnings 
                       WHERE partner_id = '$partnerId' 
-                      AND status = 'paid' 
                       AND MONTH(created_at) = MONTH(CURRENT_DATE()) 
                       AND YEAR(created_at) = YEAR(CURRENT_DATE())";
         $monthResult = $this->db->read($monthQuery);
@@ -55,6 +55,12 @@ class PartnerEarningsManager {
         $pendingResult = $this->db->read($pendingQuery);
         $stats['pending_earnings'] = $pendingResult ? (float)$pendingResult[0]['total'] : 0.00;
         
+        // Paid earnings (for reference)
+        $paidQuery = "SELECT SUM(amount_received) as total FROM partner_earnings 
+                      WHERE partner_id = '$partnerId' AND status = 'paid'";
+        $paidResult = $this->db->read($paidQuery);
+        $stats['paid_earnings'] = $paidResult ? (float)$paidResult[0]['total'] : 0.00;
+        
         return $stats;
     }
     
@@ -64,7 +70,8 @@ class PartnerEarningsManager {
             'total_earnings' => 0.00,
             'total_transactions' => 0,
             'this_month_earnings' => 0.00,
-            'pending_earnings' => 0.00
+            'pending_earnings' => 0.00,
+            'paid_earnings' => 0.00
         ];
 
         $whereClause = "WHERE partner_id = '$partnerId'";
@@ -81,8 +88,8 @@ class PartnerEarningsManager {
             $whereClause .= " AND DATE(created_at) <= '$endDate'";
         }
 
-        // Total Earnings (paid)
-        $query = "SELECT SUM(amount_received) as total FROM partner_earnings $whereClause AND status = 'paid'";
+        // Total Earnings (all matching criteria)
+        $query = "SELECT SUM(amount_received) as total FROM partner_earnings $whereClause";
         $result = $this->db->read($query);
         $stats['total_earnings'] = $result && $result[0]['total'] ? (float)$result[0]['total'] : 0.00;
 
@@ -91,23 +98,24 @@ class PartnerEarningsManager {
         $result = $this->db->read($query);
         $stats['total_transactions'] = $result && $result[0]['total'] ? (int)$result[0]['total'] : 0;
 
-        // This Month Earnings (paid) - only if no date filter applied
-        if (!$startDate && !$endDate) {
-            $currentMonth = date('Y-m-01 00:00:00');
-            $monthWhereClause = $whereClause . " AND status = 'paid' AND created_at >= '$currentMonth'";
-            $query = "SELECT SUM(amount_received) as total FROM partner_earnings $monthWhereClause";
+        // This Month Earnings (same as total_earnings when filtered)
+        $stats['this_month_earnings'] = $stats['total_earnings'];
+
+        // Pending Earnings (only if status filter allows)
+        if (!$status || $status === 'pending') {
+            $pendingWhereClause = $whereClause . " AND status = 'pending'";
+            $query = "SELECT SUM(amount_received) as total FROM partner_earnings $pendingWhereClause";
             $result = $this->db->read($query);
-            $stats['this_month_earnings'] = $result && $result[0]['total'] ? (float)$result[0]['total'] : 0.00;
-        } else {
-            // If date filter is applied, this month becomes the filtered total
-            $stats['this_month_earnings'] = $stats['total_earnings'];
+            $stats['pending_earnings'] = $result && $result[0]['total'] ? (float)$result[0]['total'] : 0.00;
         }
 
-        // Pending Earnings
-        $pendingWhereClause = $whereClause . " AND status = 'pending'";
-        $query = "SELECT SUM(amount_received) as total FROM partner_earnings $pendingWhereClause";
-        $result = $this->db->read($query);
-        $stats['pending_earnings'] = $result && $result[0]['total'] ? (float)$result[0]['total'] : 0.00;
+        // Paid Earnings (only if status filter allows)
+        if (!$status || $status === 'paid') {
+            $paidWhereClause = $whereClause . " AND status = 'paid'";
+            $query = "SELECT SUM(amount_received) as total FROM partner_earnings $paidWhereClause";
+            $result = $this->db->read($query);
+            $stats['paid_earnings'] = $result && $result[0]['total'] ? (float)$result[0]['total'] : 0.00;
+        }
 
         return $stats;
     }

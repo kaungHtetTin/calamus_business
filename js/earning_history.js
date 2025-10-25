@@ -5,7 +5,7 @@
  */
 
 // Global variables
-let sessionToken = null;
+//let sessionToken = null;
 let currentPage = 1;
 let isLoading = false;
 let currentFilters = {
@@ -24,6 +24,9 @@ $(document).ready(function() {
     
     // Setup event handlers
     setupEventHandlers();
+    
+    // Load initial earnings
+    loadInitialEarnings();
 });
 
 // Setup event handlers
@@ -61,10 +64,49 @@ function setupEventHandlers() {
     });
 }
 
+// Load initial earnings
+function loadInitialEarnings() {
+    showLoadingState();
+    if (isLoading) return;
+    
+    isLoading = true;
+    currentPage = 1;
+    
+    const loadBtn = $('#loadMoreBtn');
+    const originalText = loadBtn.html();
+    loadBtn.html('<i class="fas fa-spinner fa-spin me-2"></i>Loading...').prop('disabled', true);
+    
+    // Build URL with current filters
+    const url = buildEarningsUrl(currentPage);
+    
+    fetch(url)
+    .then(response => response.json())
+    .then(data => {
+        if (data.success && data.data.length > 0) {
+            appendEarningsToTable(data.data);
+            // Hide load more button if we got less than requested
+            if (data.data.length < 20) {
+                loadBtn.hide();
+            }
+        } else {
+            loadBtn.hide();
+            showAlert('No more earnings to load', 'info');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showAlert('An error occurred while loading more earnings', 'danger');
+    })
+    .finally(() => {
+        isLoading = false;
+        loadBtn.html(originalText).prop('disabled', false);
+    });
+}
+
 // Load more earnings
 function loadMoreEarnings() {
     if (isLoading) return;
-    
+    showLoadingState
     isLoading = true;
     currentPage++;
     
@@ -104,7 +146,7 @@ function loadMoreEarnings() {
 // Append earnings to table
 function appendEarningsToTable(earnings) {
     const tbody = $('.table tbody');
-    
+    showTableState();
     earnings.forEach(earning => {
         const row = createEarningRow(earning);
         tbody.append(row);
@@ -113,8 +155,9 @@ function appendEarningsToTable(earnings) {
 
 // Create earning row HTML
 function createEarningRow(earning) {
-    const userPhone = earning.user_phone || 'N/A';
-    const userName = earning.user_name || 'Unknown User';
+    
+    const userPhone = earning.learner_phone || 'N/A';
+    const userName = earning.learner_name || 'Unknown User';
     const transactionDate = new Date(earning.created_at);
     const formattedDate = transactionDate.toLocaleDateString('en-US', { 
         month: 'short', 
@@ -162,7 +205,7 @@ function createEarningRow(earning) {
                     <div>
                         <strong>${transactionType}</strong>
                         <br>
-                        <small class="text-muted">Price: $${parseFloat(earning.price).toFixed(2)}</small>
+                        <small class="text-muted">Price: ${parseFloat(earning.price).toFixed(2)} MMK</small>
                     </div>
                 </div>
             </td>
@@ -178,7 +221,7 @@ function createEarningRow(earning) {
             </td>
             <td>
                 <div class="text-success fw-bold">
-                    $${parseFloat(earning.amount_received).toFixed(2)}
+                    ${parseFloat(earning.amount_received).toFixed(2)} MMK
                 </div>
             </td>
             <td>
@@ -289,12 +332,8 @@ function applyFilters() {
     // Reset pagination
     currentPage = 1;
     
-    // Clear existing table data
-    $('.table tbody').empty();
-    $('#loadMoreBtn').show();
-    
-    // Load filtered data
-    loadFilteredEarnings();
+    // Load filtered earnings
+    loadInitialEarnings();
 }
 
 // Clear filters
@@ -317,12 +356,8 @@ function clearFilters() {
     // Reset pagination
     currentPage = 1;
     
-    // Clear existing table data
-    $('.table tbody').empty();
-    $('#loadMoreBtn').show();
-    
-    // Load unfiltered data
-    loadFilteredEarnings();
+    // Load initial earnings
+    loadInitialEarnings();
 }
 
 // Load filtered earnings
@@ -424,12 +459,12 @@ function updateFilteredStatistics() {
     .then(data => {
         if (data.success) {
             // Update the statistics cards
-            $('#totalEarnings').text('$' + parseFloat(data.data.total_earnings).toFixed(2));
+            $('#totalEarnings').text(parseFloat(data.data.total_earnings).toFixed(2) + ' MMK');
             $('#totalTransactions').text(data.data.total_transactions.toLocaleString());
-            $('#thisMonthEarnings').text('$' + parseFloat(data.data.this_month_earnings).toFixed(2));
+            $('#thisMonthEarnings').text(parseFloat(data.data.this_month_earnings).toFixed(2) + ' MMK');
             
             // Update the header total as well
-            $('.content-section .text-end .h3').text('$' + parseFloat(data.data.total_earnings).toFixed(2));
+            $('.content-section .text-end .h3').text(parseFloat(data.data.total_earnings).toFixed(2) + ' MMK');
         }
     })
     .catch(error => {
@@ -437,21 +472,65 @@ function updateFilteredStatistics() {
     });
 }
 
-// Format date
-function formatDate(dateString) {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric'
+// State management functions
+function showLoadingState() {
+    $('#loadingState').show();
+    $('#emptyState').hide();
+    $('#tableContainer').hide();
+}
+
+function hideLoadingState() {
+    $('#loadingState').hide();
+}
+
+function showEmptyState() {
+    $('#loadingState').hide();
+    $('#emptyState').show();
+    $('#tableContainer').hide();
+}
+
+function showTableState() {
+    $('#loadingState').hide();
+    $('#emptyState').hide();
+    $('#tableContainer').show();
+}
+
+// Update table with earnings data
+function updateTable(earnings) {
+    const tbody = $('#earningHistoryTableBody');
+    tbody.empty();
+    
+    earnings.forEach(earning => {
+        const row = createEarningRow(earning);
+        tbody.append(row);
     });
 }
 
-// Format time
-function formatTime(dateString) {
-    const date = new Date(dateString);
-    return date.toLocaleTimeString('en-US', {
-        hour: '2-digit',
-        minute: '2-digit'
-    });
+// Update statistics
+function updateStatistics(stats) {
+    if (stats) {
+        $('#totalEarnings').text(parseFloat(stats.total_earnings).toFixed(2) + ' MMK');
+        $('#totalTransactions').text(stats.total_transactions.toLocaleString());
+        $('#thisMonthEarnings').text(parseFloat(stats.this_month_earnings).toFixed(2) + ' MMK');
+        
+        // Update the header total as well
+        $('.content-section .text-end .h3').text(parseFloat(stats.total_earnings).toFixed(2) + ' MMK');
+    }
+}
+
+// Show alert message
+function showAlert(message, type = 'info') {
+    const alertDiv = $(`
+        <div class="alert alert-${type} alert-dismissible fade show" role="alert">
+            ${message}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    `);
+    
+    $('.content-section').prepend(alertDiv);
+    
+    // Auto remove after 5 seconds
+    setTimeout(() => {
+        alertDiv.remove();
+    }, 5000);
 }

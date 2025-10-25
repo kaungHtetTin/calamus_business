@@ -4,9 +4,8 @@ require_once 'classes/autoload.php';
 $pageTitle = 'Earning History';
 include 'layout/header.php';
 
-// Get earning data
+// Get earning statistics only (no earning history)
 $earningsManager = new PartnerEarningsManager();
-$earningHistory = $earningsManager->getPartnerEarningHistory($currentPartner['id'], 50);
 $earningStats = $earningsManager->getPartnerEarningStats($currentPartner['id']);
 ?>
 
@@ -20,7 +19,7 @@ $earningStats = $earningsManager->getPartnerEarningStats($currentPartner['id']);
             <p class="text-muted mb-0">Track your earnings from completed transactions</p>
         </div>
         <div class="text-end">
-            <div class="h3 mb-0 text-success">$<?php echo number_format($earningStats['total_earnings'], 2); ?></div>
+            <div class="h3 mb-0 text-success"><?php echo number_format($earningStats['total_earnings'], 2); ?> MMK</div>
             <small class="text-muted">Total Earnings</small>
         </div>
     </div>
@@ -95,7 +94,7 @@ $earningStats = $earningsManager->getPartnerEarningStats($currentPartner['id']);
             <div class="card stat-card">
                 <div class="card-body text-center">
                     <i class="fas fa-dollar-sign fa-2x mb-2"></i>
-                    <div class="stat-number" id="totalEarnings">$<?php echo number_format($earningStats['total_earnings'], 2); ?></div>
+                    <div class="stat-number" id="totalEarnings"><?php echo number_format($earningStats['total_earnings'], 2); ?> MMK</div>
                     <div>Total Earnings</div>
                 </div>
             </div>
@@ -113,7 +112,7 @@ $earningStats = $earningsManager->getPartnerEarningStats($currentPartner['id']);
             <div class="card stat-card">
                 <div class="card-body text-center">
                     <i class="fas fa-calendar-alt fa-2x mb-2"></i>
-                    <div class="stat-number" id="thisMonthEarnings">$<?php echo number_format($earningStats['this_month_earnings'], 2); ?></div>
+                    <div class="stat-number" id="thisMonthEarnings"><?php echo number_format($earningStats['this_month_earnings'], 2); ?> MMK</div>
                     <div>This Month</div>
                 </div>
             </div>
@@ -128,16 +127,26 @@ $earningStats = $earningsManager->getPartnerEarningStats($currentPartner['id']);
             </h5>
         </div>
         <div class="card-body">
-            <?php if (empty($earningHistory)): ?>
-                <div class="text-center py-5">
-                    <i class="fas fa-chart-line fa-3x text-muted mb-3"></i>
-                    <h5 class="text-muted">No Earnings Yet</h5>
-                    <p class="text-muted">Your earnings will appear here once transactions are completed and payments are processed.</p>
-                    <button class="btn btn-primary" onclick="window.location.href='dashboard.php'">
-                        <i class="fas fa-tachometer-alt me-2"></i>Go to Dashboard
-                    </button>
+            <!-- Loading state -->
+            <div id="loadingState" class="text-center py-5">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Loading...</span>
                 </div>
-            <?php else: ?>
+                <p class="mt-3 text-muted">Loading earning history...</p>
+            </div>
+            
+            <!-- Empty state (hidden initially) -->
+            <div id="emptyState" class="text-center py-5" style="display: none;">
+                <i class="fas fa-chart-line fa-3x text-muted mb-3"></i>
+                <h5 class="text-muted">No Earnings Yet</h5>
+                <p class="text-muted">Your earnings will appear here once transactions are completed and payments are processed.</p>
+                <button class="btn btn-primary" onclick="window.location.href='dashboard.php'">
+                    <i class="fas fa-tachometer-alt me-2"></i>Go to Dashboard
+                </button>
+            </div>
+            
+            <!-- Table container (hidden initially) -->
+            <div id="tableContainer" style="display: none;">
                 <div class="table-responsive">
                     <table class="table table-hover">
                         <thead>
@@ -150,77 +159,8 @@ $earningStats = $earningsManager->getPartnerEarningStats($currentPartner['id']);
                                 <th>Status</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <?php foreach ($earningHistory as $earning): ?>
-                                <tr>
-                                    <td>
-                                        <div class="d-flex align-items-center">
-                                            <div class="me-2">
-                                                <i class="fas fa-shopping-cart text-primary"></i>
-                                            </div>
-                                            <div>
-                                                <strong>
-                                                    <?php 
-                                                    if (!empty($earning['target_course_id'])) {
-                                                        echo 'Course Purchase';
-                                                    } elseif (!empty($earning['target_package_id'])) {
-                                                        echo 'Package Purchase';
-                                                    } else {
-                                                        echo 'Transaction';
-                                                    }
-                                                    ?>
-                                                </strong>
-                                                <br>
-                                                <small class="text-muted">
-                                                    Price: $<?php echo number_format($earning['price'], 2); ?>
-                                                </small>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div>
-                                            <strong><?php echo htmlspecialchars($earning['user_name'] ?? 'Unknown User'); ?></strong>
-                                            <br>
-                                            <small class="text-muted">
-                                                <i class="fas fa-phone me-1"></i>
-                                                <?php echo htmlspecialchars($earning['user_phone'] ?? 'N/A'); ?>
-                                            </small>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="text-success fw-bold">
-                                            $<?php echo number_format($earning['amount_received'], 2); ?>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <span class="badge bg-info">
-                                            <?php echo number_format($earning['commission_rate'], 1); ?>%
-                                        </span>
-                                    </td>
-                                    <td>
-                                        <div>
-                                            <?php echo date('M j, Y', strtotime($earning['updated_at'])); ?>
-                                            <br>
-                                            <small class="text-muted">
-                                                <?php echo date('H:i', strtotime($earning['updated_at'])); ?>
-                                            </small>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <?php if ($earning['status'] === 'paid'): ?>
-                                            <span class="badge bg-success">
-                                                <i class="fas fa-check-circle me-1"></i>
-                                                Received
-                                            </span>
-                                        <?php else: ?>
-                                            <span class="badge bg-warning">
-                                                <i class="fas fa-clock me-1"></i>
-                                                Pending
-                                            </span>
-                                        <?php endif; ?>
-                                    </td>
-                                </tr>
-                            <?php endforeach; ?>
+                        <tbody id="earningHistoryTableBody">
+                            <!-- Earning rows will be populated by JavaScript -->
                         </tbody>
                     </table>
                 </div>
@@ -231,7 +171,7 @@ $earningStats = $earningsManager->getPartnerEarningStats($currentPartner['id']);
                         <i class="fas fa-plus me-2"></i>Load More Earnings
                     </button>
                 </div>
-            <?php endif; ?>
+            </div>
         </div>
     </div>
 </div>

@@ -64,6 +64,15 @@ if ($needsAuth) {
 
 // Get dashboard data
 $dashboardData = $dashboard->getDashboardData($currentPartner['id']);
+
+// Get pending payment histories count
+$paymentHistoriesManager = new PartnerPaymentHistoriesManager();
+$pendingPaymentsCount = $paymentHistoriesManager->getPartnerPaymentHistoriesCount($currentPartner['id'], 'pending');
+
+// Get total pending earnings amount
+$earningsManager = new PartnerEarningsManager();
+$pendingEarningsStats = $earningsManager->getPartnerEarningStats($currentPartner['id']);
+$totalPendingEarnings = $pendingEarningsStats['pending_earnings'];
 ?>
 
 
@@ -131,12 +140,21 @@ function getCodeStatusColor($status) {
             
             <!-- Quick Stats & User Info -->
             <div class="navbar-nav ms-auto d-none d-md-flex align-items-center">
-                <!-- Quick Stats Display -->
+                <!-- Pending Payments Count -->
                 <div class="nav-item me-3">
                     <span class="navbar-text text-white">
-                        <i class="fas fa-ticket-alt me-1"></i>
-                        <strong><?php echo number_format($codeStats['total_generated'] ?? 0); ?></strong>
-                        <small class="text-white-50">codes</small>
+                        <i class="fas fa-clock me-1"></i>
+                        <strong><?php echo number_format($pendingPaymentsCount); ?></strong>
+                        <small class="text-white-50">pending payments</small>
+                    </span>
+                </div>
+                
+                <!-- Total Pending Earnings -->
+                <div class="nav-item me-3">
+                    <span class="navbar-text text-white">
+                        <i class="fas fa-money-bill-wave me-1"></i>
+                        <strong><?php echo number_format($totalPendingEarnings, 2); ?> MMK</strong>
+                        <small class="text-white-50">to receive</small>
                     </span>
                 </div>
                 
@@ -277,7 +295,7 @@ function getCodeStatusColor($status) {
                             <small>Manage your earnings and profile settings</small>
                         </div>
                         <div class="text-end">
-                            <div class="h4 mb-0"><?php echo number_format($dashboardData['total_earnings'] ?? 0, 2); ?></div>
+                            <div class="h4 mb-0"><?php echo number_format($dashboardData['total_earnings'] ?? 0, 2); ?> MMK</div>
                             <small>Total Earnings</small>
                         </div>
                     </div>

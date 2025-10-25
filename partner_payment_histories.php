@@ -4,9 +4,8 @@ require_once 'classes/autoload.php';
 $pageTitle = 'Payment History';
 include 'layout/header.php';
 
-// Get payment history data
+// Get payment statistics only (no payment histories)
 $paymentHistoriesManager = new PartnerPaymentHistoriesManager();
-$paymentHistories = $paymentHistoriesManager->getPartnerPaymentHistories($currentPartner['id'], null, 20, 0);
 $paymentStats = $paymentHistoriesManager->getPartnerPaymentStats($currentPartner['id']);
 ?>
 
@@ -20,7 +19,7 @@ $paymentStats = $paymentHistoriesManager->getPartnerPaymentStats($currentPartner
             <p class="text-muted mb-0">Track your payment disbursements and transaction status</p>
         </div>
         <div class="text-end">
-            <div class="h3 mb-0 text-success">$<?php echo number_format($paymentStats['total_received'], 2); ?></div>
+            <div class="h3 mb-0 text-success"><?php echo number_format($paymentStats['total_received'], 2); ?> MMK</div>
             <small class="text-muted">Total Received</small>
         </div>
     </div>
@@ -96,7 +95,7 @@ $paymentStats = $paymentHistoriesManager->getPartnerPaymentStats($currentPartner
             <div class="card stat-card">
                 <div class="card-body text-center">
                     <i class="fas fa-check-circle fa-2x mb-2 text-success"></i>
-                    <div class="stat-number text-success" id="totalReceived">$<?php echo number_format($paymentStats['total_received'], 2); ?></div>
+                    <div class="stat-number text-success" id="totalReceived"><?php echo number_format($paymentStats['total_received'], 2); ?> MMK</div>
                     <div>Total Received</div>
                 </div>
             </div>
@@ -105,7 +104,7 @@ $paymentStats = $paymentHistoriesManager->getPartnerPaymentStats($currentPartner
             <div class="card stat-card">
                 <div class="card-body text-center">
                     <i class="fas fa-clock fa-2x mb-2 text-warning"></i>
-                    <div class="stat-number text-warning" id="totalPending">$<?php echo number_format($paymentStats['total_pending'], 2); ?></div>
+                    <div class="stat-number text-warning" id="totalPending"><?php echo number_format($paymentStats['total_pending'], 2); ?> MMK</div>
                     <div>Pending</div>
                 </div>
             </div>
@@ -114,7 +113,7 @@ $paymentStats = $paymentHistoriesManager->getPartnerPaymentStats($currentPartner
             <div class="card stat-card">
                 <div class="card-body text-center">
                     <i class="fas fa-times-circle fa-2x mb-2 text-danger"></i>
-                    <div class="stat-number text-danger" id="totalRejected">$<?php echo number_format($paymentStats['total_rejected'], 2); ?></div>
+                    <div class="stat-number text-danger" id="totalRejected"><?php echo number_format($paymentStats['total_rejected'], 2); ?> MMK</div>
                     <div>Rejected</div>
                 </div>
             </div>
@@ -139,16 +138,26 @@ $paymentStats = $paymentHistoriesManager->getPartnerPaymentStats($currentPartner
         </div>
         <div class="card-body">
             <div id="paymentHistoriesContainer">
-                <?php if (empty($paymentHistories)): ?>
-                    <div class="text-center py-5">
-                        <i class="fas fa-credit-card fa-3x text-muted mb-3"></i>
-                        <h5 class="text-muted">No Payment History</h5>
-                        <p class="text-muted">Your payment disbursements will appear here once processed.</p>
-                        <button class="btn btn-primary" onclick="window.location.href='dashboard.php'">
-                            <i class="fas fa-tachometer-alt me-2"></i>Go to Dashboard
-                        </button>
+                <!-- Loading state -->
+                <div id="loadingState" class="text-center py-5">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
                     </div>
-                <?php else: ?>
+                    <p class="mt-3 text-muted">Loading payment history...</p>
+                </div>
+                
+                <!-- Empty state (hidden initially) -->
+                <div id="emptyState" class="text-center py-5" style="display: none;">
+                    <i class="fas fa-credit-card fa-3x text-muted mb-3"></i>
+                    <h5 class="text-muted">No Payment History</h5>
+                    <p class="text-muted">Your payment disbursements will appear here once processed.</p>
+                    <button class="btn btn-primary" onclick="window.location.href='dashboard.php'">
+                        <i class="fas fa-tachometer-alt me-2"></i>Go to Dashboard
+                    </button>
+                </div>
+                
+                <!-- Table container (hidden initially) -->
+                <div id="tableContainer" style="display: none;">
                     <div class="table-responsive">
                         <table class="table table-hover">
                             <thead>
@@ -162,91 +171,7 @@ $paymentStats = $paymentHistoriesManager->getPartnerPaymentStats($currentPartner
                                 </tr>
                             </thead>
                             <tbody id="paymentHistoriesTableBody">
-                                <?php foreach ($paymentHistories as $payment): ?>
-                                    <tr>
-                                        <td>
-                                            <div class="d-flex align-items-center">
-                                                <div class="me-2">
-                                                    <i class="fas fa-<?php echo $payment['payment_method'] === 'Bank Transfer' ? 'university' : 'credit-card'; ?> text-primary"></i>
-                                                </div>
-                                                <div>
-                                                    <strong><?php echo htmlspecialchars($payment['payment_method']); ?></strong>
-                                                    <br>
-                                                    <small class="text-muted">
-                                                        ID: #<?php echo $payment['id']; ?>
-                                                    </small>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div>
-                                                <strong><?php echo htmlspecialchars($payment['account_name']); ?></strong>
-                                                <br>
-                                                <small class="text-muted">
-                                                    <?php echo htmlspecialchars($payment['account_number']); ?>
-                                                </small>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="text-success fw-bold">
-                                                $<?php echo number_format($payment['amount'], 2); ?>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <?php 
-                                            $statusClass = '';
-                                            $statusIcon = '';
-                                            $statusText = '';
-                                            
-                                            switch($payment['status']) {
-                                                case 'received':
-                                                    $statusClass = 'bg-success';
-                                                    $statusIcon = 'fas fa-check-circle';
-                                                    $statusText = 'Received';
-                                                    break;
-                                                case 'pending':
-                                                    $statusClass = 'bg-warning';
-                                                    $statusIcon = 'fas fa-clock';
-                                                    $statusText = 'Pending';
-                                                    break;
-                                                case 'rejected':
-                                                    $statusClass = 'bg-danger';
-                                                    $statusIcon = 'fas fa-times-circle';
-                                                    $statusText = 'Rejected';
-                                                    break;
-                                            }
-                                            ?>
-                                            <span class="badge <?php echo $statusClass; ?>">
-                                                <i class="<?php echo $statusIcon; ?> me-1"></i>
-                                                <?php echo $statusText; ?>
-                                            </span>
-                                        </td>
-                                        <td>
-                                            <div>
-                                                <?php echo date('M j, Y', strtotime($payment['created_at'])); ?>
-                                                <br>
-                                                <small class="text-muted">
-                                                    <?php echo date('H:i', strtotime($payment['created_at'])); ?>
-                                                </small>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="btn-group" role="group">
-                                                <button type="button" class="btn btn-sm btn-outline-primary" onclick="viewPaymentDetails(<?php echo $payment['id']; ?>)">
-                                                    <i class="fas fa-eye"></i>
-                                                </button>
-                                                <?php if ($payment['status'] === 'pending'): ?>
-                                                    <button type="button" class="btn btn-sm btn-success" onclick="updatePaymentStatus(<?php echo $payment['id']; ?>, 'received')">
-                                                        <i class="fas fa-check"></i>
-                                                    </button>
-                                                    <button type="button" class="btn btn-sm btn-danger" onclick="updatePaymentStatus(<?php echo $payment['id']; ?>, 'rejected')">
-                                                        <i class="fas fa-times"></i>
-                                                    </button>
-                                                <?php endif; ?>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                <?php endforeach; ?>
+                                <!-- Payment rows will be populated by JavaScript -->
                             </tbody>
                         </table>
                     </div>
@@ -257,7 +182,7 @@ $paymentStats = $paymentHistoriesManager->getPartnerPaymentStats($currentPartner
                             <i class="fas fa-plus me-2"></i>Load More Payments
                         </button>
                     </div>
-                <?php endif; ?>
+                </div>
             </div>
         </div>
     </div>
