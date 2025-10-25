@@ -193,6 +193,9 @@ function getCodeStatusColor($status) {
                 <a class="nav-link <?php echo basename($_SERVER['PHP_SELF']) == 'earning_history.php' ? 'active' : ''; ?>" href="earning_history.php">
                     <i class="fas fa-chart-line me-2"></i>Earning History
                 </a>
+                <a class="nav-link <?php echo basename($_SERVER['PHP_SELF']) == 'partner_payment_histories.php' ? 'active' : ''; ?>" href="partner_payment_histories.php">
+                    <i class="fas fa-credit-card me-2"></i>Payment History
+                </a>
                 <a class="nav-link <?php echo basename($_SERVER['PHP_SELF']) == 'profile.php' ? 'active' : ''; ?>" href="profile.php">
                     <i class="fas fa-user me-2"></i>Profile
                 </a>
@@ -226,6 +229,9 @@ function getCodeStatusColor($status) {
                         <a class="nav-link <?php echo basename($_SERVER['PHP_SELF']) == 'earning_history.php' ? 'active' : ''; ?>" href="earning_history.php">
                             <i class="fas fa-chart-line me-2"></i>Earning History
                         </a>
+                        <a class="nav-link <?php echo basename($_SERVER['PHP_SELF']) == 'partner_payment_histories.php' ? 'active' : ''; ?>" href="partner_payment_histories.php">
+                            <i class="fas fa-credit-card me-2"></i>Payment History
+                        </a>
                         <a class="nav-link <?php echo basename($_SERVER['PHP_SELF']) == 'profile.php' ? 'active' : ''; ?>" href="profile.php">
                             <i class="fas fa-user me-2"></i>Profile
                         </a>
@@ -252,6 +258,7 @@ function getCodeStatusColor($status) {
                                'dashboard.php' => 'Dashboard',
                                'partner_payment_methods.php' => 'Mobile Money',
                                'earning_history.php' => 'Earning History',
+                               'partner_payment_histories.php' => 'Payment History',
                                'profile.php' => 'Profile'
                            ];
                         
