@@ -1,31 +1,20 @@
-You need to update the api side coding for the earning history page.
-The user_name and user_phone should be replaced with learner_name and learner_phone.
+The partner have to promote the product of calamus education to get new vip subscribers.
+You can learn the calamus education product from the following link:
+https://www.calamuseducation.com/app-portfolio/easy-korean.php
+https://www.calamuseducation.com/app-portfolio/easy-english.php
+https://www.calamuseducation.com/calamus/index.php
+https://www.calamuseducation.com/calamus/term.php
+https://www.calamuseducation.com/calamus/privacy.php
+https://play.google.com/store/apps/details?id=com.qanda.learnroom
+https://play.google.com/store/apps/details?id=com.calamus.easykorean
+https://www.calamuseducation.com/calamus/about_us.php
+https://www.calamuseducation.com/calamus/contact_us.php
 
-{success: true,…}
-data
-: 
-""
-pagination
-: 
-{current_page: 1, per_page: 20, total_count: 12, total_pages: 1, has_next: false, has_prev: false}
-current_page
-: 
-1
-has_next
-: 
-false
-has_prev
-: 
-false
-per_page
-: 
-20
-total_count
-: 
-12
-total_pages
-: 
-1
-success
-: 
-true
+
+Your task is to write 
+term and condition page for the partner portal.
+Privacy policy page for the partner portal.
+Cookie policy page for the partner portal.
+Contact us page for the partner portal.
+
+Then link the pages to footer content of the partner portal.

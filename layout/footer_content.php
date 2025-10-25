@@ -96,22 +96,22 @@
                 </h6>
                 <ul class="list-unstyled">
                     <li class="mb-2">
-                        <a href="#" class="text-decoration-none text-muted" data-bs-toggle="modal" data-bs-target="#termsModal">
+                        <a href="terms_conditions.php" class="text-decoration-none text-muted">
                             <i class="fas fa-file-contract me-2"></i>Terms & Conditions
                         </a>
                     </li>
                     <li class="mb-2">
-                        <a href="#" class="text-decoration-none text-muted" data-bs-toggle="modal" data-bs-target="#privacyModal">
+                        <a href="privacy_policy.php" class="text-decoration-none text-muted">
                             <i class="fas fa-shield-alt me-2"></i>Privacy Policy
                         </a>
                     </li>
                     <li class="mb-2">
-                        <a href="#" class="text-decoration-none text-muted" data-bs-toggle="modal" data-bs-target="#cookiesModal">
+                        <a href="cookie_policy.php" class="text-decoration-none text-muted">
                             <i class="fas fa-cookie-bite me-2"></i>Cookie Policy
                         </a>
                     </li>
                     <li class="mb-2">
-                        <a href="#" class="text-decoration-none text-muted" data-bs-toggle="modal" data-bs-target="#contactModal">
+                        <a href="contact_us.php" class="text-decoration-none text-muted">
                             <i class="fas fa-phone me-2"></i>Contact Us
                         </a>
                     </li>
@@ -155,113 +155,6 @@
 </footer>
 
 <!-- Modals for Footer Links -->
-
-<!-- Terms & Conditions Modal -->
-<div class="modal fade" id="termsModal" tabindex="-1">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">
-                    <i class="fas fa-file-contract me-2"></i>Terms & Conditions
-                </h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <h6>1. Partner Agreement</h6>
-                <p>By using this partner portal, you agree to our terms and conditions. Partners must maintain accurate information and comply with all applicable laws.</p>
-                
-                <h6>2. Earnings & Payments</h6>
-                <p>Earnings are calculated based on completed transactions. Payment processing may take 3-5 business days. Partners are responsible for providing accurate payment information.</p>
-                
-                <h6>3. Data Protection</h6>
-                <p>We protect your personal and business data according to our privacy policy. Partners must also protect customer data and comply with data protection regulations.</p>
-                
-                <h6>4. Termination</h6>
-                <p>Either party may terminate this agreement with 30 days notice. Outstanding payments will be processed within 30 days of termination.</p>
-                
-                <h6>5. Updates</h6>
-                <p>These terms may be updated periodically. Partners will be notified of significant changes via email.</p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Privacy Policy Modal -->
-<div class="modal fade" id="privacyModal" tabindex="-1">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">
-                    <i class="fas fa-shield-alt me-2"></i>Privacy Policy
-                </h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <h6>Data Collection</h6>
-                <p>We collect partner information including contact details, business information, and transaction data necessary for our services.</p>
-                
-                <h6>Data Usage</h6>
-                <p>Your data is used to provide partner services, process payments, and improve our platform. We do not sell your personal information to third parties.</p>
-                
-                <h6>Data Security</h6>
-                <p>We implement industry-standard security measures to protect your data. All sensitive information is encrypted and stored securely.</p>
-                
-                <h6>Your Rights</h6>
-                <p>You have the right to access, update, or delete your personal information. Contact us to exercise these rights.</p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Contact Us Modal -->
-<div class="modal fade" id="contactModal" tabindex="-1">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">
-                    <i class="fas fa-envelope me-2"></i>Contact Us
-                </h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-md-6">
-                        <h6><i class="fas fa-phone me-2"></i>Phone Support</h6>
-                        <p>+1 (555) 123-4567<br>
-                        Monday - Friday: 9:00 AM - 6:00 PM<br>
-                        Saturday: 10:00 AM - 4:00 PM</p>
-                        
-                        <h6><i class="fas fa-envelope me-2"></i>Email Support</h6>
-                        <p>support@partnerportal.com<br>
-                        partners@partnerportal.com<br>
-                        Response within 24 hours</p>
-                    </div>
-                    <div class="col-md-6">
-                        <h6><i class="fas fa-map-marker-alt me-2"></i>Office Address</h6>
-                        <p>123 Business Street<br>
-                        Suite 100<br>
-                        City, State 12345<br>
-                        United States</p>
-                        
-                        <h6><i class="fas fa-clock me-2"></i>Business Hours</h6>
-                        <p>Monday - Friday: 9:00 AM - 6:00 PM<br>
-                        Saturday: 10:00 AM - 4:00 PM<br>
-                        Sunday: Closed</p>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            </div>
-        </div>
-    </div>
-</div>
 
 <!-- Help Center Modal -->
 <div class="modal fade" id="helpModal" tabindex="-1">
@@ -455,23 +348,6 @@
             </div>
             <div class="modal-body">
                 <p>Found a bug or issue? Please report it to our technical team for immediate attention.</p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="modal fade" id="cookiesModal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Cookie Policy</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <p>We use cookies to enhance your experience and provide personalized services. By continuing to use our platform, you consent to our cookie policy.</p>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>

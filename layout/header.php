@@ -160,19 +160,51 @@ function getCodeStatusColor($status) {
                 
                 <!-- User Dropdown -->
                 <div class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle text-white d-flex align-items-center" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        <?php if (!empty($currentPartner['profile_image']) && file_exists($currentPartner['profile_image'])): ?>
-                            <img src="<?php echo htmlspecialchars($currentPartner['profile_image']); ?>" 
-                                 alt="Profile" 
-                                 class="navbar-profile-image me-2">
-                        <?php else: ?>
-                            <i class="fas fa-user-circle me-1"></i>
-                        <?php endif; ?>
-                        <?php echo htmlspecialchars($currentPartner['contact_name']); ?>
+                    <a class="nav-link dropdown-toggle text-white d-flex align-items-center user-profile-link" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <div class="user-profile-container me-2">
+                            <?php if (!empty($currentPartner['profile_image']) && file_exists($currentPartner['profile_image'])): ?>
+                                <img src="<?php echo htmlspecialchars($currentPartner['profile_image']); ?>" 
+                                     alt="Profile" 
+                                     class="navbar-profile-image">
+                            <?php else: ?>
+                                <div class="navbar-profile-placeholder">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                            <?php endif; ?>
+                        </div>
+                        <div class="user-info d-none d-lg-block">
+                            <div class="user-name"><?php echo htmlspecialchars($currentPartner['contact_name']); ?></div>
+                            <div class="user-role">Partner</div>
+                        </div>
                     </a>
-                    <ul class="dropdown-menu dropdown-menu-end">
-                        <li><a class="dropdown-item" href="profile.php"><i class="fas fa-user me-2"></i>Profile</a></li>
+                    <ul class="dropdown-menu dropdown-menu-end user-dropdown-menu">
+                        <li class="dropdown-header">
+                            <div class="d-flex align-items-center">
+                                <div class="me-3">
+                                    <?php if (!empty($currentPartner['profile_image']) && file_exists($currentPartner['profile_image'])): ?>
+                                        <img src="<?php echo htmlspecialchars($currentPartner['profile_image']); ?>" 
+                                             alt="Profile" 
+                                             class="dropdown-profile-image">
+                                    <?php else: ?>
+                                        <div class="dropdown-profile-placeholder">
+                                            <i class="fas fa-user"></i>
+                                        </div>
+                                    <?php endif; ?>
+                                </div>
+                                <div>
+                                    <div class="fw-bold"><?php echo htmlspecialchars($currentPartner['contact_name']); ?></div>
+                                    <small class="text-muted"><?php echo htmlspecialchars($currentPartner['email']); ?></small>
+                                </div>
+                            </div>
+                        </li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="profile.php"><i class="fas fa-user me-2"></i>My Profile</a></li>
                         <li><a class="dropdown-item" href="dashboard.php"><i class="fas fa-tachometer-alt me-2"></i>Dashboard</a></li>
+                        <li><a class="dropdown-item" href="earning_history.php"><i class="fas fa-chart-line me-2"></i>Earnings</a></li>
+                        <li><a class="dropdown-item" href="partner_payment_histories.php"><i class="fas fa-credit-card me-2"></i>Payments</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="settings.php"><i class="fas fa-cog me-2"></i>Settings</a></li>
+                        <li><a class="dropdown-item" href="help.php"><i class="fas fa-question-circle me-2"></i>Help & Support</a></li>
                         <li><hr class="dropdown-divider"></li>
                         <li><a class="dropdown-item text-danger" href="logout.php"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
                     </ul>
@@ -181,10 +213,55 @@ function getCodeStatusColor($status) {
             
             <!-- Mobile User Info -->
             <div class="d-md-none">
-                <span class="navbar-text text-white">
-                    <i class="fas fa-user-circle me-1"></i>
-                    <?php echo htmlspecialchars($currentPartner['contact_name']); ?>
-                </span>
+                <div class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle text-white d-flex align-items-center" href="#" id="mobileUserDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <div class="user-profile-container me-2">
+                            <?php if (!empty($currentPartner['profile_image']) && file_exists($currentPartner['profile_image'])): ?>
+                                <img src="<?php echo htmlspecialchars($currentPartner['profile_image']); ?>" 
+                                     alt="Profile" 
+                                     class="navbar-profile-image">
+                            <?php else: ?>
+                                <div class="navbar-profile-placeholder">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                            <?php endif; ?>
+                        </div>
+                        <span class="navbar-text text-white">
+                            <?php echo htmlspecialchars($currentPartner['contact_name']); ?>
+                        </span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end user-dropdown-menu">
+                        <li class="dropdown-header">
+                            <div class="d-flex align-items-center">
+                                <div class="me-3">
+                                    <?php if (!empty($currentPartner['profile_image']) && file_exists($currentPartner['profile_image'])): ?>
+                                        <img src="<?php echo htmlspecialchars($currentPartner['profile_image']); ?>" 
+                                             alt="Profile" 
+                                             class="dropdown-profile-image">
+                                    <?php else: ?>
+                                        <div class="dropdown-profile-placeholder">
+                                            <i class="fas fa-user"></i>
+                                        </div>
+                                    <?php endif; ?>
+                                </div>
+                                <div>
+                                    <div class="fw-bold"><?php echo htmlspecialchars($currentPartner['contact_name']); ?></div>
+                                    <small class="text-muted"><?php echo htmlspecialchars($currentPartner['email']); ?></small>
+                                </div>
+                            </div>
+                        </li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="profile.php"><i class="fas fa-user me-2"></i>My Profile</a></li>
+                        <li><a class="dropdown-item" href="dashboard.php"><i class="fas fa-tachometer-alt me-2"></i>Dashboard</a></li>
+                        <li><a class="dropdown-item" href="earning_history.php"><i class="fas fa-chart-line me-2"></i>Earnings</a></li>
+                        <li><a class="dropdown-item" href="partner_payment_histories.php"><i class="fas fa-credit-card me-2"></i>Payments</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="settings.php"><i class="fas fa-cog me-2"></i>Settings</a></li>
+                        <li><a class="dropdown-item" href="help.php"><i class="fas fa-question-circle me-2"></i>Help & Support</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item text-danger" href="logout.php"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
+                    </ul>
+                </div>
             </div>
         </div>
     </nav>
