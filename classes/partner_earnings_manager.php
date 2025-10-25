@@ -26,7 +26,9 @@ class PartnerEarningsManager {
             'total_transactions' => 0,
             'this_month_earnings' => 0,
             'pending_earnings' => 0,
-            'paid_earnings' => 0
+            'paid_earnings' => 0,
+            'today_earnings' => 0,
+            'yesterday_earnings' => 0
         ];
         
         // Total earnings (all statuses - paid + pending)
@@ -48,6 +50,20 @@ class PartnerEarningsManager {
                       AND YEAR(created_at) = YEAR(CURRENT_DATE())";
         $monthResult = $this->db->read($monthQuery);
         $stats['this_month_earnings'] = $monthResult ? (float)$monthResult[0]['total'] : 0.00;
+        
+        // Today's earnings (all statuses)
+        $todayQuery = "SELECT SUM(amount_received) as total FROM partner_earnings 
+                      WHERE partner_id = '$partnerId' 
+                      AND DATE(created_at) = CURDATE()";
+        $todayResult = $this->db->read($todayQuery);
+        $stats['today_earnings'] = $todayResult ? (float)$todayResult[0]['total'] : 0.00;
+        
+        // Yesterday's earnings (all statuses)
+        $yesterdayQuery = "SELECT SUM(amount_received) as total FROM partner_earnings 
+                          WHERE partner_id = '$partnerId' 
+                          AND DATE(created_at) = DATE_SUB(CURDATE(), INTERVAL 1 DAY)";
+        $yesterdayResult = $this->db->read($yesterdayQuery);
+        $stats['yesterday_earnings'] = $yesterdayResult ? (float)$yesterdayResult[0]['total'] : 0.00;
         
         // Pending earnings
         $pendingQuery = "SELECT SUM(amount_received) as total FROM partner_earnings 

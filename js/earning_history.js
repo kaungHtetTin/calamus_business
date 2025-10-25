@@ -37,7 +37,7 @@ function setupEventHandlers() {
     });
     
     // Table row click for details
-    $(document).on('click', '.table tbody tr', function() {
+    $(document).on('click', '#earningHistoryTableBody tr', function() {
         const earningId = $(this).data('earning-id');
         if (earningId) {
             showEarningDetails(earningId);
@@ -72,6 +72,9 @@ function loadInitialEarnings() {
     isLoading = true;
     currentPage = 1;
     
+    // Reset load more button
+    $('#loadMoreBtn').show().html('<i class="fas fa-plus me-2"></i>Load More Earnings').prop('disabled', false);
+    
     const loadBtn = $('#loadMoreBtn');
     const originalText = loadBtn.html();
     loadBtn.html('<i class="fas fa-spinner fa-spin me-2"></i>Loading...').prop('disabled', true);
@@ -83,14 +86,21 @@ function loadInitialEarnings() {
     .then(response => response.json())
     .then(data => {
         if (data.success && data.data.length > 0) {
-            appendEarningsToTable(data.data);
+            updateTable(data.data);
+            // Check if any filters are active and update statistics accordingly
+            const hasActiveFilters = currentFilters.status || currentFilters.startDate || currentFilters.endDate;
+            if (hasActiveFilters) {
+                updateFilteredStatistics();
+            } else {
+                updateStatistics(data.stats);
+            }
+            showTableState();
             // Hide load more button if we got less than requested
             if (data.data.length < 20) {
                 loadBtn.hide();
             }
         } else {
-            loadBtn.hide();
-            showAlert('No more earnings to load', 'info');
+            showEmptyState();
         }
     })
     .catch(error => {
@@ -145,7 +155,7 @@ function loadMoreEarnings() {
 
 // Append earnings to table
 function appendEarningsToTable(earnings) {
-    const tbody = $('.table tbody');
+    const tbody = $('#earningHistoryTableBody');
     showTableState();
     earnings.forEach(earning => {
         const row = createEarningRow(earning);
@@ -375,7 +385,7 @@ function loadFilteredEarnings() {
                 $('#loadMoreBtn').hide();
             }
         } else {
-            $('.table tbody').html(`
+            $('#earningHistoryTableBody').html(`
                 <tr>
                     <td colspan="6" class="text-center text-muted py-4">
                         <i class="fas fa-search fa-2x mb-2"></i>
@@ -458,10 +468,11 @@ function updateFilteredStatistics() {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            // Update the statistics cards
+            // Update only totalEarnings and totalTransactions based on filter
             $('#totalEarnings').text(parseFloat(data.data.total_earnings).toFixed(2) + ' MMK');
             $('#totalTransactions').text(data.data.total_transactions.toLocaleString());
-            $('#thisMonthEarnings').text(parseFloat(data.data.this_month_earnings).toFixed(2) + ' MMK');
+            
+            // Keep thisMonthEarnings unchanged - don't update it
             
             // Update the header total as well
             $('.content-section .text-end .h3').text(parseFloat(data.data.total_earnings).toFixed(2) + ' MMK');

@@ -42,32 +42,76 @@ include 'layout/header.php';
         </div>
     </div>
  
-    <!-- Quick Stats -->
+    <!-- Earnings Overview -->
     <div class="row mb-4">
-        <div class="col-md-4 mb-3">
-            <div class="card stat-card">
-                <div class="card-body text-center">
-                    <i class="fas fa-dollar-sign fa-2x mb-2"></i>
-                    <div class="stat-number">$<?php echo number_format($dashboardData['total_earnings'] ?? 0, 2); ?></div>
-                    <div>Total Earnings</div>
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="card h-100">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-shrink-0">
+                            <div class="bg-light rounded p-3">
+                                <i class="fas fa-wallet fa-lg text-muted"></i>
+                            </div>
+                        </div>
+                        <div class="flex-grow-1 ms-3">
+                            <div class="h5 mb-1"><?php echo number_format($dashboardData['total_earnings'] ?? 0, 2); ?> MMK</div>
+                            <div class="text-muted small">Total Earnings</div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="col-md-4 mb-3">
-            <div class="card stat-card">
-                <div class="card-body text-center">
-                    <i class="fas fa-receipt fa-2x mb-2"></i>
-                    <div class="stat-number"><?php echo number_format($dashboardData['total_transactions'] ?? 0); ?></div>
-                    <div>Total Transactions</div>
+        
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="card h-100">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-shrink-0">
+                            <div class="bg-light rounded p-3">
+                                <i class="fas fa-sun fa-lg text-muted"></i>
+                            </div>
+                        </div>
+                        <div class="flex-grow-1 ms-3">
+                            <div class="h5 mb-1"><?php echo number_format($dashboardData['today_earnings'] ?? 0, 2); ?> MMK</div>
+                            <div class="text-muted small">Today's Earnings</div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="col-md-4 mb-3">
-            <div class="card stat-card">
-                <div class="card-body text-center">
-                    <i class="fas fa-calendar-alt fa-2x mb-2"></i>
-                    <div class="stat-number">$<?php echo number_format($dashboardData['this_month_earnings'] ?? 0, 2); ?></div>
-                    <div>This Month</div>
+        
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="card h-100">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-shrink-0">
+                            <div class="bg-light rounded p-3">
+                                <i class="fas fa-moon fa-lg text-muted"></i>
+                            </div>
+                        </div>
+                        <div class="flex-grow-1 ms-3">
+                            <div class="h5 mb-1"><?php echo number_format($dashboardData['yesterday_earnings'] ?? 0, 2); ?> MMK</div>
+                            <div class="text-muted small">Yesterday's Earnings</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="card h-100">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-shrink-0">
+                            <div class="bg-light rounded p-3">
+                                <i class="fas fa-calendar-alt fa-lg text-muted"></i>
+                            </div>
+                        </div>
+                        <div class="flex-grow-1 ms-3">
+                            <div class="h5 mb-1"><?php echo number_format($dashboardData['this_month_earnings'] ?? 0, 2); ?> MMK</div>
+                            <div class="text-muted small">This Month</div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -77,32 +121,36 @@ include 'layout/header.php';
 
     <!-- Recent Earnings -->
     <div class="card">
-        <div class="card-header d-flex justify-content-between align-items-center">
-            <h5><i class="fas fa-chart-line me-2"></i>Recent Earnings</h5>
-            <a href="earning_history.php" class="btn btn-sm btn-primary">
-                <i class="fas fa-eye me-1"></i>View All
-            </a>
+        <div class="card-header">
+            <div class="d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Recent Earnings</h5>
+                <a href="earning_history.php" class="btn btn-outline-secondary btn-sm">
+                    View All
+                </a>
+            </div>
         </div>
-        <div class="card-body">
+        <div class="card-body p-0">
             <?php if (!empty($dashboardData['recent_earnings'])): ?>
             <div class="table-responsive">
-                <table class="table table-hover">
+                <table class="table table-hover mb-0">
                     <thead>
                         <tr>
-                            <th>Transaction</th>
-                            <th>Amount</th>
-                            <th>Status</th>
-                            <th>Date</th>
+                            <th class="border-0 py-3 px-3">Transaction</th>
+                            <th class="border-0 py-3 px-3">Amount</th>
+                            <th class="border-0 py-3 px-3">Status</th>
+                            <th class="border-0 py-3 px-3">Date</th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php foreach (array_slice($dashboardData['recent_earnings'], 0, 5) as $earning): ?>
                         <tr>
-                            <td>
+                            <td class="py-3 px-3">
                                 <div class="d-flex align-items-center">
-                                    <i class="fas fa-shopping-cart text-primary me-2"></i>
+                                    <div class="bg-light rounded p-2 me-3">
+                                        <i class="fas fa-shopping-cart text-muted"></i>
+                                    </div>
                                     <div>
-                                        <strong>
+                                        <div class="fw-medium">
                                             <?php 
                                             if (!empty($earning['target_course_id'])) {
                                                 echo 'Course Purchase';
@@ -112,40 +160,45 @@ include 'layout/header.php';
                                                 echo 'Transaction';
                                             }
                                             ?>
-                                        </strong>
-                                        <br>
-                                        <small class="text-muted">$<?php echo number_format($earning['price'], 2); ?></small>
+                                        </div>
+                                        <small class="text-muted"><?php echo number_format($earning['price'], 2); ?> MMK</small>
                                     </div>
                                 </div>
                             </td>
-                            <td>
-                                <div class="text-success fw-bold">
-                                    $<?php echo number_format($earning['amount_received'], 2); ?>
+                            <td class="py-3 px-3">
+                                <div class="fw-medium">
+                                    <?php echo number_format($earning['amount_received'], 2); ?> MMK
                                 </div>
                             </td>
-                            <td>
+                            <td class="py-3 px-3">
                                 <?php if ($earning['status'] === 'paid'): ?>
-                                    <span class="badge bg-success">
-                                        <i class="fas fa-check-circle me-1"></i>Paid
+                                    <span class="badge bg-light text-dark border">
+                                        Paid
                                     </span>
                                 <?php else: ?>
-                                    <span class="badge bg-warning">
-                                        <i class="fas fa-clock me-1"></i>Pending
+                                    <span class="badge bg-light text-dark border">
+                                        Pending
                                     </span>
                                 <?php endif; ?>
                             </td>
-                            <td><?php echo date('M j, Y', strtotime($earning['created_at'])); ?></td>
+                            <td class="py-3 px-3 text-muted">
+                                <?php echo date('M j, Y', strtotime($earning['created_at'])); ?>
+                            </td>
                         </tr>
                         <?php endforeach; ?>
                     </tbody>
                 </table>
             </div>
             <?php else: ?>
-            <div class="text-center text-muted py-4">
-                <i class="fas fa-chart-line fa-2x mb-2"></i>
-                <p>No earnings yet.</p>
-                <a href="earning_history.php" class="btn btn-primary">
-                    <i class="fas fa-chart-line me-1"></i>View Earnings
+            <div class="text-center py-5">
+                <div class="mb-3">
+                    <div class="bg-light rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 60px; height: 60px;">
+                        <i class="fas fa-chart-line text-muted"></i>
+                    </div>
+                </div>
+                <h6 class="text-muted mb-3">No earnings yet</h6>
+                <a href="earning_history.php" class="btn btn-outline-secondary">
+                    View Earnings
                 </a>
             </div>
             <?php endif; ?>

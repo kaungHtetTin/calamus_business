@@ -27,6 +27,8 @@ class PartnerDashboard {
         $data['total_transactions'] = $earningStats['total_transactions'];
         $data['this_month_earnings'] = $earningStats['this_month_earnings'];
         $data['pending_earnings'] = $earningStats['pending_earnings'];
+        $data['today_earnings'] = $earningStats['today_earnings'];
+        $data['yesterday_earnings'] = $earningStats['yesterday_earnings'];
         
         // Get recent earnings
         $data['recent_earnings'] = $earningsManager->getPartnerEarningHistory($partnerId, 10);
