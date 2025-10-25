@@ -163,6 +163,9 @@ function getCodeStatusColor($status) {
                 <a class="nav-link <?php echo basename($_SERVER['PHP_SELF']) == 'codes.php' ? 'active' : ''; ?>" href="codes.php">
                     <i class="fas fa-ticket-alt me-2"></i>Promotion Codes
                 </a>
+                <a class="nav-link <?php echo basename($_SERVER['PHP_SELF']) == 'partner_payment_methods.php' ? 'active' : ''; ?>" href="partner_payment_methods.php">
+                    <i class="fas fa-credit-card me-2"></i>Payment Methods
+                </a>
                 <a class="nav-link <?php echo basename($_SERVER['PHP_SELF']) == 'profile.php' ? 'active' : ''; ?>" href="profile.php">
                     <i class="fas fa-user me-2"></i>Profile
                 </a>
@@ -193,6 +196,9 @@ function getCodeStatusColor($status) {
                         <a class="nav-link <?php echo basename($_SERVER['PHP_SELF']) == 'codes.php' ? 'active' : ''; ?>" href="codes.php">
                             <i class="fas fa-ticket-alt me-2"></i>Promotion Codes
                         </a>
+                        <a class="nav-link <?php echo basename($_SERVER['PHP_SELF']) == 'partner_payment_methods.php' ? 'active' : ''; ?>" href="partner_payment_methods.php">
+                            <i class="fas fa-credit-card me-2"></i>Payment Methods
+                        </a>
                         <a class="nav-link <?php echo basename($_SERVER['PHP_SELF']) == 'profile.php' ? 'active' : ''; ?>" href="profile.php">
                             <i class="fas fa-user me-2"></i>Profile
                         </a>
@@ -215,11 +221,12 @@ function getCodeStatusColor($status) {
                         </li>
                         <?php
                         $currentPage = basename($_SERVER['PHP_SELF']);
-                        $pageNames = [
-                            'dashboard.php' => 'Dashboard',
-                            'codes.php' => 'Promotion Codes',
-                            'profile.php' => 'Profile'
-                        ];
+                           $pageNames = [
+                               'dashboard.php' => 'Dashboard',
+                               'codes.php' => 'Promotion Codes',
+                               'partner_payment_methods.php' => 'Payment Methods',
+                               'profile.php' => 'Profile'
+                           ];
                         
                         if ($currentPage !== 'dashboard.php' && isset($pageNames[$currentPage])) {
                             echo '<li class="breadcrumb-item active" aria-current="page">' . $pageNames[$currentPage] . '</li>';
