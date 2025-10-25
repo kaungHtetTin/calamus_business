@@ -72,9 +72,6 @@ switch ($endpoint) {
                 'website' => isset($input['website']) ? trim($input['website']) : '',
                 'description' => isset($input['description']) ? trim($input['description']) : '',
                 'commission_rate' => isset($input['commission_rate']) ? floatval($input['commission_rate']) : 10.0,
-                'code_prefix' => isset($input['code_prefix']) ? strtoupper(trim($input['code_prefix'])) : 'PART',
-                'payment_method' => isset($input['payment_method']) ? $input['payment_method'] : 'bank_transfer',
-                'payment_details' => isset($input['payment_details']) ? trim($input['payment_details']) : '',
                 'status' => 'pending' // New partners start as pending
             ];
             
@@ -89,6 +86,7 @@ switch ($endpoint) {
                     'success' => true,
                     'message' => 'Registration successful! Please check your email for verification instructions.',
                     'partner_id' => $result['partner_id'],
+                    'private_code' => $result['private_code'],
                     'partner' => $result['partner']
                 ]);
             } else {
@@ -158,29 +156,6 @@ switch ($endpoint) {
         }
         break;
         
-    case 'check_code_prefix':
-        if ($method === 'POST') {
-            $codePrefix = $input['code_prefix'] ?? '';
-            
-            if (empty($codePrefix)) {
-                echo json_encode(['success' => false, 'message' => 'Code prefix is required']);
-                break;
-            }
-            
-            $codePrefix = strtoupper(trim($codePrefix));
-            
-            // Check if code prefix is already taken
-            $existingPartner = $auth->getPartnerByCodePrefix($codePrefix);
-            
-            echo json_encode([
-                'success' => true,
-                'available' => !$existingPartner,
-                'message' => $existingPartner ? 'Code prefix already taken' : 'Code prefix is available'
-            ]);
-        } else {
-            echo json_encode(['success' => false, 'message' => 'Method not allowed']);
-        }
-        break;
         
     case 'get_partner_info':
         if ($method === 'POST') {
@@ -229,8 +204,7 @@ switch ($endpoint) {
             
             // Allowed fields for update
             $allowedFields = [
-                'company_name', 'contact_name', 'phone', 'website', 
-                'description', 'payment_method', 'payment_details'
+                'company_name', 'contact_name', 'phone', 'website', 'description'
             ];
             
             $filteredData = [];

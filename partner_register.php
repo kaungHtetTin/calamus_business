@@ -141,9 +141,9 @@
                                         </div>
                                         <div class="col-md-6">
                                             <div class="mb-3">
-                                                <label class="form-label">Code Prefix *</label>
-                                                <input type="text" class="form-control" id="code_prefix" maxlength="4" required>
-                                                <div class="form-text" id="prefix-status"></div>
+                                                <label class="form-label">Commission Rate (%)</label>
+                                                <input type="number" class="form-control" id="commission_rate" min="1" max="50" value="10" step="0.1">
+                                                <div class="form-text">Default: 10%</div>
                                             </div>
                                         </div>
                                     </div>
@@ -153,9 +153,9 @@
                                     </div>
                                 </div>
                                 
-                                <!-- Step 2: Commission & Payment -->
+                                <!-- Step 2: Commission Settings -->
                                 <div id="step2-content" class="step-content" style="display: none;">
-                                    <h4 class="mb-4">Commission & Payment Settings</h4>
+                                    <h4 class="mb-4">Commission Settings</h4>
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="mb-3">
@@ -166,19 +166,12 @@
                                         </div>
                                         <div class="col-md-6">
                                             <div class="mb-3">
-                                                <label class="form-label">Payment Method</label>
-                                                <select class="form-control" id="payment_method">
-                                                    <option value="bank_transfer">Bank Transfer</option>
-                                                    <option value="paypal">PayPal</option>
-                                                    <option value="stripe">Stripe</option>
-                                                    <option value="check">Check</option>
-                                                </select>
+                                                <label class="form-label">Additional Information</label>
+                                                <div class="alert alert-info">
+                                                    <small><i class="fas fa-info-circle me-1"></i>Payment methods can be configured later in your partner portal.</small>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label class="form-label">Payment Details</label>
-                                        <textarea class="form-control" id="payment_details" rows="3" placeholder="Bank account details, PayPal email, etc."></textarea>
                                     </div>
                                 </div>
                                 

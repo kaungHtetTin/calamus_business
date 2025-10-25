@@ -46,7 +46,7 @@ class PartnerDashboard {
     
     // Update partner profile
     public function updateProfile($partnerId, $data) {
-        $allowedFields = ['contact_name', 'company_name', 'phone', 'website', 'payment_method', 'payment_details', 'profile_image'];
+        $allowedFields = ['contact_name', 'company_name', 'phone', 'website', 'profile_image'];
         $updates = [];
         
         foreach ($allowedFields as $field) {

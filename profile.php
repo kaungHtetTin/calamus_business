@@ -56,6 +56,25 @@ include 'layout/header.php';
     <div class="card">
         <div class="card-body">
             <h5 class="card-title"><i class="fas fa-user-edit me-2"></i>Profile Information</h5>
+            
+            <!-- Private Code Display -->
+            <div class="alert alert-info mb-4">
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <h6 class="mb-1"><i class="fas fa-key me-2"></i>Your Private Code</h6>
+                        <p class="mb-0">This is your unique partner code used for promotion code generation.</p>
+                    </div>
+                    <div class="col-md-4 text-end">
+                        <div class="private-code-display">
+                            <code class="fs-4 fw-bold text-primary" id="privateCodeDisplay"><?php echo htmlspecialchars($currentPartner['private_code'] ?? 'N/A'); ?></code>
+                            <button type="button" class="btn btn-sm btn-outline-primary ms-2" onclick="copyPrivateCode()">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
             <form id="profile-form" method="POST" action="api/update_profile.php" enctype="multipart/form-data">
                 <div class="row">
                     <div class="col-md-6">
@@ -82,24 +101,6 @@ include 'layout/header.php';
                         <div class="mb-3">
                             <label class="form-label">Website</label>
                             <input type="url" class="form-control" id="website" name="website" value="<?php echo htmlspecialchars($currentPartner['website']); ?>">
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="mb-3">
-                            <label class="form-label">Payment Method</label>
-                            <select class="form-control" id="payment_method" name="payment_method">
-                                <option value="bank_transfer" <?php echo $currentPartner['payment_method'] == 'bank_transfer' ? 'selected' : ''; ?>>Bank Transfer</option>
-                                <option value="paypal" <?php echo $currentPartner['payment_method'] == 'paypal' ? 'selected' : ''; ?>>PayPal</option>
-                                <option value="stripe" <?php echo $currentPartner['payment_method'] == 'stripe' ? 'selected' : ''; ?>>Stripe</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="mb-3">
-                            <label class="form-label">Payment Details</label>
-                            <textarea class="form-control" id="payment_details" name="payment_details" rows="3"><?php echo htmlspecialchars($currentPartner['payment_details']); ?></textarea>
                         </div>
                     </div>
                 </div>

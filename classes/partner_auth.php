@@ -9,6 +9,33 @@ class PartnerAuth {
         $this->db = new Database();
     }
     
+    // Generate unique private code
+    private function generateUniquePrivateCode() {
+        $maxAttempts = 100; // Prevent infinite loop
+        $attempts = 0;
+        
+        do {
+            // Generate 6-character alphanumeric uppercase code
+            $characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            $privateCode = '';
+            
+            for ($i = 0; $i < 6; $i++) {
+                $privateCode .= $characters[rand(0, strlen($characters) - 1)];
+            }
+            
+            // Check if code already exists
+            $existingCode = $this->db->read("SELECT id FROM partners WHERE private_code = '$privateCode'");
+            
+            if (!$existingCode) {
+                return $privateCode;
+            }
+            
+            $attempts++;
+        } while ($attempts < $maxAttempts);
+        
+        return false; // Failed to generate unique code
+    }
+    
     // Register new partner (updated method)
     public function registerPartner($partnerData) {
         // Check if email already exists
@@ -17,15 +44,11 @@ class PartnerAuth {
             return ['success' => false, 'message' => 'Email already registered'];
         }
         
-        // Check if code prefix already exists
-        if (isset($partnerData['code_prefix'])) {
-            $existingPrefix = $this->db->read("SELECT id FROM partners WHERE code_prefix = '{$partnerData['code_prefix']}'");
-            if ($existingPrefix) {
-                return ['success' => false, 'message' => 'Code prefix already taken'];
-            }
+        // Generate unique private code
+        $privateCode = $this->generateUniquePrivateCode();
+        if (!$privateCode) {
+            return ['success' => false, 'message' => 'Failed to generate unique private code'];
         }
-
-      
         
         // Hash password
         $hashedPassword = password_hash($partnerData['password'], PASSWORD_DEFAULT);
@@ -36,13 +59,11 @@ class PartnerAuth {
         // Insert partner
         $query = "INSERT INTO partners 
                  (company_name, contact_name, email, phone, password, website, description, 
-                  commission_rate, code_prefix, payment_method, payment_details, status, 
-                  verification_code, created_at) 
+                  commission_rate, private_code, status, verification_code, created_at) 
                  VALUES ('{$partnerData['company_name']}', '{$partnerData['contact_name']}', 
                          '{$partnerData['email']}', '{$partnerData['phone']}', '$hashedPassword', 
                          '{$partnerData['website']}', '{$partnerData['description']}', 
-                         '{$partnerData['commission_rate']}', '{$partnerData['code_prefix']}', 
-                         '{$partnerData['payment_method']}', '{$partnerData['payment_details']}', 
+                         '{$partnerData['commission_rate']}', '$privateCode', 
                          '{$partnerData['status']}', '$verificationCode', NOW())";
         
         $result = $this->db->save($query);
@@ -58,6 +79,7 @@ class PartnerAuth {
                 'success' => true, 
                 'message' => 'Registration successful. Please check your email for verification.',
                 'partner_id' => $partnerId,
+                'private_code' => $privateCode,
                 'partner' => $partner
             ];
         }
@@ -224,12 +246,6 @@ class PartnerAuth {
     // Get partner by email
     public function getPartnerByEmail($email) {
         $partner = $this->db->read("SELECT * FROM partners WHERE email = '$email'");
-        return $partner ? $partner[0] : null;
-    }
-    
-    // Get partner by code prefix
-    public function getPartnerByCodePrefix($codePrefix) {
-        $partner = $this->db->read("SELECT * FROM partners WHERE code_prefix = '$codePrefix'");
         return $partner ? $partner[0] : null;
     }
     

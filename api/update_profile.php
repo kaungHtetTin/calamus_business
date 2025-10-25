@@ -117,7 +117,7 @@ if (isset($_FILES['profile_image']) && $_FILES['profile_image']['error'] === UPL
 $updateData = [];
 
 // Handle regular form fields
-$allowedFields = ['contact_name', 'company_name', 'phone', 'website', 'payment_method', 'payment_details'];
+$allowedFields = ['contact_name', 'company_name', 'phone', 'website'];
 foreach ($allowedFields as $field) {
     if (isset($_POST[$field])) {
         $updateData[$field] = trim($_POST[$field]);

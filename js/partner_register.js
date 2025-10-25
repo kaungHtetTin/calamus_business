@@ -109,15 +109,9 @@ function validateCurrentStep() {
     // Additional validations
     if (currentStep === 1) {
         const email = document.getElementById('email').value;
-        const codePrefix = document.getElementById('code_prefix').value;
         
         if (!isValidEmail(email)) {
             showAlert('Please enter a valid email address', 'danger');
-            return false;
-        }
-        
-        if (codePrefix.length < 2) {
-            showAlert('Code prefix must be at least 2 characters', 'danger');
             return false;
         }
     }
@@ -142,14 +136,14 @@ function validateCurrentStep() {
 
 // Setup form validation
 function setupFormValidation() {
-    // Auto-format code prefix
-    const codePrefixField = document.getElementById('code_prefix');
-    if (codePrefixField) {
-        codePrefixField.addEventListener('input', function(e) {
-            let value = e.target.value.toUpperCase();
-            // Remove any characters that aren't letters or numbers
-            value = value.replace(/[^A-Z0-9]/g, '');
-            e.target.value = value;
+    // Email validation
+    const emailField = document.getElementById('email');
+    if (emailField) {
+        emailField.addEventListener('blur', function() {
+            const email = this.value;
+            if (email && !isValidEmail(email)) {
+                showAlert('Please enter a valid email address', 'danger');
+            }
         });
     }
 }
@@ -163,17 +157,6 @@ function setupAvailabilityChecks() {
             const email = this.value;
             if (email && isValidEmail(email)) {
                 checkEmailAvailability(email);
-            }
-        });
-    }
-
-    // Code prefix availability check
-    const codePrefixField = document.getElementById('code_prefix');
-    if (codePrefixField) {
-        codePrefixField.addEventListener('blur', function() {
-            const prefix = this.value.toUpperCase();
-            if (prefix.length >= 2) {
-                checkCodePrefixAvailability(prefix);
             }
         });
     }
@@ -206,33 +189,6 @@ function checkEmailAvailability(email) {
     });
 }
 
-// Check code prefix availability
-function checkCodePrefixAvailability(prefix) {
-    fetch('api/register.php?endpoint=check_code_prefix', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ code_prefix: prefix })
-    })
-    .then(response => response.json())
-    .then(data => {
-        const statusDiv = document.getElementById('prefix-status');
-        if (statusDiv && data.success) {
-            if (data.available) {
-                statusDiv.innerHTML = '<i class="fas fa-check text-success"></i> Prefix is available';
-                statusDiv.className = 'form-text text-success';
-            } else {
-                statusDiv.innerHTML = '<i class="fas fa-times text-danger"></i> Prefix already taken';
-                statusDiv.className = 'form-text text-danger';
-            }
-        }
-    })
-    .catch(error => {
-        console.error('Error checking prefix:', error);
-    });
-}
-
 // Setup form submission
 function setupFormSubmission() {
     const registrationForm = document.getElementById('registrationForm');
@@ -252,10 +208,7 @@ function setupFormSubmission() {
             phone: document.getElementById('phone').value,
             website: document.getElementById('website').value,
             description: document.getElementById('description').value,
-            code_prefix: document.getElementById('code_prefix').value.toUpperCase(),
             commission_rate: document.getElementById('commission_rate').value,
-            payment_method: document.getElementById('payment_method').value,
-            payment_details: document.getElementById('payment_details').value,
             password: document.getElementById('password').value
         };
         
@@ -276,7 +229,11 @@ function setupFormSubmission() {
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                showAlert('Registration successful! Please check your email for verification instructions.', 'success');
+                // Display success message with private code
+                const privateCode = data.private_code;
+                showAlert(`Registration successful! Your private code is: <strong>${privateCode}</strong><br>Please save this code and check your email for verification instructions.`, 'success');
+                
+                // Reset form
                 registrationForm.reset();
                 currentStep = 1;
                 updateStepDisplay();

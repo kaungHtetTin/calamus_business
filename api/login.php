@@ -335,7 +335,7 @@ switch ($endpoint) {
             $partnerId = $sessionResult['partner']['id'];
             
             // Remove sensitive fields that shouldn't be updated via this endpoint
-            $allowedFields = ['company_name', 'contact_name', 'phone', 'website', 'description', 'payment_method', 'payment_details'];
+            $allowedFields = ['company_name', 'contact_name', 'phone', 'website', 'description'];
             $filteredData = array_intersect_key($updateData, array_flip($allowedFields));
             
             if (empty($filteredData)) {
