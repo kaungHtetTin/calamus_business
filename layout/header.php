@@ -5,7 +5,6 @@ require_once 'classes/autoload.php';
 // Initialize authentication
 $auth = new PartnerAuth();
 $dashboard = new PartnerDashboard();
-$codeManager = new PromotionCodeManager();
 
 // Check if user is logged in
 $sessionToken = $_SESSION['partner_session_token'] ?? '';
@@ -65,10 +64,6 @@ if ($needsAuth) {
 
 // Get dashboard data
 $dashboardData = $dashboard->getDashboardData($currentPartner['id']);
-
-// Get promotion code data
-$codeStats = $codeManager->getPartnerCodeStats($currentPartner['id']);
-$recentCodes = $codeManager->getPartnerPromotionCodes($currentPartner['id'], null, 10);
 ?>
 
 
@@ -192,9 +187,6 @@ function getCodeStatusColor($status) {
                 <a class="nav-link <?php echo basename($_SERVER['PHP_SELF']) == 'dashboard.php' ? 'active' : ''; ?>" href="dashboard.php">
                     <i class="fas fa-tachometer-alt me-2"></i>Dashboard
                 </a>
-                <a class="nav-link <?php echo basename($_SERVER['PHP_SELF']) == 'codes.php' ? 'active' : ''; ?>" href="codes.php">
-                    <i class="fas fa-ticket-alt me-2"></i>Promotion Codes
-                </a>
                 <a class="nav-link <?php echo basename($_SERVER['PHP_SELF']) == 'partner_payment_methods.php' ? 'active' : ''; ?>" href="partner_payment_methods.php">
                     <i class="fas fa-mobile-alt me-2"></i>Mobile Money
                 </a>
@@ -228,9 +220,6 @@ function getCodeStatusColor($status) {
                         <a class="nav-link <?php echo basename($_SERVER['PHP_SELF']) == 'dashboard.php' ? 'active' : ''; ?>" href="dashboard.php">
                             <i class="fas fa-tachometer-alt me-2"></i>Dashboard
                         </a>
-                        <a class="nav-link <?php echo basename($_SERVER['PHP_SELF']) == 'codes.php' ? 'active' : ''; ?>" href="codes.php">
-                            <i class="fas fa-ticket-alt me-2"></i>Promotion Codes
-                        </a>
                         <a class="nav-link <?php echo basename($_SERVER['PHP_SELF']) == 'partner_payment_methods.php' ? 'active' : ''; ?>" href="partner_payment_methods.php">
                             <i class="fas fa-mobile-alt me-2"></i>Mobile Money
                         </a>
@@ -261,7 +250,6 @@ function getCodeStatusColor($status) {
                         $currentPage = basename($_SERVER['PHP_SELF']);
                            $pageNames = [
                                'dashboard.php' => 'Dashboard',
-                               'codes.php' => 'Promotion Codes',
                                'partner_payment_methods.php' => 'Mobile Money',
                                'earning_history.php' => 'Earning History',
                                'profile.php' => 'Profile'
@@ -279,11 +267,11 @@ function getCodeStatusColor($status) {
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
                             <h5 class="mb-1">Welcome back, <?php echo htmlspecialchars($currentPartner['contact_name']); ?>!</h5>
-                            <small>Manage your promotion codes and profile settings</small>
+                            <small>Manage your earnings and profile settings</small>
                         </div>
                         <div class="text-end">
-                            <div class="h4 mb-0"><?php echo number_format($codeStats['total_generated'] ?? 0); ?></div>
-                            <small>Total Codes Generated</small>
+                            <div class="h4 mb-0"><?php echo number_format($dashboardData['total_earnings'] ?? 0, 2); ?></div>
+                            <small>Total Earnings</small>
                         </div>
                     </div>
                 </div>

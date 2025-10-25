@@ -18,30 +18,23 @@ class PartnerDashboard {
         $partner = $this->db->read("SELECT * FROM partners WHERE id = '$partnerId'")[0];
         $data['partner'] = $partner;
         
-        // Statistics
-        $stats = $this->getPartnerStats($partnerId);
-        $data['stats'] = $stats;
+        // Get earnings data
+        $earningsManager = new PartnerEarningsManager();
+        $earningStats = $earningsManager->getPartnerEarningStats($partnerId);
+        
+        // Map earnings stats to dashboard data
+        $data['total_earnings'] = $earningStats['total_earnings'];
+        $data['total_transactions'] = $earningStats['total_transactions'];
+        $data['this_month_earnings'] = $earningStats['this_month_earnings'];
+        $data['pending_earnings'] = $earningStats['pending_earnings'];
+        
+        // Get recent earnings
+        $data['recent_earnings'] = $earningsManager->getPartnerEarningHistory($partnerId, 10);
         
         // Monthly earnings chart data (empty for now)
         $data['monthly_earnings'] = [];
         
         return $data;
-    }
-    
-    // Get partner statistics
-    private function getPartnerStats($partnerId) {
-        $stats = [];
-        
-        // Since affiliate functionality is removed, set all stats to 0
-        $stats['total_clicks'] = 0;
-        $stats['total_conversions'] = 0;
-        $stats['conversion_rate'] = 0;
-        $stats['total_earnings'] = 0;
-        $stats['pending_earnings'] = 0;
-        $stats['this_month_earnings'] = 0;
-        $stats['active_links'] = 0;
-        
-        return $stats;
     }
     
     // Update partner profile

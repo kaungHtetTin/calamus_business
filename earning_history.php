@@ -5,9 +5,9 @@ $pageTitle = 'Earning History';
 include 'layout/header.php';
 
 // Get earning data
-$codeManager = new PromotionCodeManager();
-$earningHistory = $codeManager->getPartnerEarningHistory($currentPartner['id'], 50);
-$earningStats = $codeManager->getPartnerEarningStats($currentPartner['id']);
+$earningsManager = new PartnerEarningsManager();
+$earningHistory = $earningsManager->getPartnerEarningHistory($currentPartner['id'], 50);
+$earningStats = $earningsManager->getPartnerEarningStats($currentPartner['id']);
 ?>
 
 <div class="content-section">
@@ -17,7 +17,7 @@ $earningStats = $codeManager->getPartnerEarningStats($currentPartner['id']);
             <h4 class="mb-1">
                 <i class="fas fa-chart-line me-2"></i>Earning History
             </h4>
-            <p class="text-muted mb-0">Track your earnings from approved promotion codes</p>
+            <p class="text-muted mb-0">Track your earnings from completed transactions</p>
         </div>
         <div class="text-end">
             <div class="h3 mb-0 text-success">$<?php echo number_format($earningStats['total_earnings'], 2); ?></div>
@@ -27,7 +27,7 @@ $earningStats = $codeManager->getPartnerEarningStats($currentPartner['id']);
 
     <!-- Statistics Cards -->
     <div class="row mb-4">
-        <div class="col-md-3 mb-3">
+        <div class="col-md-4 mb-4">
             <div class="card stat-card">
                 <div class="card-body text-center">
                     <i class="fas fa-dollar-sign fa-2x mb-2"></i>
@@ -36,7 +36,7 @@ $earningStats = $codeManager->getPartnerEarningStats($currentPartner['id']);
                 </div>
             </div>
         </div>
-        <div class="col-md-3 mb-3">
+        <div class="col-md-4 mb-4">
             <div class="card stat-card">
                 <div class="card-body text-center">
                     <i class="fas fa-receipt fa-2x mb-2"></i>
@@ -45,16 +45,7 @@ $earningStats = $codeManager->getPartnerEarningStats($currentPartner['id']);
                 </div>
             </div>
         </div>
-        <div class="col-md-3 mb-3">
-            <div class="card stat-card">
-                <div class="card-body text-center">
-                    <i class="fas fa-chart-bar fa-2x mb-2"></i>
-                    <div class="stat-number">$<?php echo number_format($earningStats['average_earning'], 2); ?></div>
-                    <div>Average per Transaction</div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3 mb-3">
+        <div class="col-md-4 mb-4">
             <div class="card stat-card">
                 <div class="card-body text-center">
                     <i class="fas fa-calendar-alt fa-2x mb-2"></i>
@@ -77,9 +68,9 @@ $earningStats = $codeManager->getPartnerEarningStats($currentPartner['id']);
                 <div class="text-center py-5">
                     <i class="fas fa-chart-line fa-3x text-muted mb-3"></i>
                     <h5 class="text-muted">No Earnings Yet</h5>
-                    <p class="text-muted">Your earnings will appear here once your promotion codes are approved and used.</p>
-                    <button class="btn btn-primary" onclick="window.location.href='promotion_code_generator.php'">
-                        <i class="fas fa-magic me-2"></i>Generate Promotion Codes
+                    <p class="text-muted">Your earnings will appear here once transactions are completed and payments are processed.</p>
+                    <button class="btn btn-primary" onclick="window.location.href='dashboard.php'">
+                        <i class="fas fa-tachometer-alt me-2"></i>Go to Dashboard
                     </button>
                 </div>
             <?php else: ?>
@@ -87,11 +78,11 @@ $earningStats = $codeManager->getPartnerEarningStats($currentPartner['id']);
                     <table class="table table-hover">
                         <thead>
                             <tr>
-                                <th>Promotion Code</th>
+                                <th>Transaction Details</th>
                                 <th>User Details</th>
                                 <th>Amount Earned</th>
                                 <th>Commission Rate</th>
-                                <th>Approved Date</th>
+                                <th>Transaction Date</th>
                                 <th>Status</th>
                             </tr>
                         </thead>
@@ -101,13 +92,23 @@ $earningStats = $codeManager->getPartnerEarningStats($currentPartner['id']);
                                     <td>
                                         <div class="d-flex align-items-center">
                                             <div class="me-2">
-                                                <i class="fas fa-ticket-alt text-primary"></i>
+                                                <i class="fas fa-shopping-cart text-primary"></i>
                                             </div>
                                             <div>
-                                                <code class="text-dark"><?php echo htmlspecialchars($earning['code']); ?></code>
+                                                <strong>
+                                                    <?php 
+                                                    if (!empty($earning['target_course_id'])) {
+                                                        echo 'Course Purchase';
+                                                    } elseif (!empty($earning['target_package_id'])) {
+                                                        echo 'Package Purchase';
+                                                    } else {
+                                                        echo 'Transaction';
+                                                    }
+                                                    ?>
+                                                </strong>
                                                 <br>
                                                 <small class="text-muted">
-                                                    <?php echo htmlspecialchars($earning['payment_method'] ?? 'N/A'); ?>
+                                                    Price: $<?php echo number_format($earning['price'], 2); ?>
                                                 </small>
                                             </div>
                                         </div>
@@ -142,10 +143,17 @@ $earningStats = $codeManager->getPartnerEarningStats($currentPartner['id']);
                                         </div>
                                     </td>
                                     <td>
-                                        <span class="badge bg-success">
-                                            <i class="fas fa-check-circle me-1"></i>
-                                            Approved
-                                        </span>
+                                        <?php if ($earning['status'] === 'paid'): ?>
+                                            <span class="badge bg-success">
+                                                <i class="fas fa-check-circle me-1"></i>
+                                                Received
+                                            </span>
+                                        <?php else: ?>
+                                            <span class="badge bg-warning">
+                                                <i class="fas fa-clock me-1"></i>
+                                                Pending
+                                            </span>
+                                        <?php endif; ?>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>

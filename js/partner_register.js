@@ -6,7 +6,7 @@
  */
 
 let currentStep = 1;
-const totalSteps = 3;
+const totalSteps = 2;
 
 // Initialize registration page
 document.addEventListener('DOMContentLoaded', function() {
@@ -116,7 +116,7 @@ function validateCurrentStep() {
         }
     }
     
-    if (currentStep === 3) {
+    if (currentStep === 2) {
         const password = document.getElementById('password').value;
         const confirmPassword = document.getElementById('confirm_password').value;
         

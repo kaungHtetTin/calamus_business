@@ -1,10 +1,10 @@
-I have changed the code_prefix of partner table to private_code.
-When I the partner register, the private_code should be generated automatically.
-The private_code should be 6 characters long.
-The private_code should be unique.
-The private_code should be alphanumeric.
-The private_code should be uppercase.
-The private_code should be saved in the partner table.
-The private_code should be displayed in the partner portal.
+I have made some changes in promotion_codes table.
 
-update this functionality in the partner_auth.php file. and UI of regiser page.
+changing the table name to     partner_earnings.
+dropping the columns: expired_at, code
+changing the status column data to 'pending', 'paid',
+
+What is your take on this?
+You need to remove the promotion code managment system.
+
+Update the earning history page to use the new table.

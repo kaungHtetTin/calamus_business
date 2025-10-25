@@ -47,7 +47,7 @@ function loadMoreEarnings() {
     const originalText = loadBtn.html();
     loadBtn.html('<i class="fas fa-spinner fa-spin me-2"></i>Loading...').prop('disabled', true);
     
-    fetch(`api/promotion_codes.php?endpoint=get_earning_history&session_token=${sessionToken}&limit=20&page=${currentPage}`)
+    fetch(`api/partner_earnings.php?endpoint=get_earning_history&session_token=${sessionToken}&limit=20&page=${currentPage}`)
     .then(response => response.json())
     .then(data => {
         if (data.success && data.data.length > 0) {
@@ -87,29 +87,54 @@ function appendEarningsToTable(earnings) {
 function createEarningRow(earning) {
     const userPhone = earning.user_phone || 'N/A';
     const userName = earning.user_name || 'Unknown User';
-    const paymentMethod = earning.payment_method || 'N/A';
-    const approvedDate = new Date(earning.updated_at);
-    const formattedDate = approvedDate.toLocaleDateString('en-US', { 
+    const transactionDate = new Date(earning.created_at);
+    const formattedDate = transactionDate.toLocaleDateString('en-US', { 
         month: 'short', 
         day: 'numeric', 
         year: 'numeric' 
     });
-    const formattedTime = approvedDate.toLocaleTimeString('en-US', { 
+    const formattedTime = transactionDate.toLocaleTimeString('en-US', { 
         hour: '2-digit', 
         minute: '2-digit' 
     });
     
+    // Determine transaction type
+    let transactionType = 'Transaction';
+    if (earning.target_course_id) {
+        transactionType = 'Course Purchase';
+    } else if (earning.target_package_id) {
+        transactionType = 'Package Purchase';
+    }
+    
+    // Determine status badge
+    let statusBadge = '';
+    if (earning.status === 'paid') {
+        statusBadge = `
+            <span class="badge bg-success">
+                <i class="fas fa-check-circle me-1"></i>
+                Paid
+            </span>
+        `;
+    } else {
+        statusBadge = `
+            <span class="badge bg-warning">
+                <i class="fas fa-clock me-1"></i>
+                Pending
+            </span>
+        `;
+    }
+    
     return `
-        <tr data-code-id="${earning.id}">
+        <tr data-earning-id="${earning.id}">
             <td>
                 <div class="d-flex align-items-center">
                     <div class="me-2">
-                        <i class="fas fa-ticket-alt text-primary"></i>
+                        <i class="fas fa-shopping-cart text-primary"></i>
                     </div>
                     <div>
-                        <code class="text-dark">${earning.code}</code>
+                        <strong>${transactionType}</strong>
                         <br>
-                        <small class="text-muted">${paymentMethod}</small>
+                        <small class="text-muted">Price: $${parseFloat(earning.price).toFixed(2)}</small>
                     </div>
                 </div>
             </td>
@@ -141,17 +166,14 @@ function createEarningRow(earning) {
                 </div>
             </td>
             <td>
-                <span class="badge bg-success">
-                    <i class="fas fa-check-circle me-1"></i>
-                    Approved
-                </span>
+                ${statusBadge}
             </td>
         </tr>
     `;
 }
 
 // Show earning details modal
-function showEarningDetails(codeId) {
+function showEarningDetails(earningId) {
     // For now, just show a simple alert
     // In a real implementation, you might want to fetch detailed information
     showAlert('Earning details feature coming soon!', 'info');

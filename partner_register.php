@@ -95,7 +95,6 @@
                             <div class="step-indicator">
                                 <div class="step active" id="step1">1</div>
                                 <div class="step" id="step2">2</div>
-                                <div class="step" id="step3">3</div>
                             </div>
                             
                             <!-- Registration Form -->
@@ -142,8 +141,8 @@
                                         <div class="col-md-6">
                                             <div class="mb-3">
                                                 <label class="form-label">Commission Rate (%)</label>
-                                                <input type="number" class="form-control" id="commission_rate" min="1" max="50" value="10" step="0.1">
-                                                <div class="form-text">Default: 10%</div>
+                                                <input type="number" class="form-control" id="commission_rate" value="10" readonly>
+                                                <div class="form-text">Fixed at 10%</div>
                                             </div>
                                         </div>
                                     </div>
@@ -153,30 +152,8 @@
                                     </div>
                                 </div>
                                 
-                                <!-- Step 2: Commission Settings -->
+                                <!-- Step 2: Password -->
                                 <div id="step2-content" class="step-content" style="display: none;">
-                                    <h4 class="mb-4">Commission Settings</h4>
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="mb-3">
-                                                <label class="form-label">Commission Rate (%)</label>
-                                                <input type="number" class="form-control" id="commission_rate" min="0" max="50" step="0.1" value="10">
-                                                <div class="form-text">Default: 10%</div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="mb-3">
-                                                <label class="form-label">Additional Information</label>
-                                                <div class="alert alert-info">
-                                                    <small><i class="fas fa-info-circle me-1"></i>Payment methods can be configured later in your partner portal.</small>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <!-- Step 3: Password -->
-                                <div id="step3-content" class="step-content" style="display: none;">
                                     <h4 class="mb-4">Create Password</h4>
                                     <div class="row">
                                         <div class="col-md-6">
