@@ -8,6 +8,12 @@
 let sessionToken = null;
 let currentPage = 1;
 let isLoading = false;
+let currentFilters = {
+    status: '',
+    period: '',
+    startDate: '',
+    endDate: ''
+};
 
 $(document).ready(function() {
     console.log('Earning History: Document ready');
@@ -29,10 +35,29 @@ function setupEventHandlers() {
     
     // Table row click for details
     $(document).on('click', '.table tbody tr', function() {
-        const codeId = $(this).data('code-id');
-        if (codeId) {
-            showEarningDetails(codeId);
+        const earningId = $(this).data('earning-id');
+        if (earningId) {
+            showEarningDetails(earningId);
         }
+    });
+    
+    // Filter event handlers
+    $('#periodFilter').on('change', function() {
+        const period = $(this).val();
+        if (period === 'custom') {
+            $('#customDateRange').show();
+        } else {
+            $('#customDateRange').hide();
+            $('#startDate, #endDate').val('');
+        }
+    });
+    
+    $('#applyFilters').on('click', function() {
+        applyFilters();
+    });
+    
+    $('#clearFilters').on('click', function() {
+        clearFilters();
     });
 }
 
@@ -47,7 +72,10 @@ function loadMoreEarnings() {
     const originalText = loadBtn.html();
     loadBtn.html('<i class="fas fa-spinner fa-spin me-2"></i>Loading...').prop('disabled', true);
     
-    fetch(`api/partner_earnings.php?endpoint=get_earning_history&session_token=${sessionToken}&limit=20&page=${currentPage}`)
+    // Build URL with current filters
+    const url = buildEarningsUrl(currentPage);
+    
+    fetch(url)
     .then(response => response.json())
     .then(data => {
         if (data.success && data.data.length > 0) {
@@ -207,6 +235,206 @@ function formatCurrency(amount) {
         style: 'currency',
         currency: 'USD'
     }).format(amount);
+}
+
+// Build earnings URL with current filters
+function buildEarningsUrl(page = 1) {
+    let url = `api/partner_earnings.php?endpoint=get_earning_history&session_token=${sessionToken}&limit=20&page=${page}`;
+    
+    if (currentFilters.status) {
+        url += `&status=${currentFilters.status}`;
+    }
+    
+    if (currentFilters.startDate) {
+        url += `&start_date=${currentFilters.startDate}`;
+    }
+    
+    if (currentFilters.endDate) {
+        url += `&end_date=${currentFilters.endDate}`;
+    }
+    
+    return url;
+}
+
+// Apply filters
+function applyFilters() {
+    // Get filter values
+    const status = $('#statusFilter').val();
+    const period = $('#periodFilter').val();
+    const startDate = $('#startDate').val();
+    const endDate = $('#endDate').val();
+    
+    // Calculate date range based on period
+    let calculatedStartDate = '';
+    let calculatedEndDate = '';
+    
+    if (period && period !== 'custom') {
+        const today = new Date();
+        const dates = calculateDateRange(period, today);
+        calculatedStartDate = dates.start;
+        calculatedEndDate = dates.end;
+    } else if (period === 'custom') {
+        calculatedStartDate = startDate;
+        calculatedEndDate = endDate;
+    }
+    
+    // Update current filters
+    currentFilters = {
+        status: status,
+        period: period,
+        startDate: calculatedStartDate,
+        endDate: calculatedEndDate
+    };
+    
+    // Reset pagination
+    currentPage = 1;
+    
+    // Clear existing table data
+    $('.table tbody').empty();
+    $('#loadMoreBtn').show();
+    
+    // Load filtered data
+    loadFilteredEarnings();
+}
+
+// Clear filters
+function clearFilters() {
+    // Reset filter inputs
+    $('#statusFilter').val('');
+    $('#periodFilter').val('');
+    $('#startDate').val('');
+    $('#endDate').val('');
+    $('#customDateRange').hide();
+    
+    // Reset current filters
+    currentFilters = {
+        status: '',
+        period: '',
+        startDate: '',
+        endDate: ''
+    };
+    
+    // Reset pagination
+    currentPage = 1;
+    
+    // Clear existing table data
+    $('.table tbody').empty();
+    $('#loadMoreBtn').show();
+    
+    // Load unfiltered data
+    loadFilteredEarnings();
+}
+
+// Load filtered earnings
+function loadFilteredEarnings() {
+    const url = buildEarningsUrl(1);
+    
+    fetch(url)
+    .then(response => response.json())
+    .then(data => {
+        if (data.success && data.data.length > 0) {
+            appendEarningsToTable(data.data);
+            
+            // Hide load more button if we got less than requested
+            if (data.data.length < 20) {
+                $('#loadMoreBtn').hide();
+            }
+        } else {
+            $('.table tbody').html(`
+                <tr>
+                    <td colspan="6" class="text-center text-muted py-4">
+                        <i class="fas fa-search fa-2x mb-2"></i>
+                        <p>No earnings found matching your filters.</p>
+                    </td>
+                </tr>
+            `);
+            $('#loadMoreBtn').hide();
+        }
+        
+        // Update statistics with filtered data
+        updateFilteredStatistics();
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showAlert('An error occurred while loading earnings', 'danger');
+    });
+}
+
+// Calculate date range based on period
+function calculateDateRange(period, today) {
+    const start = new Date(today);
+    const end = new Date(today);
+    
+    switch (period) {
+        case 'today':
+            start.setHours(0, 0, 0, 0);
+            end.setHours(23, 59, 59, 999);
+            break;
+        case 'week':
+            start.setDate(today.getDate() - today.getDay());
+            start.setHours(0, 0, 0, 0);
+            end.setHours(23, 59, 59, 999);
+            break;
+        case 'month':
+            start.setDate(1);
+            start.setHours(0, 0, 0, 0);
+            end.setMonth(today.getMonth() + 1, 0);
+            end.setHours(23, 59, 59, 999);
+            break;
+        case 'quarter':
+            const quarter = Math.floor(today.getMonth() / 3);
+            start.setMonth(quarter * 3, 1);
+            start.setHours(0, 0, 0, 0);
+            end.setMonth(quarter * 3 + 3, 0);
+            end.setHours(23, 59, 59, 999);
+            break;
+        case 'year':
+            start.setMonth(0, 1);
+            start.setHours(0, 0, 0, 0);
+            end.setMonth(11, 31);
+            end.setHours(23, 59, 59, 999);
+            break;
+    }
+    
+    return {
+        start: start.toISOString().split('T')[0],
+        end: end.toISOString().split('T')[0]
+    };
+}
+
+// Update filtered statistics
+function updateFilteredStatistics() {
+    // Build URL for filtered statistics
+    let url = `api/partner_earnings.php?endpoint=get_earning_stats_filtered&session_token=${sessionToken}`;
+    
+    if (currentFilters.status) {
+        url += `&status=${currentFilters.status}`;
+    }
+    
+    if (currentFilters.startDate) {
+        url += `&start_date=${currentFilters.startDate}`;
+    }
+    
+    if (currentFilters.endDate) {
+        url += `&end_date=${currentFilters.endDate}`;
+    }
+    
+    fetch(url)
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Update the statistics cards
+            $('#totalEarnings').text('$' + parseFloat(data.data.total_earnings).toFixed(2));
+            $('#totalTransactions').text(data.data.total_transactions.toLocaleString());
+            $('#thisMonthEarnings').text('$' + parseFloat(data.data.this_month_earnings).toFixed(2));
+            
+            // Update the header total as well
+            $('.content-section .text-end .h3').text('$' + parseFloat(data.data.total_earnings).toFixed(2));
+        }
+    })
+    .catch(error => {
+        console.error('Error updating statistics:', error);
+    });
 }
 
 // Format date

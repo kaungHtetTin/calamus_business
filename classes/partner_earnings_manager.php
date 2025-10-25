@@ -58,11 +58,74 @@ class PartnerEarningsManager {
         return $stats;
     }
     
-    // Get partner's earnings with pagination
-    public function getPartnerEarnings($partnerId, $status = null, $limit = 20, $offset = 0) {
+    // Get partner's earning statistics with filtering
+    public function getPartnerEarningStatsFiltered($partnerId, $status = null, $startDate = null, $endDate = null) {
+        $stats = [
+            'total_earnings' => 0.00,
+            'total_transactions' => 0,
+            'this_month_earnings' => 0.00,
+            'pending_earnings' => 0.00
+        ];
+
         $whereClause = "WHERE partner_id = '$partnerId'";
+        
         if ($status) {
             $whereClause .= " AND status = '$status'";
+        }
+        
+        if ($startDate && $endDate) {
+            $whereClause .= " AND DATE(created_at) BETWEEN '$startDate' AND '$endDate'";
+        } elseif ($startDate) {
+            $whereClause .= " AND DATE(created_at) >= '$startDate'";
+        } elseif ($endDate) {
+            $whereClause .= " AND DATE(created_at) <= '$endDate'";
+        }
+
+        // Total Earnings (paid)
+        $query = "SELECT SUM(amount_received) as total FROM partner_earnings $whereClause AND status = 'paid'";
+        $result = $this->db->read($query);
+        $stats['total_earnings'] = $result && $result[0]['total'] ? (float)$result[0]['total'] : 0.00;
+
+        // Total Transactions (all matching criteria)
+        $query = "SELECT COUNT(*) as total FROM partner_earnings $whereClause";
+        $result = $this->db->read($query);
+        $stats['total_transactions'] = $result && $result[0]['total'] ? (int)$result[0]['total'] : 0;
+
+        // This Month Earnings (paid) - only if no date filter applied
+        if (!$startDate && !$endDate) {
+            $currentMonth = date('Y-m-01 00:00:00');
+            $monthWhereClause = $whereClause . " AND status = 'paid' AND created_at >= '$currentMonth'";
+            $query = "SELECT SUM(amount_received) as total FROM partner_earnings $monthWhereClause";
+            $result = $this->db->read($query);
+            $stats['this_month_earnings'] = $result && $result[0]['total'] ? (float)$result[0]['total'] : 0.00;
+        } else {
+            // If date filter is applied, this month becomes the filtered total
+            $stats['this_month_earnings'] = $stats['total_earnings'];
+        }
+
+        // Pending Earnings
+        $pendingWhereClause = $whereClause . " AND status = 'pending'";
+        $query = "SELECT SUM(amount_received) as total FROM partner_earnings $pendingWhereClause";
+        $result = $this->db->read($query);
+        $stats['pending_earnings'] = $result && $result[0]['total'] ? (float)$result[0]['total'] : 0.00;
+
+        return $stats;
+    }
+    
+    // Get partner's earnings with pagination and filtering
+    public function getPartnerEarnings($partnerId, $status = null, $limit = 20, $offset = 0, $startDate = null, $endDate = null) {
+        $whereClause = "WHERE partner_id = '$partnerId'";
+        
+        if ($status) {
+            $whereClause .= " AND status = '$status'";
+        }
+        
+        if ($startDate && $endDate) {
+            $whereClause .= " AND DATE(created_at) BETWEEN '$startDate' AND '$endDate'";
+        } elseif ($startDate) {
+            $whereClause .= " AND DATE(created_at) >= '$startDate'";
+        } elseif ($endDate) {
+            $whereClause .= " AND DATE(created_at) <= '$endDate'";
         }
         
         $query = "SELECT * FROM partner_earnings $whereClause ORDER BY created_at DESC LIMIT $limit OFFSET $offset";
@@ -71,11 +134,20 @@ class PartnerEarningsManager {
         return $result ? $result : [];
     }
     
-    // Get total count of partner's earnings
-    public function getPartnerEarningsCount($partnerId, $status = null) {
+    // Get total count of partner's earnings with filtering
+    public function getPartnerEarningsCount($partnerId, $status = null, $startDate = null, $endDate = null) {
         $whereClause = "WHERE partner_id = '$partnerId'";
+        
         if ($status) {
             $whereClause .= " AND status = '$status'";
+        }
+        
+        if ($startDate && $endDate) {
+            $whereClause .= " AND DATE(created_at) BETWEEN '$startDate' AND '$endDate'";
+        } elseif ($startDate) {
+            $whereClause .= " AND DATE(created_at) >= '$startDate'";
+        } elseif ($endDate) {
+            $whereClause .= " AND DATE(created_at) <= '$endDate'";
         }
         
         $query = "SELECT COUNT(*) as total FROM partner_earnings $whereClause";

@@ -32,8 +32,13 @@ try {
             $page = (int)($_GET['page'] ?? 1);
             $offset = ($page - 1) * $limit;
             
-            $earnings = $earningsManager->getPartnerEarnings($partner['id'], null, $limit, $offset);
-            $totalCount = $earningsManager->getPartnerEarningsCount($partner['id'], null);
+            // Get filter parameters
+            $status = $_GET['status'] ?? null;
+            $startDate = $_GET['start_date'] ?? null;
+            $endDate = $_GET['end_date'] ?? null;
+            
+            $earnings = $earningsManager->getPartnerEarnings($partner['id'], $status, $limit, $offset, $startDate, $endDate);
+            $totalCount = $earningsManager->getPartnerEarningsCount($partner['id'], $status, $startDate, $endDate);
             
             echo json_encode([
                 'success' => true,
@@ -68,6 +73,37 @@ try {
             $partner = $sessionResult['partner'];
             
             $stats = $earningsManager->getPartnerEarningStats($partner['id']);
+            
+            echo json_encode([
+                'success' => true,
+                'data' => $stats
+            ]);
+            break;
+            
+        case 'get_earning_stats_filtered':
+            if ($method !== 'GET') {
+                throw new Exception('Method not allowed');
+            }
+            
+            $sessionToken = $_GET['session_token'] ?? '';
+            if (empty($sessionToken)) {
+                throw new Exception('Session token is required');
+            }
+            
+            // Validate session
+            $auth = new PartnerAuth();
+            $sessionResult = $auth->validateSession($sessionToken);
+            if (!$sessionResult['success']) {
+                throw new Exception('Invalid session');
+            }
+            $partner = $sessionResult['partner'];
+            
+            // Get filter parameters
+            $status = $_GET['status'] ?? null;
+            $startDate = $_GET['start_date'] ?? null;
+            $endDate = $_GET['end_date'] ?? null;
+            
+            $stats = $earningsManager->getPartnerEarningStatsFiltered($partner['id'], $status, $startDate, $endDate);
             
             echo json_encode([
                 'success' => true,

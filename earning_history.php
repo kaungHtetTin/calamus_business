@@ -25,13 +25,77 @@ $earningStats = $earningsManager->getPartnerEarningStats($currentPartner['id']);
         </div>
     </div>
 
+    <!-- Filter Section -->
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <div class="card bg-light">
+                <div class="card-body">
+                    <h6 class="card-title mb-3">
+                        <i class="fas fa-filter me-2"></i>Filter Earnings
+                    </h6>
+                    <div class="row">
+                        <!-- Status Filter -->
+                        <div class="col-md-3 mb-3">
+                            <label class="form-label">Status</label>
+                            <select class="form-select" id="statusFilter">
+                                <option value="">All Status</option>
+                                <option value="paid">Paid</option>
+                                <option value="pending">Pending</option>
+                            </select>
+                        </div>
+                        
+                        <!-- Period Filter -->
+                        <div class="col-md-3 mb-3">
+                            <label class="form-label">Period</label>
+                            <select class="form-select" id="periodFilter">
+                                <option value="">All Time</option>
+                                <option value="today">Today</option>
+                                <option value="week">This Week</option>
+                                <option value="month">This Month</option>
+                                <option value="quarter">This Quarter</option>
+                                <option value="year">This Year</option>
+                                <option value="custom">Custom Range</option>
+                            </select>
+                        </div>
+                        
+                        <!-- Custom Date Range -->
+                        <div class="col-md-4 mb-3" id="customDateRange" style="display: none;">
+                            <label class="form-label">Date Range</label>
+                            <div class="row">
+                                <div class="col-6">
+                                    <input type="date" class="form-control" id="startDate" placeholder="Start Date">
+                                </div>
+                                <div class="col-6">
+                                    <input type="date" class="form-control" id="endDate" placeholder="End Date">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Filter Actions -->
+                        <div class="col-md-2 mb-3">
+                            <label class="form-label">&nbsp;</label>
+                            <div class="d-flex gap-2">
+                                <button type="button" class="btn btn-primary btn-sm" id="applyFilters">
+                                    <i class="fas fa-search me-1"></i>Filter
+                                </button>
+                                <button type="button" class="btn btn-outline-secondary btn-sm" id="clearFilters">
+                                    <i class="fas fa-times me-1"></i>Clear
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Statistics Cards -->
     <div class="row mb-4">
         <div class="col-md-4 mb-4">
             <div class="card stat-card">
                 <div class="card-body text-center">
                     <i class="fas fa-dollar-sign fa-2x mb-2"></i>
-                    <div class="stat-number">$<?php echo number_format($earningStats['total_earnings'], 2); ?></div>
+                    <div class="stat-number" id="totalEarnings">$<?php echo number_format($earningStats['total_earnings'], 2); ?></div>
                     <div>Total Earnings</div>
                 </div>
             </div>
@@ -40,7 +104,7 @@ $earningStats = $earningsManager->getPartnerEarningStats($currentPartner['id']);
             <div class="card stat-card">
                 <div class="card-body text-center">
                     <i class="fas fa-receipt fa-2x mb-2"></i>
-                    <div class="stat-number"><?php echo number_format($earningStats['total_transactions']); ?></div>
+                    <div class="stat-number" id="totalTransactions"><?php echo number_format($earningStats['total_transactions']); ?></div>
                     <div>Total Transactions</div>
                 </div>
             </div>
@@ -49,7 +113,7 @@ $earningStats = $earningsManager->getPartnerEarningStats($currentPartner['id']);
             <div class="card stat-card">
                 <div class="card-body text-center">
                     <i class="fas fa-calendar-alt fa-2x mb-2"></i>
-                    <div class="stat-number">$<?php echo number_format($earningStats['this_month_earnings'], 2); ?></div>
+                    <div class="stat-number" id="thisMonthEarnings">$<?php echo number_format($earningStats['this_month_earnings'], 2); ?></div>
                     <div>This Month</div>
                 </div>
             </div>
