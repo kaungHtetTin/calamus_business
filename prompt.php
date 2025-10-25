@@ -1,3 +1,31 @@
-In partner_payment_histories.php, the record added twice when the page is loaded.
-I think it is because a php function fetch and add the record and then js function fetch and add the record.
-So I want to remove the php function fetch  and only use js function to fetch and add the record.
+You need to update the api side coding for the earning history page.
+The user_name and user_phone should be replaced with learner_name and learner_phone.
+
+{success: true,…}
+data
+: 
+""
+pagination
+: 
+{current_page: 1, per_page: 20, total_count: 12, total_pages: 1, has_next: false, has_prev: false}
+current_page
+: 
+1
+has_next
+: 
+false
+has_prev
+: 
+false
+per_page
+: 
+20
+total_count
+: 
+12
+total_pages
+: 
+1
+success
+: 
+true

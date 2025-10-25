@@ -122,21 +122,26 @@ class PartnerEarningsManager {
     
     // Get partner's earnings with pagination and filtering
     public function getPartnerEarnings($partnerId, $status = null, $limit = 20, $offset = 0, $startDate = null, $endDate = null) {
-        $whereClause = "WHERE partner_id = '$partnerId'";
+        $whereClause = "WHERE pe.partner_id = '$partnerId'";
         
         if ($status) {
-            $whereClause .= " AND status = '$status'";
+            $whereClause .= " AND pe.status = '$status'";
         }
         
         if ($startDate && $endDate) {
-            $whereClause .= " AND DATE(created_at) BETWEEN '$startDate' AND '$endDate'";
+            $whereClause .= " AND DATE(pe.created_at) BETWEEN '$startDate' AND '$endDate'";
         } elseif ($startDate) {
-            $whereClause .= " AND DATE(created_at) >= '$startDate'";
+            $whereClause .= " AND DATE(pe.created_at) >= '$startDate'";
         } elseif ($endDate) {
-            $whereClause .= " AND DATE(created_at) <= '$endDate'";
+            $whereClause .= " AND DATE(pe.created_at) <= '$endDate'";
         }
         
-        $query = "SELECT * FROM partner_earnings $whereClause ORDER BY created_at DESC LIMIT $limit OFFSET $offset";
+        $query = "SELECT pe.*, l.learner_name as learner_name 
+                 FROM partner_earnings pe 
+                 LEFT JOIN learners l ON pe.learner_phone = l.learner_phone 
+                 $whereClause 
+                 ORDER BY pe.created_at DESC 
+                 LIMIT $limit OFFSET $offset";
         $result = $this->db->read($query);
         
         return $result ? $result : [];
