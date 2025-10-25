@@ -1,3 +1,4 @@
+            <?php include 'footer_content.php'; ?>
             </div>
         </div>
     </div>
