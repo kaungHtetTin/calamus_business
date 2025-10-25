@@ -45,6 +45,7 @@ function setupFormHandlers() {
 // Add new payment method
 function addPaymentMethod() {
     const formData = {
+        session_token: sessionToken,
         payment_method: $('#paymentMethod').val(),
         account_name: $('#accountName').val(),
         account_number: $('#accountNumber').val()
@@ -65,8 +66,7 @@ function addPaymentMethod() {
     fetch('api/payment_methods.php?endpoint=add_payment_method', {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + sessionToken
+            'Content-Type': 'application/json'
         },
         body: JSON.stringify(formData)
     })
@@ -110,6 +110,7 @@ function editPaymentMethod(paymentMethod) {
 // Update payment method
 function updatePaymentMethod() {
     const formData = {
+        session_token: sessionToken,
         id: $('#editPaymentMethodId').val(),
         payment_method: $('#editPaymentMethod').val(),
         account_name: $('#editAccountName').val(),
@@ -131,8 +132,7 @@ function updatePaymentMethod() {
     fetch('api/payment_methods.php?endpoint=update_payment_method', {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + sessionToken
+            'Content-Type': 'application/json'
         },
         body: JSON.stringify(formData)
     })
@@ -162,11 +162,12 @@ function updatePaymentMethod() {
 // Delete payment method
 function deletePaymentMethod(paymentMethodId) {
     // Confirm deletion
-    if (!confirm('Are you sure you want to delete this payment method? This action cannot be undone.')) {
+    if (!confirm('Are you sure you want to delete this mobile money account? This action cannot be undone.')) {
         return;
     }
     
     const formData = {
+        session_token: sessionToken,
         id: paymentMethodId
     };
     
@@ -174,8 +175,7 @@ function deletePaymentMethod(paymentMethodId) {
     fetch('api/payment_methods.php?endpoint=delete_payment_method', {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + sessionToken
+            'Content-Type': 'application/json'
         },
         body: JSON.stringify(formData)
     })

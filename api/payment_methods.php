@@ -5,12 +5,28 @@ header('Content-Type: application/json');
 // Get endpoint from URL parameter
 $endpoint = $_GET['endpoint'] ?? '';
 
-// Validate session
+// Get session token from request
+$sessionToken = null;
+
+// Check for session token in different ways
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $input = json_decode(file_get_contents('php://input'), true);
+    $sessionToken = $input['session_token'] ?? null;
+} else {
+    $sessionToken = $_GET['session_token'] ?? null;
+}
+
+// Validate session token
+if (empty($sessionToken)) {
+    echo json_encode(['success' => false, 'message' => 'Session token is required']);
+    exit;
+}
+
 $auth = new PartnerAuth();
-$sessionResult = $auth->validateSession();
+$sessionResult = $auth->validateSession($sessionToken);
 
 if (!$sessionResult['success']) {
-    echo json_encode(['success' => false, 'message' => 'Invalid session']);
+    echo json_encode(['success' => false, 'message' => 'Invalid session token']);
     exit;
 }
 

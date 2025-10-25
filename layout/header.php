@@ -164,7 +164,7 @@ function getCodeStatusColor($status) {
                     <i class="fas fa-ticket-alt me-2"></i>Promotion Codes
                 </a>
                 <a class="nav-link <?php echo basename($_SERVER['PHP_SELF']) == 'partner_payment_methods.php' ? 'active' : ''; ?>" href="partner_payment_methods.php">
-                    <i class="fas fa-credit-card me-2"></i>Payment Methods
+                    <i class="fas fa-mobile-alt me-2"></i>Mobile Money
                 </a>
                 <a class="nav-link <?php echo basename($_SERVER['PHP_SELF']) == 'profile.php' ? 'active' : ''; ?>" href="profile.php">
                     <i class="fas fa-user me-2"></i>Profile
@@ -197,7 +197,7 @@ function getCodeStatusColor($status) {
                             <i class="fas fa-ticket-alt me-2"></i>Promotion Codes
                         </a>
                         <a class="nav-link <?php echo basename($_SERVER['PHP_SELF']) == 'partner_payment_methods.php' ? 'active' : ''; ?>" href="partner_payment_methods.php">
-                            <i class="fas fa-credit-card me-2"></i>Payment Methods
+                            <i class="fas fa-mobile-alt me-2"></i>Mobile Money
                         </a>
                         <a class="nav-link <?php echo basename($_SERVER['PHP_SELF']) == 'profile.php' ? 'active' : ''; ?>" href="profile.php">
                             <i class="fas fa-user me-2"></i>Profile
@@ -224,7 +224,7 @@ function getCodeStatusColor($status) {
                            $pageNames = [
                                'dashboard.php' => 'Dashboard',
                                'codes.php' => 'Promotion Codes',
-                               'partner_payment_methods.php' => 'Payment Methods',
+                               'partner_payment_methods.php' => 'Mobile Money',
                                'profile.php' => 'Profile'
                            ];
                         

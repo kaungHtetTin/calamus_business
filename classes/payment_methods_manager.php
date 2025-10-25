@@ -40,7 +40,7 @@ class PaymentMethodsManager {
         // Insert new payment method
         $query = "INSERT INTO partner_payment_methods (partner_id, payment_method, account_number, account_name) VALUES ('$partnerId', '$paymentMethod', '$accountNumber', '$accountName')";
         
-        if ($this->db->write($query)) {
+        if ($this->db->save($query)) {
             return ['success' => true, 'message' => 'Payment method added successfully'];
         } else {
             return ['success' => false, 'message' => 'Failed to add payment method'];
@@ -73,7 +73,7 @@ class PaymentMethodsManager {
         // Update payment method
         $query = "UPDATE partner_payment_methods SET payment_method = '$paymentMethod', account_number = '$accountNumber', account_name = '$accountName', updated_at = CURRENT_TIMESTAMP WHERE id = '$paymentMethodId' AND partner_id = '$partnerId'";
         
-        if ($this->db->write($query)) {
+        if ($this->db->save($query)) {
             return ['success' => true, 'message' => 'Payment method updated successfully'];
         } else {
             return ['success' => false, 'message' => 'Failed to update payment method'];
@@ -93,7 +93,7 @@ class PaymentMethodsManager {
         // Delete payment method
         $query = "DELETE FROM partner_payment_methods WHERE id = '$paymentMethodId' AND partner_id = '$partnerId'";
         
-        if ($this->db->write($query)) {
+        if ($this->db->save($query)) {
             return ['success' => true, 'message' => 'Payment method deleted successfully'];
         } else {
             return ['success' => false, 'message' => 'Failed to delete payment method'];
