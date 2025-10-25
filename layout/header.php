@@ -25,9 +25,41 @@ if (empty($sessionToken)) {
     }
 }
 
-// If not authenticated, redirect to login
+// If not authenticated, check localStorage via JavaScript before redirecting
 if ($needsAuth) {
-    header('Location: partner_login.php');
+    // Add JavaScript to check localStorage before redirecting
+    echo '<script>
+    if (localStorage.getItem("partner_session_token")) {
+        // Token exists in localStorage, set it in PHP session
+        fetch("api/validate_session.php", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                session_token: localStorage.getItem("partner_session_token")
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Session is valid, reload page
+                window.location.reload();
+            } else {
+                // Session is invalid, redirect to login
+                localStorage.removeItem("partner_session_token");
+                window.location.href = "partner_login.php";
+            }
+        })
+        .catch(error => {
+            console.error("Session validation error:", error);
+            window.location.href = "partner_login.php";
+        });
+    } else {
+        // No token in localStorage, redirect to login
+        window.location.href = "partner_login.php";
+    }
+    </script>';
     exit;
 }
 
@@ -166,6 +198,9 @@ function getCodeStatusColor($status) {
                 <a class="nav-link <?php echo basename($_SERVER['PHP_SELF']) == 'partner_payment_methods.php' ? 'active' : ''; ?>" href="partner_payment_methods.php">
                     <i class="fas fa-mobile-alt me-2"></i>Mobile Money
                 </a>
+                <a class="nav-link <?php echo basename($_SERVER['PHP_SELF']) == 'earning_history.php' ? 'active' : ''; ?>" href="earning_history.php">
+                    <i class="fas fa-chart-line me-2"></i>Earning History
+                </a>
                 <a class="nav-link <?php echo basename($_SERVER['PHP_SELF']) == 'profile.php' ? 'active' : ''; ?>" href="profile.php">
                     <i class="fas fa-user me-2"></i>Profile
                 </a>
@@ -199,6 +234,9 @@ function getCodeStatusColor($status) {
                         <a class="nav-link <?php echo basename($_SERVER['PHP_SELF']) == 'partner_payment_methods.php' ? 'active' : ''; ?>" href="partner_payment_methods.php">
                             <i class="fas fa-mobile-alt me-2"></i>Mobile Money
                         </a>
+                        <a class="nav-link <?php echo basename($_SERVER['PHP_SELF']) == 'earning_history.php' ? 'active' : ''; ?>" href="earning_history.php">
+                            <i class="fas fa-chart-line me-2"></i>Earning History
+                        </a>
                         <a class="nav-link <?php echo basename($_SERVER['PHP_SELF']) == 'profile.php' ? 'active' : ''; ?>" href="profile.php">
                             <i class="fas fa-user me-2"></i>Profile
                         </a>
@@ -225,6 +263,7 @@ function getCodeStatusColor($status) {
                                'dashboard.php' => 'Dashboard',
                                'codes.php' => 'Promotion Codes',
                                'partner_payment_methods.php' => 'Mobile Money',
+                               'earning_history.php' => 'Earning History',
                                'profile.php' => 'Profile'
                            ];
                         

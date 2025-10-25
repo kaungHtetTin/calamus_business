@@ -100,20 +100,4 @@ class PaymentMethodsManager {
         }
     }
     
-    // Get payment method statistics for a partner
-    public function getPaymentMethodStats($partnerId) {
-        $stats = [];
-        
-        // Total payment methods
-        $totalQuery = "SELECT COUNT(*) as total FROM partner_payment_methods WHERE partner_id = '$partnerId'";
-        $totalResult = $this->db->read($totalQuery);
-        $stats['total'] = $totalResult ? (int)$totalResult[0]['total'] : 0;
-        
-        // Payment methods by type
-        $typeQuery = "SELECT payment_method, COUNT(*) as count FROM partner_payment_methods WHERE partner_id = '$partnerId' GROUP BY payment_method";
-        $typeResult = $this->db->read($typeQuery);
-        $stats['by_type'] = $typeResult ? $typeResult : [];
-        
-        return $stats;
-    }
 }

@@ -62,111 +62,136 @@ try {
             break;
             
         case 'get_codes':
-            if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
                 throw new Exception('Method not allowed');
             }
             
-            $input = json_decode(file_get_contents('php://input'), true);
-            
-            if (!isset($input['session_token'])) {
-                throw new Exception('Missing session token');
+            $sessionToken = $_GET['session_token'] ?? '';
+            if (empty($sessionToken)) {
+                throw new Exception('Session token is required');
             }
             
             // Validate session
             $auth = new PartnerAuth();
-            $partner = $auth->validateSession($input['session_token']);
-            if (!$partner) {
+            $sessionResult = $auth->validateSession($sessionToken);
+            if (!$sessionResult['success']) {
                 throw new Exception('Invalid session');
             }
+            $partner = $sessionResult['partner'];
             
-            $status = $input['status'] ?? null;
-            $limit = $input['limit'] ?? 20;
+            $status = $_GET['status'] ?? null;
+            $limit = (int)($_GET['limit'] ?? 20);
+            $page = (int)($_GET['page'] ?? 1);
+            $offset = ($page - 1) * $limit;
             
-            $codes = $codeManager->getPartnerPromotionCodes($partner['id'], $status, $limit);
+            $codes = $codeManager->getPartnerPromotionCodes($partner['id'], $status, $limit, $offset);
+            $totalCount = $codeManager->getPartnerPromotionCodesCount($partner['id'], $status);
             
             echo json_encode([
                 'success' => true,
-                'codes' => $codes
+                'data' => $codes,
+                'pagination' => [
+                    'current_page' => $page,
+                    'per_page' => $limit,
+                    'total_count' => $totalCount,
+                    'total_pages' => ceil($totalCount / $limit),
+                    'has_next' => $page < ceil($totalCount / $limit),
+                    'has_prev' => $page > 1
+                ]
             ]);
             break;
             
         case 'get_code_management':
-            if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
                 throw new Exception('Method not allowed');
             }
             
-            $input = json_decode(file_get_contents('php://input'), true);
-            
-            if (!isset($input['session_token'])) {
-                throw new Exception('Missing session token');
+            $sessionToken = $_GET['session_token'] ?? '';
+            if (empty($sessionToken)) {
+                throw new Exception('Session token is required');
             }
             
             // Validate session
             $auth = new PartnerAuth();
-            $partner = $auth->validateSession($input['session_token']);
-            if (!$partner) {
+            $sessionResult = $auth->validateSession($sessionToken);
+            if (!$sessionResult['success']) {
                 throw new Exception('Invalid session');
             }
+            $partner = $sessionResult['partner'];
             
-            $status = $input['status'] ?? null;
-            $limit = $input['limit'] ?? 20;
+            $status = $_GET['status'] ?? null;
+            $limit = (int)($_GET['limit'] ?? 20);
+            $page = (int)($_GET['page'] ?? 1);
+            $offset = ($page - 1) * $limit;
             
-            $codes = $codeManager->getPartnerCodeManagement($partner['id'], $status, $limit);
+            $codes = $codeManager->getPartnerCodeManagement($partner['id'], $status, $limit, $offset);
+            $totalCount = $codeManager->getPartnerCodeManagementCount($partner['id'], $status);
             
             echo json_encode([
                 'success' => true,
-                'codes' => $codes
+                'data' => $codes,
+                'pagination' => [
+                    'current_page' => $page,
+                    'per_page' => $limit,
+                    'total_count' => $totalCount,
+                    'total_pages' => ceil($totalCount / $limit),
+                    'has_next' => $page < ceil($totalCount / $limit),
+                    'has_prev' => $page > 1
+                ]
             ]);
             break;
             
-        case 'approve_code':
-            if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+        case 'get_earning_history':
+            if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
                 throw new Exception('Method not allowed');
             }
             
-            $input = json_decode(file_get_contents('php://input'), true);
-            
-            $requiredFields = ['session_token', 'code_id', 'learner_phone'];
-            foreach ($requiredFields as $field) {
-                if (!isset($input[$field])) {
-                    throw new Exception("Missing required field: $field");
-                }
+            $sessionToken = $_GET['session_token'] ?? '';
+            if (empty($sessionToken)) {
+                throw new Exception('Session token is required');
             }
             
             // Validate session
             $auth = new PartnerAuth();
-            $partner = $auth->validateSession($input['session_token']);
-            if (!$partner) {
+            $sessionResult = $auth->validateSession($sessionToken);
+            if (!$sessionResult['success']) {
                 throw new Exception('Invalid session');
             }
+            $partner = $sessionResult['partner'];
             
-            $result = $codeManager->approvePromotionCode($input['code_id'], $input['learner_phone']);
-            echo json_encode($result);
+            $limit = $_GET['limit'] ?? 50;
+            $earningHistory = $codeManager->getPartnerEarningHistory($partner['id'], $limit);
+            
+            echo json_encode([
+                'success' => true,
+                'data' => $earningHistory
+            ]);
             break;
             
-        case 'reject_code':
-            if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+        case 'get_earning_stats':
+            if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
                 throw new Exception('Method not allowed');
             }
             
-            $input = json_decode(file_get_contents('php://input'), true);
-            
-            $requiredFields = ['session_token', 'code_id'];
-            foreach ($requiredFields as $field) {
-                if (!isset($input[$field])) {
-                    throw new Exception("Missing required field: $field");
-                }
+            $sessionToken = $_GET['session_token'] ?? '';
+            if (empty($sessionToken)) {
+                throw new Exception('Session token is required');
             }
             
             // Validate session
             $auth = new PartnerAuth();
-            $partner = $auth->validateSession($input['session_token']);
-            if (!$partner) {
+            $sessionResult = $auth->validateSession($sessionToken);
+            if (!$sessionResult['success']) {
                 throw new Exception('Invalid session');
             }
+            $partner = $sessionResult['partner'];
             
-            $result = $codeManager->rejectPromotionCode($input['code_id']);
-            echo json_encode($result);
+            $earningStats = $codeManager->getPartnerEarningStats($partner['id']);
+            
+            echo json_encode([
+                'success' => true,
+                'data' => $earningStats
+            ]);
             break;
             
         case 'delete_code':

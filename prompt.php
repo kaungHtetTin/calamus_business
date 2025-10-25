@@ -1,21 +1,10 @@
-create a partner_payment_transactions table in the database with the following columns:
-id, 
-partner_id (foreign key to partners table),
-payment_method (varchar), 
-account_number (varchar), 
-account_name (varchar), 
-amount (decimal), 
-status (varchar), 
-transaction_screenshot (varchar), 
-created_at (timestamp), 
-updated_at (timestamp)
+I have changed the code_prefix of partner table to private_code.
+When I the partner register, the private_code should be generated automatically.
+The private_code should be 6 characters long.
+The private_code should be unique.
+The private_code should be alphanumeric.
+The private_code should be uppercase.
+The private_code should be saved in the partner table.
+The private_code should be displayed in the partner portal.
 
-
-<br />
-<b>Fatal error</b>:  Uncaught Error: Call to undefined method Database::write() in C:\xampp\htdocs\business\classes\payment_methods_manager.php:76
-Stack trace:
-#0 C:\xampp\htdocs\business\api\payment_methods.php(101): PaymentMethodsManager-&gt;updatePaymentMethod('1', '9', 'KBZ pay', '09516547500', 'Kaung Htet Tin')
-#1 {main}
-  thrown in <b>C:\xampp\htdocs\business\classes\payment_methods_manager.php</b> on line <b>76</b><br />
-
-
+update this functionality in the partner_auth.php file. and UI of regiser page.

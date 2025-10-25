@@ -126,11 +126,6 @@ switch ($endpoint) {
         echo json_encode($result);
         break;
         
-    case 'get_stats':
-        $stats = $paymentMethodsManager->getPaymentMethodStats($partner['id']);
-        echo json_encode(['success' => true, 'data' => $stats]);
-        break;
-        
     default:
         echo json_encode(['success' => false, 'message' => 'Invalid endpoint']);
         break;

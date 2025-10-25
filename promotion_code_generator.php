@@ -171,11 +171,15 @@ $partnerCommissionRate = $currentPartner['commission_rate'] ?? 0;
                     <div class="generation-summary">
                         <div class="summary-item">
                             <span class="summary-label">Price:</span>
-                            <span class="summary-value">$0.00 (Free)</span>
+                            <span class="summary-value" id="selectedPrice">Select a target to see price</span>
                         </div>
                         <div class="summary-item">
                             <span class="summary-label">Commission:</span>
                             <span class="summary-value"><?php echo $partnerCommissionRate; ?>%</span>
+                        </div>
+                        <div class="summary-item">
+                            <span class="summary-label">Commission Amount:</span>
+                            <span class="summary-value" id="commissionAmount">-</span>
                         </div>
                     </div>
                     <div class="generate-action">
@@ -891,6 +895,8 @@ let selectedType = null;
 let courses = [];
 let packages = [];
 let currentStep = 1;
+let selectedTarget = null;
+let selectedPrice = 0;
 
 // Initialize page
 $(document).ready(function() {
@@ -921,7 +927,25 @@ $(document).ready(function() {
 
     // Target selection
     $('#targetSelect').on('change', function() {
-        if ($(this).val()) {
+        const targetId = $(this).val();
+        if (targetId) {
+            // Find the selected target from the loaded data
+            const targets = selectedType === 'course_purchase' ? courses : packages;
+            selectedTarget = targets.find(target => {
+                const id = selectedType === 'course_purchase' ? target.course_id : target.id;
+                return id == targetId;
+            });
+            
+            if (selectedTarget) {
+                // Extract price based on type
+                selectedPrice = selectedType === 'course_purchase' ? 
+                    parseFloat(selectedTarget.fee) : 
+                    parseFloat(selectedTarget.price);
+                
+                // Update price display
+                updatePriceDisplay();
+            }
+            
             nextStep();
         }
     });
@@ -962,6 +986,11 @@ function nextStep() {
 function showStepContent() {
     $('.step-content').removeClass('show').hide();
     $('#step' + currentStep).addClass('show').show();
+    
+    // Update price display when showing step 4
+    if (currentStep === 4) {
+        updatePriceDisplay();
+    }
 }
 
 // Load targets based on category and type
@@ -995,17 +1024,42 @@ function populateTargetDropdown(targets) {
     const targetSelect = document.getElementById('targetSelect');
     targetSelect.innerHTML = '<option value="">Select...</option>';
     
+    // Store targets globally for later use
+    if (selectedType === 'course_purchase') {
+        courses = targets;
+    } else {
+        packages = targets;
+    }
+    
     targets.forEach(target => {
         const option = document.createElement('option');
         if (selectedType === 'course_purchase') {
             option.value = target.course_id;
-            option.textContent = `${target.title} - ${target.fee}`;
+            option.textContent = `${target.title} - $${target.fee}`;
         } else {
             option.value = target.id;
-            option.textContent = `${target.name} - ${target.price}`;
+            option.textContent = `${target.name} - $${target.price}`;
         }
         targetSelect.appendChild(option);
     });
+}
+
+// Update price display in step 4
+function updatePriceDisplay() {
+    const priceElement = document.getElementById('selectedPrice');
+    const commissionElement = document.getElementById('commissionAmount');
+    
+    if (selectedPrice > 0) {
+        priceElement.textContent = `$${selectedPrice.toFixed(2)}`;
+        
+        // Calculate commission amount
+        const commissionRate = <?php echo $partnerCommissionRate; ?>;
+        const commissionAmount = (selectedPrice * commissionRate) / 100;
+        commissionElement.textContent = `$${commissionAmount.toFixed(2)}`;
+    } else {
+        priceElement.textContent = 'Select a target to see price';
+        commissionElement.textContent = '-';
+    }
 }
 
 // Handle form submission
@@ -1028,8 +1082,8 @@ document.getElementById('promotionCodeForm').addEventListener('submit', function
     // Remove unnecessary fields
     delete data.target_id;
     
-    // Set price to 0 (free promotion code)
-    data.price = 0;
+    // Set price from selected target
+    data.price = selectedPrice;
     
     // Set commission rate from partner
     data.commission_rate = <?php echo $partnerCommissionRate; ?>;
@@ -1065,7 +1119,7 @@ function displayGeneratedCode(code, expirationDate) {
     document.getElementById('expirationDate').textContent = new Date(expirationDate).toLocaleString();
     
     // Hide form and show result
-    document.querySelector('.card.shadow-lg').style.display = 'none';
+    document.querySelector('.generator-container').style.display = 'none';
     document.getElementById('generatedCodeSection').style.display = 'block';
     
     // Scroll to result using jQuery animate
@@ -1097,13 +1151,21 @@ document.getElementById('copyCodeBtn').addEventListener('click', function() {
 // Generate new code
 function generateNewCode() {
     // Reset form
-    document.querySelector('.card.shadow-lg').style.display = 'block';
+    document.querySelector('.generator-container').style.display = 'block';
     document.getElementById('generatedCodeSection').style.display = 'none';
     
     // Reset selections
     $('.category-option, .type-option').removeClass('selected');
     $('#selectedCategory, #selectedType').val('');
     $('#targetSelect').html('<option value="">Select...</option>');
+    
+    // Reset global variables
+    selectedCategory = null;
+    selectedType = null;
+    selectedTarget = null;
+    selectedPrice = 0;
+    courses = [];
+    packages = [];
     
     // Reset step progress
     currentStep = 1;

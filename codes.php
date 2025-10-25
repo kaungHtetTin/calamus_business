@@ -4,8 +4,10 @@ include 'layout/header.php';
 
 // Get promotion code data
 $codeStats = $codeManager->getPartnerCodeStats($currentPartner['id']);
-$recentCodes = $codeManager->getPartnerPromotionCodes($currentPartner['id'], null, 10);
-$codeManagement = $codeManager->getPartnerCodeManagement($currentPartner['id'], null, 10);
+$recentCodes = $codeManager->getPartnerPromotionCodes($currentPartner['id'], null, 10, 0);
+$codeManagement = $codeManager->getPartnerCodeManagement($currentPartner['id'], null, 10, 0);
+$totalCodesCount = $codeManager->getPartnerPromotionCodesCount($currentPartner['id']);
+$totalManagementCount = $codeManager->getPartnerCodeManagementCount($currentPartner['id']);
 ?>
 
 <!-- Promotion Codes Section -->
@@ -25,15 +27,6 @@ $codeManagement = $codeManager->getPartnerCodeManagement($currentPartner['id'], 
                     <i class="fas fa-ticket-alt fa-2x mb-2"></i>
                     <div class="stat-number"><?php echo number_format($codeStats['total_generated'] ?? 0); ?></div>
                     <div>Total Generated</div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3 mb-3">
-            <div class="card stat-card">
-                <div class="card-body text-center">
-                    <i class="fas fa-check-circle fa-2x mb-2"></i>
-                    <div class="stat-number"><?php echo number_format($codeStats['approved'] ?? 0); ?></div>
-                    <div>Approved</div>
                 </div>
             </div>
         </div>
@@ -64,7 +57,6 @@ $codeManagement = $codeManager->getPartnerCodeManagement($currentPartner['id'], 
             <div class="btn-group" role="group">
                 <button type="button" class="btn btn-sm btn-outline-primary" onclick="filterCodes('all')">All</button>
                 <button type="button" class="btn btn-sm btn-outline-warning" onclick="filterCodes('pending')">Pending</button>
-                <button type="button" class="btn btn-sm btn-outline-success" onclick="filterCodes('approved')">Approved</button>
                 <button type="button" class="btn btn-sm btn-outline-danger" onclick="filterCodes('rejected')">Rejected</button>
             </div>
         </div>
@@ -74,6 +66,7 @@ $codeManagement = $codeManager->getPartnerCodeManagement($currentPartner['id'], 
                     <thead>
                         <tr>
                             <th>Code</th>
+                            <th>Type</th>
                             <th>Status</th>
                             <th>Created</th>
                             <th>Expires</th>
@@ -89,6 +82,19 @@ $codeManagement = $codeManager->getPartnerCodeManagement($currentPartner['id'], 
                                 <code class="bg-light p-1 rounded"><?php echo htmlspecialchars($code['code']); ?></code>
                             </td>
                             <td>
+                                <?php 
+                                $codeType = '';
+                                if (!empty($code['target_course_id'])) {
+                                    $codeType = 'Course';
+                                } elseif (!empty($code['target_package_id'])) {
+                                    $codeType = 'Package';
+                                } else {
+                                    $codeType = '-';
+                                }
+                                ?>
+                                <span class="badge bg-info"><?php echo $codeType; ?></span>
+                            </td>
+                            <td>
                                 <span class="badge bg-<?php echo getCodeStatusColor($code['status']); ?>">
                                     <?php echo ucfirst($code['status']); ?>
                                 </span>
@@ -100,12 +106,6 @@ $codeManagement = $codeManager->getPartnerCodeManagement($currentPartner['id'], 
                             <td>
                                 <?php if ($code['status'] === 'pending'): ?>
                                 <div class="btn-group btn-group-sm" role="group">
-                                    <button class="btn btn-success btn-sm" onclick="approveCode(<?php echo $code['id']; ?>)">
-                                        <i class="fas fa-check"></i>
-                                    </button>
-                                    <button class="btn btn-danger btn-sm" onclick="rejectCode(<?php echo $code['id']; ?>)">
-                                        <i class="fas fa-times"></i>
-                                    </button>
                                     <button class="btn btn-outline-danger btn-sm" onclick="deleteCode(<?php echo $code['id']; ?>)">
                                         <i class="fas fa-trash"></i>
                                     </button>
@@ -118,6 +118,28 @@ $codeManagement = $codeManager->getPartnerCodeManagement($currentPartner['id'], 
                         <?php endforeach; ?>
                     </tbody>
                 </table>
+            </div>
+            
+            <!-- Pagination -->
+            <div class="d-flex justify-content-between align-items-center mt-3">
+                <div class="pagination-info">
+                    <small class="text-muted">
+                        Showing <span id="showingStart">1</span> to <span id="showingEnd">10</span> of <span id="totalCount"><?php echo $totalManagementCount; ?></span> codes
+                    </small>
+                </div>
+                <nav aria-label="Code management pagination">
+                    <ul class="pagination pagination-sm mb-0" id="codeManagementPagination">
+                        <li class="page-item disabled" id="prevBtn">
+                            <a class="page-link" href="#" onclick="loadCodeManagementPage(currentPage - 1)">Previous</a>
+                        </li>
+                        <li class="page-item active" id="page1">
+                            <a class="page-link" href="#" onclick="loadCodeManagementPage(1)">1</a>
+                        </li>
+                        <li class="page-item" id="nextBtn">
+                            <a class="page-link" href="#" onclick="loadCodeManagementPage(currentPage + 1)">Next</a>
+                        </li>
+                    </ul>
+                </nav>
             </div>
         </div>
     </div>
@@ -259,43 +281,230 @@ $codeManagement = $codeManager->getPartnerCodeManagement($currentPartner['id'], 
     </div>
 </div>
 
-<!-- Approve Code Modal -->
-<div class="modal fade" id="approveCodeModal" tabindex="-1" aria-labelledby="approveCodeModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="approveCodeModalLabel">Approve Promotion Code</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <form id="approveCodeForm">
-                <div class="modal-body">
-                    <input type="hidden" id="approveCodeId" name="code_id">
-                    <div class="mb-3">
-                        <label for="learnerPhone" class="form-label">Learner Phone Number</label>
-                        <input type="tel" class="form-control" id="learnerPhone" name="learner_phone" required>
-                        <div class="form-text">Enter the phone number of the learner who used this code</div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="submit" class="btn btn-success">Approve Code</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
 
 <script>
 // Global variables
-let sessionToken = window.sessionToken || '';
+let sessionToken = window.sessionToken || localStorage.getItem('partner_session_token') || '';
 let categories = [];
 let courses = [];
 let packages = [];
+let currentPage = 1;
+let currentStatus = 'all';
+let totalPages = 1;
+let perPage = 10;
 
 // Initialize page
 $(document).ready(function() {
+    // Check if session token is available
+    if (!sessionToken) {
+        console.error('No session token available');
+        showAlert('Session expired. Please login again.', 'danger');
+        setTimeout(() => {
+            window.location.href = 'partner_login.php';
+        }, 2000);
+        return;
+    }
+    
+    // Update window.sessionToken for other scripts
+    window.sessionToken = sessionToken;
+    
     loadCategories();
+    initializePagination();
+    // Load initial data for pagination
+    loadCodeManagementPage(1);
 });
+
+// Initialize pagination
+function initializePagination() {
+    // Don't update pagination info until we have data
+    updatePaginationButtons();
+}
+
+// Load code management page
+function loadCodeManagementPage(page) {
+    if (page < 1 || page > totalPages) return;
+    
+    currentPage = page;
+    
+    // Show loading state
+    const tbody = $('#codeManagementTable tbody');
+    tbody.html('<tr><td colspan="8" class="text-center"><i class="fas fa-spinner fa-spin"></i> Loading...</td></tr>');
+    
+    // Build API URL
+    const params = new URLSearchParams({
+        session_token: sessionToken,
+        status: currentStatus === 'all' ? '' : currentStatus,
+        limit: perPage,
+        page: page
+    });
+    
+    fetch(`api/promotion_codes.php?endpoint=get_code_management&${params}`)
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            updateCodeManagementTable(data.data);
+            updatePaginationInfo(data.pagination);
+            updatePaginationButtons(data.pagination);
+        } else {
+            showAlert(data.message || 'Failed to load codes', 'danger');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showAlert('An error occurred while loading codes', 'danger');
+    });
+}
+
+// Update code management table
+function updateCodeManagementTable(codes) {
+    const tbody = $('#codeManagementTable tbody');
+    tbody.empty();
+    
+    if (codes.length === 0) {
+        tbody.html('<tr><td colspan="8" class="text-center text-muted">No codes found</td></tr>');
+        return;
+    }
+    
+    codes.forEach(code => {
+        const statusBadge = getStatusBadge(code.status);
+        const codeTypeBadge = getCodeTypeBadge(code);
+        const actions = getCodeActions(code);
+        
+        const row = `
+            <tr>
+                <td><code>${code.code}</code></td>
+                <td>${codeTypeBadge}</td>
+                <td>${statusBadge}</td>
+                <td>${formatDate(code.created_at)}</td>
+                <td>${formatDate(code.expired_at)}</td>
+                <td>${code.user_name || '-'}</td>
+                <td>${code.user_phone || '-'}</td>
+                <td>${actions}</td>
+            </tr>
+        `;
+        tbody.append(row);
+    });
+}
+
+// Get status badge HTML
+function getStatusBadge(status) {
+    const statusColors = {
+        'pending': 'warning',
+        'approved': 'success',
+        'rejected': 'danger',
+        'expired': 'secondary'
+    };
+    
+    const color = statusColors[status] || 'secondary';
+    return `<span class="badge bg-${color}">${status.charAt(0).toUpperCase() + status.slice(1)}</span>`;
+}
+
+// Get code type badge HTML
+function getCodeTypeBadge(code) {
+    let codeType = '';
+    if (code.target_course_id) {
+        codeType = 'Course';
+    } else if (code.target_package_id) {
+        codeType = 'Package';
+    } else {
+        codeType = '-';
+    }
+    
+    return `<span class="badge bg-info">${codeType}</span>`;
+}
+
+// Get code actions HTML
+function getCodeActions(code) {
+    if (code.status === 'pending') {
+        return `
+            <div class="btn-group btn-group-sm" role="group">
+                <button class="btn btn-outline-danger btn-sm" onclick="deleteCode(${code.id})">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </div>
+        `;
+    } else {
+        return '<span class="text-muted">No actions</span>';
+    }
+}
+
+// Update pagination info
+function updatePaginationInfo(pagination = null) {
+    if (pagination) {
+        const start = ((pagination.current_page - 1) * pagination.per_page) + 1;
+        const end = Math.min(pagination.current_page * pagination.per_page, pagination.total_count);
+        
+        $('#showingStart').text(start);
+        $('#showingEnd').text(end);
+        $('#totalCount').text(pagination.total_count);
+        
+        totalPages = pagination.total_pages;
+    }
+}
+
+// Update pagination buttons
+function updatePaginationButtons(pagination = null) {
+    const prevBtn = $('#prevBtn');
+    const nextBtn = $('#nextBtn');
+    
+    if (pagination) {
+        prevBtn.toggleClass('disabled', !pagination.has_prev);
+        nextBtn.toggleClass('disabled', !pagination.has_next);
+    } else {
+        prevBtn.toggleClass('disabled', currentPage <= 1);
+        nextBtn.toggleClass('disabled', currentPage >= totalPages);
+    }
+    
+    // Update page numbers
+    updatePageNumbers();
+}
+
+// Update page numbers
+function updatePageNumbers() {
+    const pagination = $('#codeManagementPagination');
+    const pageItems = pagination.find('.page-item').not('#prevBtn, #nextBtn');
+    pageItems.remove();
+    
+    // Add page numbers
+    const startPage = Math.max(1, currentPage - 2);
+    const endPage = Math.min(totalPages, currentPage + 2);
+    
+    for (let i = startPage; i <= endPage; i++) {
+        const pageItem = $(`
+            <li class="page-item ${i === currentPage ? 'active' : ''}">
+                <a class="page-link" href="#" onclick="loadCodeManagementPage(${i})">${i}</a>
+            </li>
+        `);
+        $('#prevBtn').after(pageItem);
+    }
+}
+
+// Format date
+function formatDate(dateString) {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', {
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+    });
+}
+
+// Filter codes
+function filterCodes(status) {
+    currentStatus = status;
+    currentPage = 1;
+    
+    // Update filter buttons
+    $('.btn-group .btn').removeClass('active');
+    $(`.btn-group .btn[onclick="filterCodes('${status}')"]`).addClass('active');
+    
+    // Load first page with new filter
+    loadCodeManagementPage(1);
+}
+
+// Initialize page
 
 // Load course categories
 function loadCategories() {
@@ -484,72 +693,7 @@ document.getElementById('createCodeForm').addEventListener('submit', function(e)
     });
 });
 
-// Approve code
-function approveCode(codeId) {
-    document.getElementById('approveCodeId').value = codeId;
-    const modal = new bootstrap.Modal(document.getElementById('approveCodeModal'));
-    modal.show();
-}
 
-// Handle approve code form submission
-document.getElementById('approveCodeForm').addEventListener('submit', function(e) {
-    e.preventDefault();
-    
-    const formData = new FormData(this);
-    const data = Object.fromEntries(formData);
-    data.session_token = sessionToken;
-    
-    fetch('api/promotion_codes.php?endpoint=approve_code', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data)
-    })
-    .then(response => response.json())
-    .then(result => {
-        if (result.success) {
-            showAlert('Code approved successfully', 'success');
-            bootstrap.Modal.getInstance(document.getElementById('approveCodeModal')).hide();
-            location.reload();
-        } else {
-            showAlert(result.message, 'danger');
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        showAlert('An error occurred while approving the code', 'danger');
-    });
-});
-
-// Reject code
-function rejectCode(codeId) {
-    if (confirm('Are you sure you want to reject this code?')) {
-        fetch('api/promotion_codes.php?endpoint=reject_code', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                session_token: sessionToken,
-                code_id: codeId
-            })
-        })
-        .then(response => response.json())
-        .then(result => {
-            if (result.success) {
-                showAlert('Code rejected successfully', 'success');
-                location.reload();
-            } else {
-                showAlert(result.message, 'danger');
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            showAlert('An error occurred while rejecting the code', 'danger');
-        });
-    }
-}
 
 // Delete code
 function deleteCode(codeId) {

@@ -101,22 +101,22 @@ class PromotionCodeManager {
         }
     }
     
-    // Get partner's promotion codes
-    public function getPartnerPromotionCodes($partnerId, $status = null, $limit = 20) {
+    // Get partner's promotion codes with pagination
+    public function getPartnerPromotionCodes($partnerId, $status = null, $limit = 20, $offset = 0) {
         $whereClause = "WHERE partner_id = '$partnerId'";
         if ($status) {
             $whereClause .= " AND status = '$status'";
         }
         
-        $query = "SELECT * FROM promotion_codes $whereClause ORDER BY created_at DESC LIMIT $limit";
+        $query = "SELECT * FROM promotion_codes $whereClause ORDER BY created_at DESC LIMIT $limit OFFSET $offset";
         $result = $this->db->read($query);
         
         // Return empty array if no results
         return $result ? $result : [];
     }
     
-    // Get partner's code management records (now just uses promotion_codes table)
-    public function getPartnerCodeManagement($partnerId, $status = null, $limit = 20) {
+    // Get partner's code management records with pagination
+    public function getPartnerCodeManagement($partnerId, $status = null, $limit = 20, $offset = 0) {
         $whereClause = "WHERE partner_id = '$partnerId'";
         if ($status) {
             $whereClause .= " AND status = '$status'";
@@ -125,11 +125,37 @@ class PromotionCodeManager {
         $query = "SELECT pc.*, l.learner_name as user_name, pc.learner_phone as user_phone
                  FROM promotion_codes pc 
                  LEFT JOIN learners l ON pc.learner_phone = l.learner_phone 
-                 $whereClause ORDER BY pc.created_at DESC LIMIT $limit";
+                 $whereClause ORDER BY pc.created_at DESC LIMIT $limit OFFSET $offset";
         $result = $this->db->read($query);
         
         // Return empty array if no results
         return $result ? $result : [];
+    }
+    
+    // Get total count of partner's promotion codes
+    public function getPartnerPromotionCodesCount($partnerId, $status = null) {
+        $whereClause = "WHERE partner_id = '$partnerId'";
+        if ($status) {
+            $whereClause .= " AND status = '$status'";
+        }
+        
+        $query = "SELECT COUNT(*) as total FROM promotion_codes $whereClause";
+        $result = $this->db->read($query);
+        
+        return $result ? (int)$result[0]['total'] : 0;
+    }
+    
+    // Get total count of partner's code management records
+    public function getPartnerCodeManagementCount($partnerId, $status = null) {
+        $whereClause = "WHERE partner_id = '$partnerId'";
+        if ($status) {
+            $whereClause .= " AND status = '$status'";
+        }
+        
+        $query = "SELECT COUNT(*) as total FROM promotion_codes $whereClause";
+        $result = $this->db->read($query);
+        
+        return $result ? (int)$result[0]['total'] : 0;
     }
     
     // Get partner code statistics
@@ -175,76 +201,52 @@ class PromotionCodeManager {
         return $stats;
     }
     
-    // Approve promotion code
-    public function approvePromotionCode($codeId, $learnerPhone) {
-        // Get code details
-        $code = $this->db->read("SELECT * FROM promotion_codes WHERE id = '$codeId'");
-        if (!$code) {
-            return ['success' => false, 'message' => 'Code not found'];
-        }
+    // Get partner earning history
+    public function getPartnerEarningHistory($partnerId, $limit = 50) {
+        $query = "SELECT pc.*, l.learner_name as user_name, pc.learner_phone as user_phone
+                 FROM promotion_codes pc 
+                 LEFT JOIN learners l ON pc.learner_phone = l.learner_phone 
+                 WHERE pc.partner_id = '$partnerId' 
+                 AND pc.status = 'approved' 
+                 AND pc.amount_received > 0
+                 ORDER BY pc.updated_at DESC 
+                 LIMIT $limit";
         
-        $code = $code[0];
-        
-        // Check if code is still valid
-        if ($code['status'] !== 'pending') {
-            return ['success' => false, 'message' => 'Code is not in pending status'];
-        }
-        
-        if (strtotime($code['expired_at']) < time()) {
-            return ['success' => false, 'message' => 'Code has expired'];
-        }
-        
-        // Get learner name from learners table
-        $learner = $this->db->read("SELECT learner_name FROM learners WHERE learner_phone = '$learnerPhone'");
-        $learnerName = $learner ? $learner[0]['learner_name'] : 'Unknown';
-        
-        // Calculate commission amount
-        $commissionAmount = ($code['price'] * $code['commission_rate']) / 100;
-        
-        // Update promotion_codes table
-        $updateQuery = "UPDATE promotion_codes SET 
-                        status = 'approved', 
-                        learner_phone = '$learnerPhone',
-                        amount_received = '$commissionAmount',
-                        updated_at = NOW() 
-                        WHERE id = '$codeId'";
-        
-        if ($this->db->save($updateQuery)) {
-            // Update partner code count
-            $this->db->save("UPDATE partners SET total_codes_used = total_codes_used + 1 WHERE id = '{$code['partner_id']}'");
-            
-            return [
-                'success' => true, 
-                'message' => 'Code approved successfully',
-                'commission_amount' => $commissionAmount
-            ];
-        }
-        
-        return ['success' => false, 'message' => 'Failed to approve code'];
+        $result = $this->db->read($query);
+        return $result ? $result : [];
     }
     
-    // Reject promotion code
-    public function rejectPromotionCode($codeId) {
-        // Get code details
-        $code = $this->db->read("SELECT * FROM promotion_codes WHERE id = '$codeId'");
-        if (!$code) {
-            return ['success' => false, 'message' => 'Code not found'];
-        }
+    // Get partner earning statistics
+    public function getPartnerEarningStats($partnerId) {
+        $stats = [];
         
-        $code = $code[0];
+        // Total earnings
+        $totalEarningsQuery = "SELECT SUM(amount_received) as total FROM promotion_codes WHERE partner_id = '$partnerId' AND status = 'approved' AND amount_received > 0";
+        $totalEarnings = $this->db->read($totalEarningsQuery);
+        $stats['total_earnings'] = $totalEarnings ? (float)$totalEarnings[0]['total'] : 0.00;
         
-        // Update promotion_codes table
-        $updateQuery = "UPDATE promotion_codes SET 
-                        status = 'rejected', 
-                        updated_at = NOW() 
-                        WHERE id = '$codeId'";
+        // Total transactions
+        $totalTransactionsQuery = "SELECT COUNT(*) as total FROM promotion_codes WHERE partner_id = '$partnerId' AND status = 'approved' AND amount_received > 0";
+        $totalTransactions = $this->db->read($totalTransactionsQuery);
+        $stats['total_transactions'] = $totalTransactions ? (int)$totalTransactions[0]['total'] : 0;
         
-        if ($this->db->save($updateQuery)) {
-            return ['success' => true, 'message' => 'Code rejected successfully'];
-        }
+        // Average earning per transaction
+        $stats['average_earning'] = $stats['total_transactions'] > 0 ? 
+            round($stats['total_earnings'] / $stats['total_transactions'], 2) : 0.00;
         
-        return ['success' => false, 'message' => 'Failed to reject code'];
+        // This month earnings
+        $thisMonthQuery = "SELECT SUM(amount_received) as total FROM promotion_codes 
+                          WHERE partner_id = '$partnerId' 
+                          AND status = 'approved' 
+                          AND amount_received > 0
+                          AND MONTH(updated_at) = MONTH(CURRENT_DATE()) 
+                          AND YEAR(updated_at) = YEAR(CURRENT_DATE())";
+        $thisMonthEarnings = $this->db->read($thisMonthQuery);
+        $stats['this_month_earnings'] = $thisMonthEarnings ? (float)$thisMonthEarnings[0]['total'] : 0.00;
+        
+        return $stats;
     }
+    
     
     // Delete promotion code (only if pending)
     public function deletePromotionCode($codeId) {

@@ -7,7 +7,6 @@ include 'layout/header.php';
 
 $paymentMethodsManager = new PaymentMethodsManager();
 $paymentMethods = $paymentMethodsManager->getPartnerPaymentMethods($currentPartner['id']);
-$stats = $paymentMethodsManager->getPaymentMethodStats($currentPartner['id']);
 
 ?>
 
@@ -23,28 +22,6 @@ $stats = $paymentMethodsManager->getPaymentMethodStats($currentPartner['id']);
         <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addPaymentMethodModal">
             <i class="fas fa-plus me-2"></i>Add Mobile Money Account
         </button>
-    </div>
-
-    <!-- Statistics Cards -->
-    <div class="row mb-4">
-        <div class="col-md-6 mb-3">
-            <div class="card stat-card">
-                <div class="card-body text-center">
-                    <i class="fas fa-mobile-alt fa-2x mb-2"></i>
-                    <div class="stat-number"><?php echo number_format($stats['total'] ?? 0); ?></div>
-                    <div>Total Mobile Money Accounts</div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-6 mb-3">
-            <div class="card stat-card">
-                <div class="card-body text-center">
-                    <i class="fas fa-list fa-2x mb-2"></i>
-                    <div class="stat-number"><?php echo count($stats['by_type'] ?? []); ?></div>
-                    <div>Different Services</div>
-                </div>
-            </div>
-        </div>
     </div>
 
     <!-- Payment Methods Table -->
@@ -122,11 +99,17 @@ $stats = $paymentMethodsManager->getPaymentMethodStats($currentPartner['id']);
                 <div class="modal-body">
                     <div class="mb-3">
                         <label for="paymentMethod" class="form-label">Mobile Money Service</label>
-                        <input type="text" class="form-control" id="paymentMethod" name="payment_method" placeholder="e.g., M-Pesa, Airtel Money, Orange Money" required>
+                        <select class="form-select" id="paymentMethod" name="payment_method" required>
+                            <option value="">Select Mobile Money Service</option>
+                            <option value="KBZ Pay">KBZ Pay</option>
+                            <option value="Wave Pay">Wave Pay</option>
+                            <option value="AYA Pay">AYA Pay</option>
+                            <option value="Mytel Pay">Mytel Pay</option>
+                        </select>
                         <div class="form-text">
                             <small class="text-muted">
                                 <i class="fas fa-info-circle me-1"></i>
-                                Enter the mobile money service provider name
+                                Choose your mobile money service provider
                             </small>
                         </div>
                     </div>
@@ -171,11 +154,17 @@ $stats = $paymentMethodsManager->getPaymentMethodStats($currentPartner['id']);
                 <div class="modal-body">
                     <div class="mb-3">
                         <label for="editPaymentMethod" class="form-label">Mobile Money Service</label>
-                        <input type="text" class="form-control" id="editPaymentMethod" name="payment_method" placeholder="e.g., M-Pesa, Airtel Money, Orange Money" required>
+                        <select class="form-select" id="editPaymentMethod" name="payment_method" required>
+                            <option value="">Select Mobile Money Service</option>
+                            <option value="KBZ Pay">KBZ Pay</option>
+                            <option value="Wave Pay">Wave Pay</option>
+                            <option value="AYA Pay">AYA Pay</option>
+                            <option value="Mytel Pay">Mytel Pay</option>
+                        </select>
                         <div class="form-text">
                             <small class="text-muted">
                                 <i class="fas fa-info-circle me-1"></i>
-                                Enter the mobile money service provider name
+                                Choose your mobile money service provider
                             </small>
                         </div>
                     </div>
