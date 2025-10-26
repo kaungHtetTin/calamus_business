@@ -32,3 +32,35 @@ payment methods
 amount to payout
 action button to payout the amount to the partner. (only add button, the implementation will be in the next step)
 
+for admin dashboard, add new section in drawer menu 'Payout history'
+the history should have the following features:
+fetch the data from the table 'partner_payment_histories'
+construct the table with the following columns:
+partner name
+payment method
+payment account
+amount
+status
+date
+add pagination feature
+add filtering feature with status and date range
+add action button to view the payout details.
+
+for partners.php add a button 'create new partner' to create a new partner.
+this button will redirect to the create_partner.php page.
+create_partner.php should have the following features:
+form to create a new partner
+form fields:
+company name
+contact name
+email
+phone
+website
+description
+commission rate (default 10%)
+password
+confirm password
+make private code generation
+make status verification
+make created at and updated at
+submit button

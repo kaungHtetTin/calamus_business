@@ -491,6 +491,176 @@ class AdminAuth {
     }
     
     /**
+     * Get payout histories with pagination and filtering
+     */
+    public function getPayoutHistories($page = 1, $limit = 20, $status = null, $startDate = null, $endDate = null) {
+        $offset = ($page - 1) * $limit;
+        $whereClause = "WHERE 1=1";
+        
+        if ($status) {
+            $whereClause .= " AND pph.status = '$status'";
+        }
+        
+        if ($startDate) {
+            $whereClause .= " AND DATE(pph.created_at) >= '$startDate'";
+        }
+        
+        if ($endDate) {
+            $whereClause .= " AND DATE(pph.created_at) <= '$endDate'";
+        }
+        
+        // Get total count
+        $countQuery = "SELECT COUNT(*) as total FROM partner_payment_histories pph $whereClause";
+        $countResult = $this->db->read($countQuery);
+        $total = $countResult[0]['total'];
+        
+        // Get payout histories with partner info
+        $query = "SELECT 
+                    pph.*,
+                    p.contact_name,
+                    p.company_name,
+                    p.email
+                  FROM partner_payment_histories pph
+                  LEFT JOIN partners p ON pph.partner_id = p.id
+                  $whereClause
+                  ORDER BY pph.created_at DESC
+                  LIMIT $limit OFFSET $offset";
+        
+        $histories = $this->db->read($query);
+        
+        return [
+            'histories' => $histories ? $histories : [],
+            'total' => $total,
+            'page' => $page,
+            'limit' => $limit,
+            'total_pages' => ceil($total / $limit)
+        ];
+    }
+    
+    /**
+     * Get payout history statistics
+     */
+    public function getPayoutHistoryStatistics($status = null, $startDate = null, $endDate = null) {
+        $whereClause = "WHERE 1=1";
+        
+        if ($status) {
+            $whereClause .= " AND status = '$status'";
+        }
+        
+        if ($startDate) {
+            $whereClause .= " AND DATE(created_at) >= '$startDate'";
+        }
+        
+        if ($endDate) {
+            $whereClause .= " AND DATE(created_at) <= '$endDate'";
+        }
+        
+        $stats = [];
+        
+        // Total payout amount
+        $totalQuery = "SELECT SUM(amount) as total FROM partner_payment_histories $whereClause";
+        $result = $this->db->read($totalQuery);
+        $stats['total_amount'] = $result && $result[0]['total'] ? (float)$result[0]['total'] : 0.00;
+        
+        // Total transactions
+        $countQuery = "SELECT COUNT(*) as total FROM partner_payment_histories $whereClause";
+        $result = $this->db->read($countQuery);
+        $stats['total_transactions'] = $result ? (int)$result[0]['total'] : 0;
+        
+        // Pending amount
+        $pendingQuery = "SELECT SUM(amount) as total FROM partner_payment_histories WHERE status = 'pending' $whereClause";
+        $result = $this->db->read($pendingQuery);
+        $stats['pending_amount'] = $result && $result[0]['total'] ? (float)$result[0]['total'] : 0.00;
+        
+        // Received amount
+        $receivedQuery = "SELECT SUM(amount) as total FROM partner_payment_histories WHERE status = 'received' $whereClause";
+        $result = $this->db->read($receivedQuery);
+        $stats['received_amount'] = $result && $result[0]['total'] ? (float)$result[0]['total'] : 0.00;
+        
+        return $stats;
+    }
+    
+    /**
+     * Generate unique private code
+     */
+    private function generateUniquePrivateCode() {
+        $maxAttempts = 100;
+        $attempts = 0;
+        
+        do {
+            $characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            $privateCode = '';
+            
+            for ($i = 0; $i < 6; $i++) {
+                $privateCode .= $characters[rand(0, strlen($characters) - 1)];
+            }
+            
+            $existingCode = $this->db->read("SELECT id FROM partners WHERE private_code = '$privateCode'");
+            
+            if (!$existingCode) {
+                return $privateCode;
+            }
+            
+            $attempts++;
+        } while ($attempts < $maxAttempts);
+        
+        return false;
+    }
+    
+    /**
+     * Create new partner
+     */
+    public function createPartner($partnerData) {
+        // Check if email already exists
+        $existingPartner = $this->db->read("SELECT id FROM partners WHERE email = '{$partnerData['email']}'");
+        if ($existingPartner) {
+            return ['success' => false, 'message' => 'Email already registered'];
+        }
+        
+        // Generate unique private code
+        $privateCode = $this->generateUniquePrivateCode();
+        if (!$privateCode) {
+            return ['success' => false, 'message' => 'Failed to generate unique private code'];
+        }
+        
+        // Hash password
+        $hashedPassword = password_hash($partnerData['password'], PASSWORD_DEFAULT);
+        
+        // Generate verification code
+        $verificationCode = str_pad(rand(100000, 999999), 6, '0', STR_PAD_LEFT);
+        
+        // Set default values
+        $status = $partnerData['status'] ?? 'active';
+        $commissionRate = $partnerData['commission_rate'] ?? '10';
+        $emailVerified = isset($partnerData['email_verified']) && $partnerData['email_verified'] ? 1 : 0;
+        
+        // Insert partner
+        $query = "INSERT INTO partners 
+                 (company_name, contact_name, email, phone, password, website, description, 
+                  commission_rate, private_code, status, verification_code, email_verified, created_at, updated_at) 
+                 VALUES ('{$partnerData['company_name']}', '{$partnerData['contact_name']}', 
+                         '{$partnerData['email']}', '{$partnerData['phone']}', '$hashedPassword', 
+                         '{$partnerData['website']}', '{$partnerData['description']}', 
+                         '$commissionRate', '$privateCode', '$status', '$verificationCode', '$emailVerified', NOW(), NOW())";
+        
+        $result = $this->db->save($query);
+        if ($result) {
+            $query = "SELECT id FROM partners WHERE email = '{$partnerData['email']}' LIMIT 1";
+            $partner = $this->db->read($query);
+            $partnerId = $partner[0]['id'];
+            
+            return [
+                'success' => true, 
+                'message' => 'Partner created successfully',
+                'partner_id' => $partnerId,
+                'private_code' => $privateCode
+            ];
+        }
+        
+        return ['success' => false, 'message' => 'Failed to create partner'];
+    }
+    
+    /**
      * Process payout for a partner
      */
     public function processPayout($partnerId) {

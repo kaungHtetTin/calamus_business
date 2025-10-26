@@ -29,6 +29,9 @@
                 <a class="nav-link <?php echo isset($currentPage) && $currentPage == 'payout_logs' ? 'active' : ''; ?>" href="payout_logs.php" style="color: <?php echo isset($currentPage) && $currentPage == 'payout_logs' ? '#e8f0fe' : 'rgba(255, 255, 255, 0.87)'; ?>; background: <?php echo isset($currentPage) && $currentPage == 'payout_logs' ? 'rgba(232, 240, 254, 0.1)' : 'transparent'; ?>; padding: 12px 16px; border-radius: 6px; margin-bottom: 4px; transition: all 0.2s;">
                     <i class="fas fa-credit-card me-2"></i>Payout Logs
                 </a>
+                <a class="nav-link <?php echo isset($currentPage) && $currentPage == 'payout_history' ? 'active' : ''; ?>" href="payout_history.php" style="color: <?php echo isset($currentPage) && $currentPage == 'payout_history' ? '#e8f0fe' : 'rgba(255, 255, 255, 0.87)'; ?>; background: <?php echo isset($currentPage) && $currentPage == 'payout_history' ? 'rgba(232, 240, 254, 0.1)' : 'transparent'; ?>; padding: 12px 16px; border-radius: 6px; margin-bottom: 4px; transition: all 0.2s;">
+                    <i class="fas fa-history me-2"></i>Payout History
+                </a>
                 <hr style="border-color: rgba(255, 255, 255, 0.1); margin: 16px 0;">
                 <a class="nav-link" href="logout.php" style="color: #d93025; padding: 12px 16px; border-radius: 6px; transition: all 0.2s;">
                     <i class="fas fa-sign-out-alt me-2"></i>Logout

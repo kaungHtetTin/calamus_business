@@ -126,9 +126,14 @@ $currentPage = 'partners';
         <div class="partners-table">
             <div class="table-header">
                 <h2 class="table-title">All Partners (<?php echo number_format($partnersData['total']); ?>)</h2>
-                <a href="partners.php<?php echo $searchQuery ? '?search=' . urlencode($searchQuery) : ''; ?>" class="btn btn-sm btn-primary">
-                    <i class="fas fa-sync-alt me-2"></i>Refresh
-                </a>
+                <div>
+                    <a href="create_partner.php" class="btn btn-sm btn-success me-2">
+                        <i class="fas fa-plus me-2"></i>Create New Partner
+                    </a>
+                    <a href="partners.php<?php echo $searchQuery ? '?search=' . urlencode($searchQuery) : ''; ?>" class="btn btn-sm btn-primary">
+                        <i class="fas fa-sync-alt me-2"></i>Refresh
+                    </a>
+                </div>
             </div>
             
             <div class="table-responsive">
