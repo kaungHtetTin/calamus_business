@@ -11,13 +11,16 @@ https://www.calamuseducation.com/calamus/about_us.php
 https://www.calamuseducation.com/calamus/contact_us.php
 
 
-I want to create new pages for admin dashboard to manage the partners
-use new folder for this new pages and features
-Admin dashboard should have the following features:
-I don't want to create admins table for this feature.
-Use fixed username and password for admin dashboard.
-username: "calamuseducation@gmail.com"
-password: "@$calamus5241$@"
-partner management system
+for admin  dashboard, add new section in drawer menu 'Earning Logs'
+earning logs should have the following features:
+get all data from the table 'partner_earnings'
+add filtering feature with status and date range
+add pagination feature
 
-for UI, you can use the current theme of the project and nav header, nav slide drawer, footer, etc.
+for admin dashboard, add new section in drawer menu 'Payout Logs'
+the logs should have the following features:
+get all data from the table 'partner_earnings' with group by partner_id and sum the total amount_received
+add filtering feature with status and date range
+order by total amount_received in descending order and status pending first and paid second
+add pagination feature
+add action button to payout the amount to the partner.

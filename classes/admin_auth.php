@@ -208,4 +208,92 @@ class AdminAuth {
         
         return $stats;
     }
+    
+    /**
+     * Get all earning logs with pagination and filtering
+     */
+    public function getEarningLogs($page = 1, $limit = 20, $status = null, $startDate = null, $endDate = null) {
+        $offset = ($page - 1) * $limit;
+        
+        // Build WHERE clause
+        $whereClause = "WHERE 1=1";
+        
+        if ($status) {
+            $whereClause .= " AND pe.status = '$status'";
+        }
+        
+        if ($startDate) {
+            $whereClause .= " AND DATE(pe.created_at) >= '$startDate'";
+        }
+        
+        if ($endDate) {
+            $whereClause .= " AND DATE(pe.created_at) <= '$endDate'";
+        }
+        
+        // Get total count
+        $countQuery = "SELECT COUNT(*) as total FROM partner_earnings pe $whereClause";
+        $countResult = $this->db->read($countQuery);
+        $total = $countResult[0]['total'];
+        
+        // Get earning logs with partner details
+        $query = "SELECT pe.*, p.contact_name, p.company_name, p.email 
+                 FROM partner_earnings pe 
+                 LEFT JOIN partners p ON pe.partner_id = p.id 
+                 $whereClause 
+                 ORDER BY pe.created_at DESC 
+                 LIMIT $limit OFFSET $offset";
+        
+        $logs = $this->db->read($query);
+        
+        return [
+            'logs' => $logs ? $logs : [],
+            'total' => $total,
+            'page' => $page,
+            'limit' => $limit,
+            'total_pages' => ceil($total / $limit)
+        ];
+    }
+    
+    /**
+     * Get earning logs statistics
+     */
+    public function getEarningLogsStatistics($status = null, $startDate = null, $endDate = null) {
+        $whereClause = "WHERE 1=1";
+        
+        if ($status) {
+            $whereClause .= " AND status = '$status'";
+        }
+        
+        if ($startDate) {
+            $whereClause .= " AND DATE(created_at) >= '$startDate'";
+        }
+        
+        if ($endDate) {
+            $whereClause .= " AND DATE(created_at) <= '$endDate'";
+        }
+        
+        $stats = [];
+        
+        // Total earnings
+        $totalQuery = "SELECT SUM(amount_received) as total FROM partner_earnings $whereClause";
+        $result = $this->db->read($totalQuery);
+        $stats['total_amount'] = $result && $result[0]['total'] ? (float)$result[0]['total'] : 0.00;
+        
+        // Total transactions
+        $countQuery = "SELECT COUNT(*) as total FROM partner_earnings $whereClause";
+        $result = $this->db->read($countQuery);
+        $stats['total_transactions'] = $result ? (int)$result[0]['total'] : 0;
+        
+        // Pending earnings
+        $pendingQuery = "SELECT SUM(amount_received) as total FROM partner_earnings $whereClause AND status = 'pending'";
+        $result = $this->db->read($pendingQuery);
+        $stats['pending_amount'] = $result && $result[0]['total'] ? (float)$result[0]['total'] : 0.00;
+        
+        // Paid earnings
+        $paidQuery = "SELECT SUM(amount_received) as total FROM partner_earnings $whereClause AND status = 'paid'";
+        $result = $this->db->read($paidQuery);
+        $stats['paid_amount'] = $result && $result[0]['total'] ? (float)$result[0]['total'] : 0.00;
+        
+        return $stats;
+    }
 }
