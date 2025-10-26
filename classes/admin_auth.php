@@ -296,4 +296,162 @@ class AdminAuth {
         
         return $stats;
     }
+    
+    /**
+     * Get payout logs (grouped by partner)
+     */
+    public function getPayoutLogs($page = 1, $limit = 20, $status = null, $startDate = null, $endDate = null) {
+        $offset = ($page - 1) * $limit;
+        
+        // Build WHERE clause
+        $whereClause = "WHERE 1=1";
+        
+        if ($startDate) {
+            $whereClause .= " AND DATE(created_at) >= '$startDate'";
+        }
+        
+        if ($endDate) {
+            $whereClause .= " AND DATE(created_at) <= '$endDate'";
+        }
+        
+        // Get total count
+        $countQuery = "SELECT COUNT(DISTINCT partner_id) as total FROM partner_earnings $whereClause";
+        $countResult = $this->db->read($countQuery);
+        $total = $countResult[0]['total'];
+        
+        // Get payout logs grouped by partner
+        $query = "SELECT 
+                    pe.partner_id,
+                    SUM(pe.amount_received) as total_amount,
+                    COUNT(pe.id) as transaction_count,
+                    p.contact_name,
+                    p.company_name,
+                    p.email,
+                    p.phone,
+                    MAX(pe.status) as status
+                 FROM partner_earnings pe 
+                 LEFT JOIN partners p ON pe.partner_id = p.id 
+                 $whereClause 
+                 GROUP BY pe.partner_id, p.contact_name, p.company_name, p.email, p.phone";
+        
+        // Apply status filter after grouping
+        if ($status) {
+            // For grouped data, we need to filter by each partner's status
+            // We'll do this by checking if all their earnings have the same status
+            $query = "SELECT 
+                        pe.partner_id,
+                        SUM(pe.amount_received) as total_amount,
+                        COUNT(pe.id) as transaction_count,
+                        p.contact_name,
+                        p.company_name,
+                        p.email,
+                        p.phone,
+                        MAX(pe.status) as status
+                     FROM partner_earnings pe 
+                     LEFT JOIN partners p ON pe.partner_id = p.id 
+                     $whereClause 
+                     GROUP BY pe.partner_id, p.contact_name, p.company_name, p.email, p.phone
+                     HAVING MAX(pe.status) = '$status'";
+        }
+        
+        // Order by status (pending first, then paid), then by total amount descending
+        $query .= " ORDER BY 
+                     CASE 
+                         WHEN pe.status = 'pending' THEN 0 
+                         WHEN pe.status = 'paid' THEN 1 
+                         ELSE 2 
+                     END,
+                     total_amount DESC 
+                   LIMIT $limit OFFSET $offset";
+        
+        $logs = $this->db->read($query);
+        
+        return [
+            'logs' => $logs ? $logs : [],
+            'query' => $query,
+            'total' => $total,
+            'page' => $page,
+            'limit' => $limit,
+            'total_pages' => ceil($total / $limit)
+        ];
+    }
+    
+    /**
+     * Get payout logs statistics
+     */
+    public function getPayoutLogsStatistics($status = null, $startDate = null, $endDate = null) {
+        $whereClause = "WHERE 1=1";
+        
+        if ($startDate) {
+            $whereClause .= " AND DATE(created_at) >= '$startDate'";
+        }
+        
+        if ($endDate) {
+            $whereClause .= " AND DATE(created_at) <= '$endDate'";
+        }
+        
+        $stats = [];
+        
+        // Total payout amount (sum of all grouped amounts)
+        $totalQuery = "SELECT SUM(total_amount) as total FROM (
+            SELECT pe.partner_id, SUM(pe.amount_received) as total_amount, MAX(pe.status) as status
+            FROM partner_earnings pe 
+            $whereClause 
+            GROUP BY pe.partner_id
+            " . ($status ? " HAVING MAX(pe.status) = '$status'" : "") . "
+        ) as grouped_earnings";
+        $result = $this->db->read($totalQuery);
+        $stats['total_amount'] = $result && $result[0]['total'] ? (float)$result[0]['total'] : 0.00;
+        
+        // Total partners
+        $countQuery = "SELECT COUNT(DISTINCT partner_id) as total FROM partner_earnings $whereClause" . ($status ? " AND status = '$status'" : "");
+        $result = $this->db->read($countQuery);
+        $stats['total_partners'] = $result ? (int)$result[0]['total'] : 0;
+        
+        // Pending payout amount
+        $pendingQuery = "SELECT SUM(total_amount) as total FROM (
+            SELECT pe.partner_id, SUM(pe.amount_received) as total_amount
+            FROM partner_earnings pe 
+            $whereClause 
+            GROUP BY pe.partner_id
+            HAVING MAX(pe.status) = 'pending'
+        ) as pending_earnings";
+        $result = $this->db->read($pendingQuery);
+        $stats['pending_amount'] = $result && $result[0]['total'] ? (float)$result[0]['total'] : 0.00;
+        
+        // Paid payout amount
+        $paidQuery = "SELECT SUM(total_amount) as total FROM (
+            SELECT pe.partner_id, SUM(pe.amount_received) as total_amount
+            FROM partner_earnings pe 
+            $whereClause 
+            GROUP BY pe.partner_id
+            HAVING MAX(pe.status) = 'paid'
+        ) as paid_earnings";
+        $result = $this->db->read($paidQuery);
+        $stats['paid_amount'] = $result && $result[0]['total'] ? (float)$result[0]['total'] : 0.00;
+        
+        return $stats;
+    }
+    
+    /**
+     * Process payout for a partner
+     */
+    public function processPayout($partnerId) {
+        // Check if partner has pending earnings
+        $pendingQuery = "SELECT COUNT(*) as count FROM partner_earnings WHERE partner_id = '$partnerId' AND status = 'pending'";
+        $result = $this->db->read($pendingQuery);
+        
+        if ($result[0]['count'] == 0) {
+            return ['success' => false, 'message' => 'No pending earnings found for this partner'];
+        }
+        
+        // Update all pending earnings to paid
+        $updateQuery = "UPDATE partner_earnings SET status = 'paid', updated_at = NOW() WHERE partner_id = '$partnerId' AND status = 'pending'";
+        
+        if ($this->db->save($updateQuery)) {
+            return ['success' => true, 'message' => 'Payout processed successfully'];
+        }
+        
+        return ['success' => false, 'message' => 'Failed to process payout'];
+    }
 }

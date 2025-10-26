@@ -31,6 +31,9 @@ if (!$partner) {
 
 $pageTitle = 'Partner Details - ' . htmlspecialchars($partner['contact_name']);
 $currentPage = 'partners';
+
+// Get payout logs for this partner
+$payoutStats = $adminAuth->getPayoutLogsStatistics(null, null, null);
 ?>
 
 <!DOCTYPE html>
@@ -134,168 +137,162 @@ $currentPage = 'partners';
     <?php include 'layout/admin_header.php'; ?>
 
     <?php include 'layout/admin_sidebar.php'; ?>
-    <div class="container-fluid p-0">
-        <div class="row g-0">
-            <!-- Main Content -->
-            <div class="col-md-12 col-lg-12" style="padding: 24px;">
-                
-                <!-- Back Button -->
-                <div class="mb-3">
-                    <a href="partners.php" class="btn btn-sm btn-outline-secondary">
-                        <i class="fas fa-arrow-left me-2"></i>Back to Partners
-                    </a>
+    <div class="container-fluid" style="padding: 24px;">
+        <!-- Back Button -->
+        <div class="mb-3">
+            <a href="partners.php" class="btn btn-sm btn-outline-secondary">
+                <i class="fas fa-arrow-left me-2"></i>Back to Partners
+            </a>
+        </div>
+        
+        <!-- Partner Header -->
+        <div class="partner-header">
+            <div class="d-flex align-items-center">
+                <div class="flex-shrink-0">
+                    <?php if ($partner['profile_image']): ?>
+                        <img src="../<?php echo htmlspecialchars($partner['profile_image']); ?>" alt="Profile" class="partner-avatar">
+                    <?php else: ?>
+                        <div class="profile-placeholder">
+                            <i class="fas fa-user"></i>
+                        </div>
+                    <?php endif; ?>
                 </div>
-                
-                <!-- Partner Header -->
-                <div class="partner-header">
-                    <div class="d-flex align-items-center">
-                        <div class="flex-shrink-0">
-                            <?php if ($partner['profile_image']): ?>
-                                <img src="../<?php echo htmlspecialchars($partner['profile_image']); ?>" alt="Profile" class="partner-avatar">
+                <div class="flex-grow-1 ms-4">
+                    <h2 class="mb-2" style="color: #202124;"><?php echo htmlspecialchars($partner['contact_name']); ?></h2>
+                    <p class="mb-1" style="color: #5f6368;"><?php echo htmlspecialchars($partner['company_name'] ?? 'N/A'); ?></p>
+                    <p class="mb-0" style="color: #5f6368; font-size: 14px;">
+                        <i class="fas fa-envelope me-2"></i><?php echo htmlspecialchars($partner['email']); ?>
+                    </p>
+                </div>
+                <div class="flex-shrink-0">
+                    <?php
+                    $status = $partner['status'] ?? 'active';
+                    $statusClass = 'status-active';
+                    if ($status === 'inactive') $statusClass = 'status-inactive';
+                    if ($status === 'suspended') $statusClass = 'status-suspended';
+                    ?>
+                    <span class="status-badge <?php echo $statusClass; ?>"><?php echo ucfirst($status); ?></span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Partner Information -->
+        <div class="row">
+            <div class="col-md-6">
+                <div class="info-card">
+                    <h5 class="mb-3" style="color: #202124;">
+                        <i class="fas fa-info-circle me-2"></i>Basic Information
+                    </h5>
+                    <div class="info-row">
+                        <div class="info-label">Partner ID</div>
+                        <div class="info-value">#<?php echo htmlspecialchars($partner['id']); ?></div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">Company Name</div>
+                        <div class="info-value"><?php echo htmlspecialchars($partner['company_name'] ?? 'N/A'); ?></div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">Contact Name</div>
+                        <div class="info-value"><?php echo htmlspecialchars($partner['contact_name'] ?? 'N/A'); ?></div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">Email</div>
+                        <div class="info-value">
+                            <i class="fas fa-envelope me-2"></i><?php echo htmlspecialchars($partner['email']); ?>
+                        </div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">Phone</div>
+                        <div class="info-value">
+                            <i class="fas fa-phone me-2"></i><?php echo htmlspecialchars($partner['phone'] ?? 'N/A'); ?>
+                        </div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">Website</div>
+                        <div class="info-value">
+                            <?php if ($partner['website']): ?>
+                                <a href="<?php echo htmlspecialchars($partner['website']); ?>" target="_blank" style="color: #1a73e8;">
+                                    <i class="fas fa-globe me-2"></i><?php echo htmlspecialchars($partner['website']); ?>
+                                </a>
                             <?php else: ?>
-                                <div class="profile-placeholder">
-                                    <i class="fas fa-user"></i>
-                                </div>
+                                N/A
                             <?php endif; ?>
                         </div>
-                        <div class="flex-grow-1 ms-4">
-                            <h2 class="mb-2" style="color: #202124;"><?php echo htmlspecialchars($partner['contact_name']); ?></h2>
-                            <p class="mb-1" style="color: #5f6368;"><?php echo htmlspecialchars($partner['company_name'] ?? 'N/A'); ?></p>
-                            <p class="mb-0" style="color: #5f6368; font-size: 14px;">
-                                <i class="fas fa-envelope me-2"></i><?php echo htmlspecialchars($partner['email']); ?>
-                            </p>
-                        </div>
-                        <div class="flex-shrink-0">
-                            <?php
-                            $status = $partner['status'] ?? 'active';
-                            $statusClass = 'status-active';
-                            if ($status === 'inactive') $statusClass = 'status-inactive';
-                            if ($status === 'suspended') $statusClass = 'status-suspended';
-                            ?>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6">
+                <div class="info-card">
+                    <h5 class="mb-3" style="color: #202124;">
+                        <i class="fas fa-cog me-2"></i>Account Information
+                    </h5>
+                    <div class="info-row">
+                        <div class="info-label">Status</div>
+                        <div class="info-value">
                             <span class="status-badge <?php echo $statusClass; ?>"><?php echo ucfirst($status); ?></span>
                         </div>
                     </div>
-                </div>
-                
-                <!-- Partner Information -->
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="info-card">
-                            <h5 class="mb-3" style="color: #202124;">
-                                <i class="fas fa-info-circle me-2"></i>Basic Information
-                            </h5>
-                            <div class="info-row">
-                                <div class="info-label">Partner ID</div>
-                                <div class="info-value">#<?php echo htmlspecialchars($partner['id']); ?></div>
-                            </div>
-                            <div class="info-row">
-                                <div class="info-label">Company Name</div>
-                                <div class="info-value"><?php echo htmlspecialchars($partner['company_name'] ?? 'N/A'); ?></div>
-                            </div>
-                            <div class="info-row">
-                                <div class="info-label">Contact Name</div>
-                                <div class="info-value"><?php echo htmlspecialchars($partner['contact_name'] ?? 'N/A'); ?></div>
-                            </div>
-                            <div class="info-row">
-                                <div class="info-label">Email</div>
-                                <div class="info-value">
-                                    <i class="fas fa-envelope me-2"></i><?php echo htmlspecialchars($partner['email']); ?>
-                                </div>
-                            </div>
-                            <div class="info-row">
-                                <div class="info-label">Phone</div>
-                                <div class="info-value">
-                                    <i class="fas fa-phone me-2"></i><?php echo htmlspecialchars($partner['phone'] ?? 'N/A'); ?>
-                                </div>
-                            </div>
-                            <div class="info-row">
-                                <div class="info-label">Website</div>
-                                <div class="info-value">
-                                    <?php if ($partner['website']): ?>
-                                        <a href="<?php echo htmlspecialchars($partner['website']); ?>" target="_blank" style="color: #1a73e8;">
-                                            <i class="fas fa-globe me-2"></i><?php echo htmlspecialchars($partner['website']); ?>
-                                        </a>
-                                    <?php else: ?>
-                                        N/A
-                                    <?php endif; ?>
-                                </div>
-                            </div>
+                    <div class="info-row">
+                        <div class="info-label">Email Verified</div>
+                        <div class="info-value">
+                            <?php if ($partner['email_verified']): ?>
+                                <i class="fas fa-check-circle text-success"></i> Yes
+                            <?php else: ?>
+                                <i class="fas fa-times-circle text-danger"></i> No
+                            <?php endif; ?>
                         </div>
                     </div>
-                    
-                    <div class="col-md-6">
-                        <div class="info-card">
-                            <h5 class="mb-3" style="color: #202124;">
-                                <i class="fas fa-cog me-2"></i>Account Information
-                            </h5>
-                            <div class="info-row">
-                                <div class="info-label">Status</div>
-                                <div class="info-value">
-                                    <span class="status-badge <?php echo $statusClass; ?>"><?php echo ucfirst($status); ?></span>
-                                </div>
-                            </div>
-                            <div class="info-row">
-                                <div class="info-label">Email Verified</div>
-                                <div class="info-value">
-                                    <?php if ($partner['email_verified']): ?>
-                                        <i class="fas fa-check-circle text-success"></i> Yes
-                                    <?php else: ?>
-                                        <i class="fas fa-times-circle text-danger"></i> No
-                                    <?php endif; ?>
-                                </div>
-                            </div>
-                            <div class="info-row">
-                                <div class="info-label">Private Code</div>
-                                <div class="info-value">
-                                    <code><?php echo htmlspecialchars($partner['private_code'] ?? 'N/A'); ?></code>
-                                </div>
-                            </div>
-                            <div class="info-row">
-                                <div class="info-label">Commission Rate</div>
-                                <div class="info-value"><?php echo htmlspecialchars($partner['commission_rate'] ?? 'N/A'); ?>%</div>
-                            </div>
-                            <div class="info-row">
-                                <div class="info-label">Account Created</div>
-                                <div class="info-value">
-                                    <i class="fas fa-calendar me-2"></i><?php echo date('M d, Y', strtotime($partner['created_at'])); ?>
-                                </div>
-                            </div>
-                            <div class="info-row">
-                                <div class="info-label">Last Login</div>
-                                <div class="info-value">
-                                    <i class="fas fa-clock me-2"></i><?php echo $partner['last_login'] ? date('M d, Y H:i', strtotime($partner['last_login'])) : 'Never'; ?>
-                                </div>
-                            </div>
+                    <div class="info-row">
+                        <div class="info-label">Private Code</div>
+                        <div class="info-value">
+                            <code><?php echo htmlspecialchars($partner['private_code'] ?? 'N/A'); ?></code>
                         </div>
                     </div>
-                </div>
-                
-                <!-- Description -->
-                <?php if ($partner['description']): ?>
-                <div class="info-card">
-                    <h5 class="mb-3" style="color: #202124;">
-                        <i class="fas fa-align-left me-2"></i>Description
-                    </h5>
-                    <p style="color: #202124; line-height: 1.6;"><?php echo nl2br(htmlspecialchars($partner['description'])); ?></p>
-                </div>
-                <?php endif; ?>
-                
-                <!-- Action Buttons -->
-                <div class="action-buttons">
-                    <a href="partners.php" class="btn btn-outline-secondary">
-                        <i class="fas fa-arrow-left me-2"></i>Back to List
-                    </a>
-                    <a href="edit_partner.php?id=<?php echo htmlspecialchars($partner['id']); ?>" class="btn btn-primary">
-                        <i class="fas fa-edit me-2"></i>Edit Partner
-                    </a>
-                    <form method="POST" action="delete_partner.php" style="display: inline;" onsubmit="return confirm('Are you sure you want to delete this partner? This action cannot be undone.');">
-                        <input type="hidden" name="partner_id" value="<?php echo htmlspecialchars($partner['id']); ?>">
-                        <button type="submit" class="btn btn-danger">
-                            <i class="fas fa-trash me-2"></i>Delete Partner
-                        </button>
-                    </form>
+                    <div class="info-row">
+                        <div class="info-label">Commission Rate</div>
+                        <div class="info-value"><?php echo htmlspecialchars($partner['commission_rate'] ?? 'N/A'); ?>%</div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">Account Created</div>
+                        <div class="info-value">
+                            <i class="fas fa-calendar me-2"></i><?php echo date('M d, Y', strtotime($partner['created_at'])); ?>
+                        </div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">Last Login</div>
+                        <div class="info-value">
+                            <i class="fas fa-clock me-2"></i><?php echo $partner['last_login'] ? date('M d, Y H:i', strtotime($partner['last_login'])) : 'Never'; ?>
+                        </div>
+                    </div>
                 </div>
             </div>
+        </div>
+        
+        <!-- Description -->
+        <?php if ($partner['description']): ?>
+        <div class="info-card">
+            <h5 class="mb-3" style="color: #202124;">
+                <i class="fas fa-align-left me-2"></i>Description
+            </h5>
+            <p style="color: #202124; line-height: 1.6;"><?php echo nl2br(htmlspecialchars($partner['description'])); ?></p>
+        </div>
+        <?php endif; ?>
+        
+        <!-- Action Buttons -->
+        <div class="action-buttons">
+            <a href="partners.php" class="btn btn-outline-secondary">
+                <i class="fas fa-arrow-left me-2"></i>Back to List
+            </a>
+            <a href="edit_partner.php?id=<?php echo htmlspecialchars($partner['id']); ?>" class="btn btn-primary">
+                <i class="fas fa-edit me-2"></i>Edit Partner
+            </a>
+            <form method="POST" action="delete_partner.php" style="display: inline;" onsubmit="return confirm('Are you sure you want to delete this partner? This action cannot be undone.');">
+                <input type="hidden" name="partner_id" value="<?php echo htmlspecialchars($partner['id']); ?>">
+                <button type="submit" class="btn btn-danger">
+                    <i class="fas fa-trash me-2"></i>Delete Partner
+                </button>
+            </form>
         </div>
     </div>
     
