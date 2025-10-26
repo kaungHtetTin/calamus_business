@@ -72,12 +72,17 @@ class PartnerAuth {
             $partner = $this->db->read($query);
             $partnerId = $partner[0]['id'];
             
-            // Send verification email
-          //  $this->sendVerificationEmail($partnerData['email'], $verificationCode);
+            // Send welcome email with verification link
+            $this->sendWelcomeEmail(
+                $partnerData['email'], 
+                $partnerData['contact_name'], 
+                $partnerData['company_name'],
+                $verificationCode
+            );
             
             return [
                 'success' => true, 
-                'message' => 'Registration successful. Please check your email for verification.',
+                'message' => 'Registration successful. Please check your email to verify your account.',
                 'partner_id' => $partnerId,
                 'private_code' => $privateCode,
                 'partner' => $partner
@@ -97,16 +102,28 @@ class PartnerAuth {
         
         $partner = $partner[0];
         
-        // Check if email is verified
-        if (!$partner['email_verified']) {
-            return ['success' => false, 'message' => 'Please verify your email before logging in'];
-        }
-        
-        // Verify password
+        // Verify password first to ensure credentials are correct
         if (!password_verify($password, $partner['password'])) {
             return ['success' => false, 'message' => 'Invalid credentials'];
         }
         
+        // Check if email is verified - if not, resend verification email
+        if (!$partner['email_verified']) {
+            // Resend the welcome email with verification code
+            $this->sendWelcomeEmail(
+                $partner['email'],
+                $partner['contact_name'],
+                $partner['company_name'],
+                $partner['verification_code']
+            );
+            
+            return [
+                'success' => false, 
+                'message' => 'Verification email sent! Please check your email and verify before logging in',
+                'needs_verification' => true,
+                'verification_code' => $partner['verification_code']
+            ];
+        }
         
         // Create session
         $sessionToken = bin2hex(random_bytes(32));
@@ -272,6 +289,32 @@ class PartnerAuth {
         return $partner ? $partner[0] : null;
     }
     
+    // Verify email with verification code by code only
+    public function verifyEmailByCode($verificationCode) {
+        // Find partner by verification code
+        $partner = $this->db->read("SELECT * FROM partners WHERE verification_code = '$verificationCode'");
+        
+        if (!$partner) {
+            return ['success' => false, 'message' => 'Invalid or expired verification code'];
+        }
+        
+        $partner = $partner[0];
+        
+        // Check if already verified
+        if ($partner['email_verified']) {
+            return ['success' => false, 'message' => 'Email has already been verified'];
+        }
+        
+        // Update partner status to active and clear verification code
+        $query = "UPDATE partners SET status = 'active', email_verified = 1, verification_code = NULL WHERE id = '{$partner['id']}'";
+        
+        if ($this->db->save($query)) {
+            return ['success' => true, 'message' => 'Email verified successfully'];
+        }
+        
+        return ['success' => false, 'message' => 'Failed to verify email'];
+    }
+    
     // Verify email with verification code
     public function verifyEmail($email, $verificationCode) {
         $partner = $this->db->read("SELECT * FROM partners WHERE email = '$email' AND verification_code = '$verificationCode'");
@@ -321,8 +364,8 @@ class PartnerAuth {
         return ['success' => false, 'message' => 'Failed to send verification email'];
     }
     
-    // Send welcome email
-    public function sendWelcomeEmail($email, $contactName, $companyName) {
+    // Send welcome email with verification link
+    public function sendWelcomeEmail($email, $contactName, $companyName, $verificationCode) {
         $subject = "Welcome to Calamus Education Partner Portal!";
         
         // Get partner details
@@ -331,6 +374,7 @@ class PartnerAuth {
         
         // Use dynamic base URL
         $baseUrl = getBaseUrl();
+        $verificationLink = "$baseUrl/verify_email.php?code=$verificationCode";
         $loginLink = "$baseUrl/partner_login.php";
         
         // Use template
@@ -338,6 +382,7 @@ class PartnerAuth {
             'partner_name' => $contactName,
             'partner_email' => $email,
             'partner_code' => $privateCode,
+            'verification_link' => $verificationLink,
             'login_link' => $loginLink
         ];
         
@@ -351,7 +396,9 @@ class PartnerAuth {
                 <p>Dear $contactName,</p>
                 <p>Thank you for registering $companyName as a partner!</p>
                 <p>Your private code: <strong>$privateCode</strong></p>
-                <p><a href='$loginLink'>Login to your dashboard</a></p>
+                <p><strong>Please verify your email:</strong></p>
+                <p><a href='$verificationLink'>Verify Email Address</a></p>
+                <p>After verification, you can <a href='$loginLink'>login to your dashboard</a></p>
             </div>
             ";
         }

@@ -18,6 +18,26 @@ function showAlert(message, type = 'danger') {
     }
 }
 
+// Show verification alert for unverified accounts
+function showVerificationAlert(message, verificationCode) {
+    const alertContainer = document.getElementById('alertContainer');
+    if (alertContainer) {
+        const verificationLink = `verify_email.php?code=${verificationCode}`;
+        alertContainer.innerHTML = `
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                <h6 class="alert-heading"><i class="fas fa-envelope me-2"></i>${message}</h6>
+                <p class="mb-2">A verification email has been sent to your email address. Please check your inbox.</p>
+                <p class="mb-2">If you haven't received the email, click below to verify:</p>
+                <a href="${verificationLink}" class="btn btn-sm btn-warning mb-2">
+                    <i class="fas fa-envelope me-2"></i>Verify Email
+                </a>
+                <p class="mb-0 small">After verifying, you can login to your account.</p>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        `;
+    }
+}
+
 // Initialize login page
 document.addEventListener('DOMContentLoaded', function() {
     // Setup login form
@@ -63,6 +83,9 @@ function setupLoginForm() {
                 // Store session token
                 localStorage.setItem('partner_session_token', data.session_token);
                 window.location.href = 'index.php';
+            } else if (data.needs_verification) {
+                // Show special message for unverified accounts
+                showVerificationAlert(data.message, data.verification_code);
             } else {
                 showAlert(data.message);
             }

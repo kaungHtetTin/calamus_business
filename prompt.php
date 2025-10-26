@@ -10,11 +10,3 @@ https://play.google.com/store/apps/details?id=com.calamus.easykorean
 https://www.calamuseducation.com/calamus/about_us.php
 https://www.calamuseducation.com/calamus/contact_us.php
 
-
-Your task is to write 
-term and condition page for the partner portal.
-Privacy policy page for the partner portal.
-Cookie policy page for the partner portal.
-Contact us page for the partner portal.
-
-Then link the pages to footer content of the partner portal.

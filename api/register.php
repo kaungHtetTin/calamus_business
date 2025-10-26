@@ -75,23 +75,10 @@ switch ($endpoint) {
                 'status' => 'pending' // New partners start as pending
             ];
             
-            // Register the partner
+            // Register the partner (this will send welcome email automatically)
             $result = $auth->registerPartner($partnerData);
             
-            if ($result['success']) {
-                // Send welcome email
-                //$auth->sendWelcomeEmail($partnerData['email'], $partnerData['contact_name'], $partnerData['company_name']);
-                
-                echo json_encode([
-                    'success' => true,
-                    'message' => 'Registration successful! Please check your email for verification instructions.',
-                    'partner_id' => $result['partner_id'],
-                    'private_code' => $result['private_code'],
-                    'partner' => $result['partner']
-                ]);
-            } else {
-                echo json_encode($result);
-            }
+            echo json_encode($result);
         } else {
             echo json_encode(['success' => false, 'message' => 'Method not allowed']);
         }
