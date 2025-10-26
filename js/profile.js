@@ -7,7 +7,6 @@
 
 // Global variables
 let selectedFile = null;
-let sessionToken = null;
 
 // Initialize profile page
 $(document).ready(function() {
@@ -248,24 +247,34 @@ function setupProfileFormSubmission() {
 // Show alert message
 function showAlert(message, type = 'info') {
     // Remove existing alerts
-    $('.alert').remove();
+    $('.alert-google').remove();
+    
+    // Map type names for Google style
+    let alertType = 'info';
+    if (type === 'success') alertType = 'success';
+    else if (type === 'danger' || type === 'error') alertType = 'error';
+    else alertType = 'info';
     
     // Create new alert with Google styling
     const alertHtml = `
-        <div class="alert alert-google alert-${type}" role="alert">
+        <div class="alert alert-google alert-${alertType}" role="alert">
             ${message}
         </div>
     `;
     
-    // Insert alert at the top of the profile container
-    $('.content-wrapper').prepend(alertHtml);
+    // Insert alert at the top of the content wrapper
+    if ($('.content-wrapper').length > 0) {
+        $('.content-wrapper').prepend(alertHtml);
+    } else {
+        $('.profile-container').prepend(alertHtml);
+    }
     
-    // Auto-dismiss after 5 seconds
+    // Auto-dismiss after 2 seconds
     setTimeout(function() {
-        $('.alert').fadeOut(300, function() {
+        $('.alert-google').fadeOut(300, function() {
             $(this).remove();
         });
-    }, 5000);
+    }, 10000);
 }
 
 // Copy private code to clipboard
@@ -320,10 +329,8 @@ function setupPasswordChangeForm() {
     const passwordForm = document.getElementById('password-change-form');
     if (!passwordForm) return;
     
-    // Setup form submission
-    passwordForm.addEventListener('submit', function(e) {
-        e.preventDefault();
-        handlePasswordChange();
+    $('#changePasswordBtn').click(function() {
+          handlePasswordChange();
     });
     
     // Setup password strength indicator
@@ -349,10 +356,10 @@ function handlePasswordChange() {
     const newPassword = document.getElementById('newPassword').value;
     const confirmPassword = document.getElementById('confirmPassword').value;
     const submitBtn = document.getElementById('changePasswordBtn');
-    
+
+   
     // Clear previous errors
     clearPasswordErrors();
-    
     // Validate inputs
     if (!currentPassword) {
         showPasswordError('currentPassword', 'Current password is required');
@@ -400,6 +407,7 @@ function handlePasswordChange() {
     })
     .then(response => response.json())
     .then(data => {
+        console.log(data);
         if (data.success) {
             showAlert('Password changed successfully!', 'success');
             // Clear form
@@ -426,13 +434,20 @@ function handlePasswordChange() {
 
 // Show password error for specific field
 function showPasswordError(fieldId, message) {
-    const field = document.getElementById(fieldId);
     const errorElement = document.getElementById(fieldId + 'Error');
     
-    if (field && errorElement) {
-        field.classList.add('is-invalid');
+    if (errorElement) {
         errorElement.textContent = message;
+        errorElement.style.display = 'block';
+        
+        // Add visual feedback to the input
+        const field = document.getElementById(fieldId);
+        if (field) {
+            field.style.borderColor = '#d93025';
+        }
     }
+    
+    console.log('Error for ' + fieldId + ':', message);
 }
 
 // Clear all password errors
@@ -443,8 +458,13 @@ function clearPasswordErrors() {
         const errorElement = document.getElementById(fieldId + 'Error');
         
         if (field && errorElement) {
+            // Reset input border
+            field.style.borderColor = '';
             field.classList.remove('is-invalid');
+            
+            // Hide error message
             errorElement.textContent = '';
+            errorElement.style.display = 'none';
         }
     });
 }

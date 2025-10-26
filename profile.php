@@ -438,9 +438,8 @@ include 'layout/header.php';
                                     <i class="fas fa-eye" id="currentPasswordIcon"></i>
                                 </button>
                             </div>
-                            <div class="invalid-feedback" id="currentPasswordError" style="color: #d93025; font-size: 13px; margin-top: 4px;"></div>
+                            <div class="" id="currentPasswordError" style="color: #d93025; font-size: 13px; margin-top: 4px; display: none;"></div>
                         </div>
-                        
                         <div class="google-form-group">
                             <label>New password</label>
                             <div class="input-group-google">
@@ -452,7 +451,7 @@ include 'layout/header.php';
                             <div class="help-text">
                                 Use at least 8 characters
                             </div>
-                            <div class="invalid-feedback" id="newPasswordError" style="color: #d93025; font-size: 13px; margin-top: 4px;"></div>
+                            <div class="" id="newPasswordError" style="color: #d93025; font-size: 13px; margin-top: 4px; display: none;"></div>
                         </div>
                         
                         <div class="google-form-group">
@@ -463,7 +462,7 @@ include 'layout/header.php';
                                     <i class="fas fa-eye" id="confirmPasswordIcon"></i>
                                 </button>
                             </div>
-                            <div class="invalid-feedback" id="confirmPasswordError" style="color: #d93025; font-size: 13px; margin-top: 4px;"></div>
+                            <div class="" id="confirmPasswordError" style="color: #d93025; font-size: 13px; margin-top: 4px; display: none;"></div>
                         </div>
                         
                         <!-- Password Strength Indicator -->
@@ -473,19 +472,18 @@ include 'layout/header.php';
                             </div>
                             <div style="font-size: 12px; color: #5f6368;" id="strengthText">Password strength</div>
                         </div>
-                        
-                        <div class="mt-4">
-                            <button type="submit" class="google-btn google-btn-primary" id="changePasswordBtn">
-                                Change password
-                            </button>
-                    </div>
+
                     </form>
+                    <div class="mt-4">
+                        <button type="button" class="google-btn google-btn-primary" id="changePasswordBtn">
+                            Change password
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-<script src="js/profile.js"></script>
-
 <?php include 'layout/footer.php'; ?>
+<script src="js/profile.js"></script>
