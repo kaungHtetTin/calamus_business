@@ -27,6 +27,12 @@ $searchQuery = isset($_GET['search']) ? trim($_GET['search']) : null;
 // Get partners with pagination and search
 $partnersData = $adminAuth->getAllPartners($currentPageNum, $limit, $searchQuery);
 
+// Get chart year filter
+$chartYear = isset($_GET['chart_year']) ? $_GET['chart_year'] : 'current';
+
+// Get chart data
+$chartData = $adminAuth->getPaymentHistoryChart($chartYear);
+
 $pageTitle = 'Admin Dashboard';
 $isAdmin = true;
 $currentPage = 'index';
@@ -42,6 +48,7 @@ $currentPage = 'index';
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="../css/app.css">
     <link rel="stylesheet" href="css/app.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <style>
         .verified-icon {
             color: #137333;
@@ -49,6 +56,55 @@ $currentPage = 'index';
         
         .unverified-icon {
             color: #d93025;
+        }
+        
+        .chart-container {
+            background: white;
+            border: 1px solid #e8eaed;
+            border-radius: 8px;
+            padding: 24px;
+            margin-bottom: 30px;
+        }
+        
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .chart-title {
+            font-size: 18px;
+            font-weight: 500;
+            color: #202124;
+            margin: 0;
+        }
+        
+        .duration-filter {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .duration-btn {
+            padding: 6px 12px;
+            border: 1px solid #dadce0;
+            background: white;
+            color: #5f6368;
+            border-radius: 4px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .duration-btn:hover {
+            background: #f8f9fa;
+            border-color: #1a73e8;
+        }
+        
+        .duration-btn.active {
+            background: #1a73e8;
+            color: white;
+            border-color: #1a73e8;
         }
     </style>
 </head>
@@ -93,6 +149,23 @@ $currentPage = 'index';
                 <div class="stat-label">Unverified Partners</div>
                 <div class="stat-value"><?php echo number_format($stats['unverified']); ?></div>
             </div>
+        </div>
+        
+        <!-- Payment History Chart -->
+        <div class="chart-container">
+            <div class="chart-header">
+                <h5 class="chart-title">
+                    <i class="fas fa-chart-line me-2"></i>Payout History
+                </h5>
+                <div class="duration-filter">
+                    <a href="?chart_year=current<?php echo $searchQuery ? '&search=' . urlencode($searchQuery) : ''; ?>" class="duration-btn <?php echo $chartYear === 'current' ? 'active' : ''; ?>"><?php echo date('Y'); ?></a>
+                    <a href="?chart_year=2024<?php echo $searchQuery ? '&search=' . urlencode($searchQuery) : ''; ?>" class="duration-btn <?php echo $chartYear === '2024' ? 'active' : ''; ?>">2024</a>
+                    <a href="?chart_year=2023<?php echo $searchQuery ? '&search=' . urlencode($searchQuery) : ''; ?>" class="duration-btn <?php echo $chartYear === '2023' ? 'active' : ''; ?>">2023</a>
+                    <a href="?chart_year=2022<?php echo $searchQuery ? '&search=' . urlencode($searchQuery) : ''; ?>" class="duration-btn <?php echo $chartYear === '2022' ? 'active' : ''; ?>">2022</a>
+                    <a href="?chart_year=all<?php echo $searchQuery ? '&search=' . urlencode($searchQuery) : ''; ?>" class="duration-btn <?php echo $chartYear === 'all' ? 'active' : ''; ?>">All</a>
+                </div>
+            </div>
+            <canvas id="payoutChart" height="80"></canvas>
         </div>
         
         <!-- Search Form -->
@@ -244,5 +317,88 @@ $currentPage = 'index';
     </div>
     
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Chart data from PHP
+        const chartData = <?php echo json_encode($chartData); ?>;
+        
+        // Prepare labels and data for monthly display
+        const labels = chartData.map(item => {
+            const date = new Date(item.payment_month + '-01');
+            return date.toLocaleDateString('en-US', { month: 'short' });
+        });
+        
+        const amounts = chartData.map(item => parseFloat(item.total_amount));
+        
+        // Create chart
+        const ctx = document.getElementById('payoutChart');
+        const payoutChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Payout Amount (MMK)',
+                    data: amounts,
+                    borderColor: '#1a73e8',
+                    backgroundColor: 'rgba(26, 115, 232, 0.1)',
+                    borderWidth: 2,
+                    fill: true,
+                    tension: 0.4,
+                    pointRadius: 4,
+                    pointHoverRadius: 6,
+                    pointBackgroundColor: '#1a73e8',
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top',
+                        labels: {
+                            usePointStyle: true,
+                            padding: 15
+                        }
+                    },
+                    tooltip: {
+                        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                        padding: 12,
+                        titleFont: {
+                            size: 14,
+                            weight: 'bold'
+                        },
+                        bodyFont: {
+                            size: 13
+                        },
+                        callbacks: {
+                            label: function(context) {
+                                return 'Amount: ' + new Intl.NumberFormat('en-US').format(context.parsed.y) + ' MMK';
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            color: 'rgba(0, 0, 0, 0.05)'
+                        },
+                        ticks: {
+                            callback: function(value) {
+                                return new Intl.NumberFormat('en-US').format(value);
+                            }
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false
+                        }
+                    }
+                }
+            }
+        });
+    </script>
 </body>
 </html>

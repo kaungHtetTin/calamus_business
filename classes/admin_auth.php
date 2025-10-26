@@ -460,6 +460,37 @@ class AdminAuth {
     }
     
     /**
+     * Get payment history chart data grouped by month
+     */
+    public function getPaymentHistoryChart($year = 'current') {
+        // Year filter
+        $yearFilter = '';
+        if ($year === 'current') {
+            $yearFilter = " AND YEAR(pph.created_at) = YEAR(CURRENT_DATE)";
+        } elseif ($year === '2024') {
+            $yearFilter = " AND YEAR(pph.created_at) = 2024";
+        } elseif ($year === '2023') {
+            $yearFilter = " AND YEAR(pph.created_at) = 2023";
+        } elseif ($year === '2022') {
+            $yearFilter = " AND YEAR(pph.created_at) = 2022";
+        }
+        // 'all' = no filter
+        
+        // Query to get payment amounts grouped by month
+        $query = "SELECT 
+                    DATE_FORMAT(pph.created_at, '%Y-%m') as payment_month,
+                    SUM(pph.amount) as total_amount
+                  FROM partner_payment_histories pph
+                  WHERE 1=1 $yearFilter
+                  GROUP BY DATE_FORMAT(pph.created_at, '%Y-%m')
+                  ORDER BY payment_month ASC";
+        
+        $result = $this->db->read($query);
+        
+        return $result ? $result : [];
+    }
+    
+    /**
      * Process payout for a partner
      */
     public function processPayout($partnerId) {

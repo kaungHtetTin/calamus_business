@@ -32,8 +32,11 @@ if (!$partner) {
 $pageTitle = 'Partner Details - ' . htmlspecialchars($partner['contact_name']);
 $currentPage = 'partners';
 
-// Get payout logs for this partner
-$payoutStats = $adminAuth->getPayoutLogsStatistics(null, null, null);
+// Get pending payout amount for this partner
+$pendingAmount = $adminAuth->getPendingPayoutAmount($partnerId);
+
+// Get partner payment methods
+$paymentMethods = $adminAuth->getPartnerPaymentMethods($partnerId);
 ?>
 
 <!DOCTYPE html>
@@ -220,6 +223,48 @@ $payoutStats = $adminAuth->getPayoutLogsStatistics(null, null, null);
             <p style="color: #202124; line-height: 1.6;"><?php echo nl2br(htmlspecialchars($partner['description'])); ?></p>
         </div>
         <?php endif; ?>
+        
+        <!-- Pending Payout Amount -->
+        <?php if ($pendingAmount > 0): ?>
+        <div class="amount-card">
+            <div class="amount-label">Pending Amount to Payout</div>
+            <div class="amount-value"><?php echo number_format($pendingAmount, 2); ?></div>
+            <div class="currency">MMK</div>
+        </div>
+        
+        <div class="text-center mb-4">
+            <a href="process_payout.php?partner_id=<?php echo htmlspecialchars($partner['id']); ?>" class="btn btn-success btn-lg">
+                <i class="fas fa-money-bill-wave me-2"></i>Process Payout
+            </a>
+        </div>
+        <?php endif; ?>
+        
+        <!-- Payment Methods -->
+        <div class="info-card">
+            <h5 class="mb-3" style="color: #202124;">
+                <i class="fas fa-credit-card me-2"></i>Payment Methods
+            </h5>
+            
+            <?php if (count($paymentMethods) > 0): ?>
+                <?php foreach ($paymentMethods as $method): ?>
+                    <div class="payment-method-item">
+                        <div class="method-name">
+                            <i class="fas fa-<?php echo strtolower($method['payment_method']) === 'bank transfer' ? 'university' : 'wallet'; ?> me-2"></i>
+                            <?php echo htmlspecialchars($method['payment_method']); ?>
+                        </div>
+                        <div class="method-details">
+                            <div><strong>Account Name:</strong> <?php echo htmlspecialchars($method['account_name']); ?></div>
+                            <div><strong>Account Number:</strong> <?php echo htmlspecialchars($method['account_number']); ?></div>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <div class="empty-state">
+                    <i class="fas fa-credit-card"></i>
+                    <p>No payment methods found for this partner.</p>
+                </div>
+            <?php endif; ?>
+        </div>
         
         <!-- Action Buttons -->
         <div class="action-buttons">
