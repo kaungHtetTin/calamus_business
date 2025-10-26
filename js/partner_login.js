@@ -18,19 +18,10 @@ function showAlert(message, type = 'danger') {
     }
 }
 
-// Show forgot password modal
-function showForgotPassword() {
-    const modal = new bootstrap.Modal(document.getElementById('forgotPasswordModal'));
-    modal.show();
-}
-
 // Initialize login page
 document.addEventListener('DOMContentLoaded', function() {
     // Setup login form
     setupLoginForm();
-    
-    // Setup forgot password form
-    setupForgotPasswordForm();
     
     // Check if user is already logged in
     checkExistingSession();
@@ -79,56 +70,6 @@ function setupLoginForm() {
         .catch(error => {
             console.error('Login error:', error);
             showAlert('Login failed. Please try again.');
-        })
-        .finally(() => {
-            // Reset button state
-            submitBtn.textContent = originalText;
-            submitBtn.disabled = false;
-        });
-    });
-}
-
-// Setup forgot password form
-function setupForgotPasswordForm() {
-    const forgotPasswordForm = document.getElementById('forgotPasswordForm');
-    if (!forgotPasswordForm) return;
-    
-    forgotPasswordForm.addEventListener('submit', function(e) {
-        e.preventDefault();
-        
-        const email = document.getElementById('reset_email').value;
-        
-        if (!email) {
-            showAlert('Please enter your email address');
-            return;
-        }
-        
-        // Show loading state
-        const submitBtn = forgotPasswordForm.querySelector('button[type="submit"]');
-        const originalText = submitBtn.textContent;
-        submitBtn.textContent = 'Sending...';
-        submitBtn.disabled = true;
-        
-        fetch('api/login.php?endpoint=forgot_password', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ email })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                showAlert(data.message, 'success');
-                bootstrap.Modal.getInstance(document.getElementById('forgotPasswordModal')).hide();
-                forgotPasswordForm.reset();
-            } else {
-                showAlert(data.message);
-            }
-        })
-        .catch(error => {
-            console.error('Forgot password error:', error);
-            showAlert('Failed to send reset email. Please try again.');
         })
         .finally(() => {
             // Reset button state

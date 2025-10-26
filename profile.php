@@ -3,74 +3,379 @@ $pageTitle = 'Profile Settings';
 include 'layout/header.php';
 ?>
 
-<!-- Profile Section -->
-<div class="content-section">
-    <h2><i class="fas fa-user me-2"></i>Profile Settings</h2>
+<style>
+/* Google-Style Minimal Profile Page */
+.profile-container {
+    background: #fafafa;
+    min-height: 100vh;
+}
+
+.profile-header {
+    background: white;
+    border-bottom: 1px solid #e8eaed;
+    padding: 24px 48px;
+}
+
+.profile-header h1 {
+    font-size: 22px;
+    font-weight: 400;
+    color: #202124;
+    margin: 0 0 4px 0;
+}
+
+.profile-header p {
+    font-size: 14px;
+    color: #5f6368;
+    margin: 0;
+}
+
+.content-wrapper {
+    padding: 32px 48px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.google-card {
+    background: white;
+    border: 1px solid #e8eaed;
+    border-radius: 8px;
+    margin-bottom: 24px;
+}
+
+.google-card .card-header {
+    padding: 20px 24px;
+    border-bottom: 1px solid #e8eaed;
+}
+
+.google-card .card-header h5 {
+    font-size: 16px;
+    font-weight: 500;
+    color: #202124;
+    margin: 0;
+}
+
+.google-card .card-body {
+    padding: 24px;
+}
+
+.profile-image-section {
+    background: #f8f9fa;
+    border: 1px solid #e8eaed;
+    border-radius: 4px;
+    padding: 24px;
+}
+
+.profile-image-preview {
+    width: 96px;
+    height: 96px;
+    margin: 0 auto 20px;
+    border-radius: 50%;
+    overflow: hidden;
+    background: #dadce0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.profile-image-preview img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.profile-image-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #5f6368;
+}
+
+.upload-section {
+    margin-top: 16px;
+}
+
+.google-form-group {
+    margin-bottom: 20px;
+}
+
+.google-form-group label {
+    font-size: 14px;
+    font-weight: 500;
+    color: #202124;
+    display: block;
+    margin-bottom: 8px;
+}
+
+.google-form-group .form-control {
+    font-size: 14px;
+    padding: 10px 14px;
+    border: 1px solid #dadce0;
+    border-radius: 4px;
+    background: white;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.google-form-group .form-control:focus {
+    border-color: #202124;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(32, 33, 36, 0.1);
+}
+
+.google-btn {
+    font-size: 14px;
+    font-weight: 500;
+    padding: 10px 24px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s, box-shadow 0.2s;
+}
+
+.google-btn-primary {
+    background: #202124;
+    color: white;
+}
+
+.google-btn-primary:hover {
+    background: #3c4043;
+    box-shadow: 0 1px 2px 0 rgba(60,64,67,.3), 0 1px 3px 1px rgba(60,64,67,.15);
+}
+
+.google-btn-outline {
+    background: white;
+    color: #202124;
+    border: 1px solid #dadce0;
+}
+
+.google-btn-outline:hover {
+    background: #f8f9fa;
+    border-color: #202124;
+    color: #202124;
+}
+
+.google-btn-secondary {
+    background: #f8f9fa;
+    color: #202124;
+    border: 1px solid #dadce0;
+}
+
+.google-btn-secondary:hover {
+    background: #e8eaed;
+    border-color: #dadce0;
+}
+
+.private-code-section {
+    background: #f8f9fa;
+    border: 1px solid #e8eaed;
+    border-radius: 4px;
+    padding: 16px 20px;
+}
+
+.private-code-value {
+    font-family: 'Courier New', monospace;
+    font-size: 16px;
+    font-weight: 500;
+    color: #202124;
+    background: white;
+    padding: 10px 16px;
+    border-radius: 4px;
+    display: inline-block;
+    border: 1px solid #dadce0;
+}
+
+.password-section {
+    background: #f8f9fa;
+    border: 1px solid #e8eaed;
+    border-radius: 4px;
+    padding: 24px;
+}
+
+.password-strength {
+    background: white;
+    border: 1px solid #dadce0;
+    border-radius: 4px;
+    padding: 12px;
+    margin-top: 16px;
+}
+
+.strength-bar {
+    height: 4px;
+    border-radius: 2px;
+    background: #e8eaed;
+    overflow: hidden;
+    margin-bottom: 8px;
+}
+
+.strength-fill {
+    height: 100%;
+    transition: all 0.3s ease;
+}
+
+.strength-weak { background: #ea4335; }
+.strength-fair { background: #fbbc04; }
+.strength-good { background: #34a853; }
+.strength-strong { background: #1e8e3e; }
+
+.input-group-google {
+    position: relative;
+}
+
+.input-group-google .form-control {
+    padding-right: 48px;
+}
+
+.input-group-google .btn {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: transparent;
+    border: none;
+    padding: 8px;
+    color: #5f6368;
+    cursor: pointer;
+}
+
+.input-group-google .btn:hover {
+    color: #202124;
+}
+
+.alert-google {
+    background: #fef7e0;
+    border: 1px solid #f9ab00;
+    border-radius: 4px;
+    padding: 12px 16px;
+    margin-bottom: 16px;
+    font-size: 14px;
+}
+
+.alert-success {
+    background: #e6f4ea;
+    border-color: #137333;
+    color: #137333;
+}
+
+.alert-error {
+    background: #fce8e6;
+    border-color: #d93025;
+    color: #d93025;
+}
+
+.alert-info {
+    background: #f8f9fa;
+    border-color: #e8eaed;
+    color: #202124;
+}
+
+.help-text {
+    font-size: 13px;
+    color: #5f6368;
+    margin-top: 6px;
+}
+
+.badge-google {
+    font-size: 12px;
+    font-weight: 500;
+    padding: 4px 12px;
+    border-radius: 16px;
+    background: #f8f9fa;
+    color: #202124;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .profile-header {
+        padding: 20px 24px;
+    }
     
+    .content-wrapper {
+        padding: 24px;
+    }
+    
+    .google-card .card-body {
+        padding: 20px;
+    }
+}
+</style>
+
+<div class="profile-container">
+    <!-- Profile Header -->
+    <div class="profile-header">
+        <h1>Profile settings</h1>
+        <p>Manage your account information and security settings</p>
+    </div>
+
+    <div class="content-wrapper">
     <!-- Profile Image Section -->
-    <div class="card mb-4">
+        <div class="google-card">
+            <div class="card-header">
+                <h5>Profile picture</h5>
+            </div>
         <div class="card-body">
-            <h5 class="card-title"><i class="fas fa-image me-2"></i>Profile Picture</h5>
+                <div class="profile-image-section">
             <div class="row align-items-center">
-                <div class="col-md-3">
-                    <div class="profile-image-container text-center">
-                        <div class="profile-image-preview mb-3">
+                        <div class="col-md-4 text-center">
+                            <div class="profile-image-preview">
                             <?php if (!empty($currentPartner['profile_image']) && file_exists($currentPartner['profile_image'])): ?>
                                 <img src="<?php echo htmlspecialchars($currentPartner['profile_image']); ?>" 
                                      alt="Profile Picture" 
-                                     class="profile-image rounded-circle" 
                                      id="profileImagePreview">
                             <?php else: ?>
-                                <div class="profile-image-placeholder rounded-circle d-flex align-items-center justify-content-center" id="profileImagePreview">
-                                    <i class="fas fa-user fa-3x text-muted"></i>
+                                    <div class="profile-image-placeholder" id="profileImagePreview">
+                                        <i class="fas fa-user fa-3x"></i>
                                 </div>
                             <?php endif; ?>
                         </div>
                     </div>
-                </div>
-                <div class="col-md-9">
-                    <div class="mb-3">
-                        <label class="form-label">Upload New Profile Picture</label>
+                        <div class="col-md-8">
+                            <div class="upload-section">
+                                <div class="google-form-group">
                         <input type="file" class="form-control" id="profileImageInput" accept="image/*">
-                        <div class="form-text">
-                            <small class="text-muted">
-                                <i class="fas fa-info-circle me-1"></i>
-                                Supported formats: JPG, PNG, GIF, WebP. Maximum size: 5MB.
-                            </small>
+                                    <div class="help-text">
+                                        JPG, PNG, GIF, WebP up to 5MB
                         </div>
                     </div>
-                    <button type="button" class="btn btn-outline-primary" id="uploadImageBtn" disabled>
-                        <i class="fas fa-upload me-2"></i>Upload Image
+                                <div class="d-flex gap-2 flex-wrap">
+                                    <button type="button" class="google-btn google-btn-outline" id="uploadImageBtn" disabled>
+                                        Upload image
                     </button>
                     <?php if (!empty($currentPartner['profile_image'])): ?>
-                    <button type="button" class="btn btn-outline-danger ms-2" id="removeImageBtn">
-                        <i class="fas fa-trash me-2"></i>Remove Image
+                                    <button type="button" class="google-btn google-btn-secondary" id="removeImageBtn">
+                                        Remove
                     </button>
                     <?php endif; ?>
+                                </div>
+                            </div>
+                        </div>
                 </div>
             </div>
         </div>
     </div>
     
     <!-- Profile Information Section -->
-    <div class="card">
+        <div class="google-card">
+            <div class="card-header">
+                <h5>Personal information</h5>
+            </div>
         <div class="card-body">
-            <h5 class="card-title"><i class="fas fa-user-edit me-2"></i>Profile Information</h5>
-            
             <!-- Private Code Display -->
-            <div class="alert alert-info mb-4">
+                <div class="private-code-section mb-4">
                 <div class="row align-items-center">
                     <div class="col-md-8">
-                        <h6 class="mb-1"><i class="fas fa-key me-2"></i>Your Private Code</h6>
-                        <p class="mb-0">This is your unique partner code used for promotion code generation.</p>
+                            <strong style="font-size: 14px; color: #202124;">Partner code</strong>
+                            <p style="font-size: 13px; color: #5f6368; margin: 4px 0 0 0;">
+                                Use this code to generate promotion links
+                            </p>
                     </div>
                     <div class="col-md-4 text-end">
-                        <div class="private-code-display">
-                            <code class="fs-4 fw-bold text-primary" id="privateCodeDisplay"><?php echo htmlspecialchars($currentPartner['private_code'] ?? 'N/A'); ?></code>
-                            <button type="button" class="btn btn-sm btn-outline-primary ms-2" onclick="copyPrivateCode()">
-                                <i class="fas fa-copy"></i>
+                            <div class="private-code-value" id="privateCodeDisplay">
+                                <?php echo htmlspecialchars($currentPartner['private_code'] ?? 'N/A'); ?>
+                            </div>
+                            <button type="button" class="google-btn google-btn-secondary mt-2" onclick="copyPrivateCode()">
+                                Copy code
                             </button>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -78,41 +383,109 @@ include 'layout/header.php';
             <form id="profile-form" method="POST" action="api/update_profile.php" enctype="multipart/form-data">
                 <div class="row">
                     <div class="col-md-6">
-                        <div class="mb-3">
-                            <label class="form-label">Contact Name</label>
-                            <input type="text" class="form-control" id="contact_name" name="contact_name" value="<?php echo htmlspecialchars($currentPartner['contact_name']); ?>" required>
-                        </div>
+                            <div class="google-form-group">
+                                <label>Contact name</label>
+                                <input type="text" class="form-control" id="contact_name" name="contact_name" 
+                                       value="<?php echo htmlspecialchars($currentPartner['contact_name']); ?>" required>
+                            </div>
                     </div>
                     <div class="col-md-6">
-                        <div class="mb-3">
-                            <label class="form-label">Company Name</label>
-                            <input type="text" class="form-control" id="company_name" name="company_name" value="<?php echo htmlspecialchars($currentPartner['company_name']); ?>">
+                            <div class="google-form-group">
+                                <label>Company name</label>
+                                <input type="text" class="form-control" id="company_name" name="company_name" 
+                                       value="<?php echo htmlspecialchars($currentPartner['company_name']); ?>">
                         </div>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-6">
-                        <div class="mb-3">
-                            <label class="form-label">Phone</label>
-                            <input type="tel" class="form-control" id="phone" name="phone" value="<?php echo htmlspecialchars($currentPartner['phone']); ?>">
+                            <div class="google-form-group">
+                                <label>Phone number</label>
+                                <input type="tel" class="form-control" id="phone" name="phone" 
+                                       value="<?php echo htmlspecialchars($currentPartner['phone']); ?>">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="google-form-group">
+                                <label>Website</label>
+                                <input type="url" class="form-control" id="website" name="website" 
+                                       value="<?php echo htmlspecialchars($currentPartner['website']); ?>">
+                            </div>
                         </div>
                     </div>
-                    <div class="col-md-6">
-                        <div class="mb-3">
-                            <label class="form-label">Website</label>
-                            <input type="url" class="form-control" id="website" name="website" value="<?php echo htmlspecialchars($currentPartner['website']); ?>">
-                        </div>
+                    <div class="text-end mt-4">
+                        <button type="submit" class="google-btn google-btn-primary">
+                            Save
+                        </button>
                     </div>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Password Change Section -->
+        <div class="google-card" id="password-change">
+            <div class="card-header">
+                <h5>Password</h5>
+            </div>
+            <div class="card-body">
+                <div class="password-section">
+                    <form id="password-change-form">
+                        <div class="google-form-group">
+                            <label>Current password</label>
+                            <div class="input-group-google">
+                                <input type="password" class="form-control" id="currentPassword" name="currentPassword" required>
+                                <button class="btn" type="button" onclick="togglePassword('currentPassword')">
+                                    <i class="fas fa-eye" id="currentPasswordIcon"></i>
+                                </button>
+                            </div>
+                            <div class="invalid-feedback" id="currentPasswordError" style="color: #d93025; font-size: 13px; margin-top: 4px;"></div>
+                        </div>
+                        
+                        <div class="google-form-group">
+                            <label>New password</label>
+                            <div class="input-group-google">
+                                <input type="password" class="form-control" id="newPassword" name="newPassword" required minlength="8">
+                                <button class="btn" type="button" onclick="togglePassword('newPassword')">
+                                    <i class="fas fa-eye" id="newPasswordIcon"></i>
+                                </button>
+                            </div>
+                            <div class="help-text">
+                                Use at least 8 characters
+                            </div>
+                            <div class="invalid-feedback" id="newPasswordError" style="color: #d93025; font-size: 13px; margin-top: 4px;"></div>
+                        </div>
+                        
+                        <div class="google-form-group">
+                            <label>Confirm password</label>
+                            <div class="input-group-google">
+                                <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" required minlength="8">
+                                <button class="btn" type="button" onclick="togglePassword('confirmPassword')">
+                                    <i class="fas fa-eye" id="confirmPasswordIcon"></i>
+                                </button>
+                            </div>
+                            <div class="invalid-feedback" id="confirmPasswordError" style="color: #d93025; font-size: 13px; margin-top: 4px;"></div>
+                        </div>
+                        
+                        <!-- Password Strength Indicator -->
+                        <div class="password-strength" id="passwordStrength" style="display: none;">
+                            <div class="strength-bar">
+                                <div class="strength-fill" id="strengthBar"></div>
+                            </div>
+                            <div style="font-size: 12px; color: #5f6368;" id="strengthText">Password strength</div>
+                        </div>
+                        
+                        <div class="mt-4">
+                            <button type="submit" class="google-btn google-btn-primary" id="changePasswordBtn">
+                                Change password
+                            </button>
+                    </div>
+                    </form>
                 </div>
-                <button type="submit" class="btn btn-primary">
-                    <i class="fas fa-save me-2"></i>Update Profile
-                </button>
-            </form>
+            </div>
         </div>
     </div>
 </div>
 
-<!-- Load profile JavaScript -->
 <script src="js/profile.js"></script>
 
 <?php include 'layout/footer.php'; ?>

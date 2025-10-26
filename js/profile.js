@@ -22,6 +22,9 @@ $(document).ready(function() {
     
     // Setup image removal
     setupImageRemoval();
+    
+    // Setup password change form
+    setupPasswordChangeForm();
 });
 
 // Setup profile image upload functionality
@@ -247,20 +250,21 @@ function showAlert(message, type = 'info') {
     // Remove existing alerts
     $('.alert').remove();
     
-    // Create new alert
+    // Create new alert with Google styling
     const alertHtml = `
-        <div class="alert alert-${type} alert-dismissible fade show" role="alert">
+        <div class="alert alert-google alert-${type}" role="alert">
             ${message}
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
     `;
     
-    // Insert alert at the top of the content section
-    $('.content-section').prepend(alertHtml);
+    // Insert alert at the top of the profile container
+    $('.content-wrapper').prepend(alertHtml);
     
     // Auto-dismiss after 5 seconds
     setTimeout(function() {
-        $('.alert').fadeOut();
+        $('.alert').fadeOut(300, function() {
+            $(this).remove();
+        });
     }, 5000);
 }
 
@@ -309,4 +313,225 @@ function fallbackCopyTextToClipboard(text) {
     }
     
     document.body.removeChild(textArea);
+}
+
+// Setup password change form functionality
+function setupPasswordChangeForm() {
+    const passwordForm = document.getElementById('password-change-form');
+    if (!passwordForm) return;
+    
+    // Setup form submission
+    passwordForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        handlePasswordChange();
+    });
+    
+    // Setup password strength indicator
+    const newPasswordInput = document.getElementById('newPassword');
+    if (newPasswordInput) {
+        newPasswordInput.addEventListener('input', function() {
+            checkPasswordStrength(this.value);
+        });
+    }
+    
+    // Setup password confirmation validation
+    const confirmPasswordInput = document.getElementById('confirmPassword');
+    if (confirmPasswordInput) {
+        confirmPasswordInput.addEventListener('input', function() {
+            validatePasswordConfirmation();
+        });
+    }
+}
+
+// Handle password change form submission
+function handlePasswordChange() {
+    const currentPassword = document.getElementById('currentPassword').value;
+    const newPassword = document.getElementById('newPassword').value;
+    const confirmPassword = document.getElementById('confirmPassword').value;
+    const submitBtn = document.getElementById('changePasswordBtn');
+    
+    // Clear previous errors
+    clearPasswordErrors();
+    
+    // Validate inputs
+    if (!currentPassword) {
+        showPasswordError('currentPassword', 'Current password is required');
+        return;
+    }
+    
+    if (!newPassword) {
+        showPasswordError('newPassword', 'New password is required');
+        return;
+    }
+    
+    if (newPassword.length < 8) {
+        showPasswordError('newPassword', 'Password must be at least 8 characters long');
+        return;
+    }
+    
+    if (newPassword !== confirmPassword) {
+        showPasswordError('confirmPassword', 'Passwords do not match');
+        return;
+    }
+    
+    // Check for weak passwords
+    const weakPasswords = ['password', '12345678', 'qwerty123', 'abc12345', 'password123'];
+    if (weakPasswords.includes(newPassword.toLowerCase())) {
+        showPasswordError('newPassword', 'Password is too weak. Please choose a stronger password.');
+        return;
+    }
+    
+    // Show loading state
+    const originalText = submitBtn.innerHTML;
+    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Changing Password...';
+    submitBtn.disabled = true;
+    
+    // Send request
+    fetch('api/change_password.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            currentPassword: currentPassword,
+            newPassword: newPassword,
+            session_token: sessionToken
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            showAlert('Password changed successfully!', 'success');
+            // Clear form
+            document.getElementById('password-change-form').reset();
+            document.getElementById('passwordStrength').style.display = 'none';
+        } else {
+            if (data.field) {
+                showPasswordError(data.field, data.message);
+            } else {
+                showAlert('Error: ' + data.message, 'danger');
+            }
+        }
+    })
+    .catch(error => {
+        console.error('Error changing password:', error);
+        showAlert('Error changing password. Please try again.', 'danger');
+    })
+    .finally(() => {
+        // Reset button state
+        submitBtn.innerHTML = originalText;
+        submitBtn.disabled = false;
+    });
+}
+
+// Show password error for specific field
+function showPasswordError(fieldId, message) {
+    const field = document.getElementById(fieldId);
+    const errorElement = document.getElementById(fieldId + 'Error');
+    
+    if (field && errorElement) {
+        field.classList.add('is-invalid');
+        errorElement.textContent = message;
+    }
+}
+
+// Clear all password errors
+function clearPasswordErrors() {
+    const fields = ['currentPassword', 'newPassword', 'confirmPassword'];
+    fields.forEach(fieldId => {
+        const field = document.getElementById(fieldId);
+        const errorElement = document.getElementById(fieldId + 'Error');
+        
+        if (field && errorElement) {
+            field.classList.remove('is-invalid');
+            errorElement.textContent = '';
+        }
+    });
+}
+
+// Check password strength
+function checkPasswordStrength(password) {
+    const strengthContainer = document.getElementById('passwordStrength');
+    const strengthBar = document.getElementById('strengthBar');
+    const strengthText = document.getElementById('strengthText');
+    
+    if (!password) {
+        strengthContainer.style.display = 'none';
+        return;
+    }
+    
+    strengthContainer.style.display = 'block';
+    
+    let strength = 0;
+    let strengthLabel = '';
+    let strengthClass = '';
+    
+    // Length check
+    if (password.length >= 8) strength += 20;
+    if (password.length >= 12) strength += 10;
+    
+    // Character variety checks
+    if (/[a-z]/.test(password)) strength += 10;
+    if (/[A-Z]/.test(password)) strength += 10;
+    if (/[0-9]/.test(password)) strength += 10;
+    if (/[^A-Za-z0-9]/.test(password)) strength += 10;
+    
+    // Additional checks
+    if (password.length >= 16) strength += 10;
+    if (/(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9])/.test(password)) strength += 10;
+    
+    // Determine strength level
+    if (strength < 30) {
+        strengthLabel = 'Weak';
+        strengthClass = 'strength-weak';
+    } else if (strength < 60) {
+        strengthLabel = 'Fair';
+        strengthClass = 'strength-fair';
+    } else if (strength < 80) {
+        strengthLabel = 'Good';
+        strengthClass = 'strength-good';
+    } else {
+        strengthLabel = 'Strong';
+        strengthClass = 'strength-strong';
+    }
+    
+    // Update UI
+    strengthBar.style.width = strength + '%';
+    strengthBar.className = 'strength-fill ' + strengthClass;
+    strengthText.textContent = `Password strength: ${strengthLabel}`;
+}
+
+// Validate password confirmation
+function validatePasswordConfirmation() {
+    const newPassword = document.getElementById('newPassword').value;
+    const confirmPassword = document.getElementById('confirmPassword').value;
+    
+    if (confirmPassword && newPassword !== confirmPassword) {
+        showPasswordError('confirmPassword', 'Passwords do not match');
+    } else {
+        const confirmField = document.getElementById('confirmPassword');
+        const confirmError = document.getElementById('confirmPasswordError');
+        if (confirmField && confirmError) {
+            confirmField.classList.remove('is-invalid');
+            confirmError.textContent = '';
+        }
+    }
+}
+
+// Toggle password visibility
+function togglePassword(fieldId) {
+    const field = document.getElementById(fieldId);
+    const icon = document.getElementById(fieldId + 'Icon');
+    
+    if (field && icon) {
+        if (field.type === 'password') {
+            field.type = 'text';
+            icon.classList.remove('fa-eye');
+            icon.classList.add('fa-eye-slash');
+        } else {
+            field.type = 'password';
+            icon.classList.remove('fa-eye-slash');
+            icon.classList.add('fa-eye');
+        }
+    }
 }

@@ -100,8 +100,8 @@
                                 </button>
                                 
                                 <div class="text-center mb-3">
-                                    <a href="#" onclick="showForgotPassword()" class="text-primary">
-                                        Forgot your password?
+                                    <a href="forgot_password.php" class="text-primary">
+                                        <i class="fas fa-key me-1"></i>Forgot your password?
                                     </a>
                                 </div>
                                 
@@ -114,29 +114,6 @@
                             </form>
                         </div>
                     </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Forgot Password Modal -->
-    <div class="modal fade" id="forgotPasswordModal" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Reset Password</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="forgotPasswordForm">
-                        <div class="mb-3">
-                            <label class="form-label">Email Address</label>
-                            <input type="email" class="form-control" id="reset_email" required>
-                        </div>
-                        <button type="submit" class="btn btn-primary w-100">
-                            <i class="fas fa-paper-plane me-2"></i>Send Reset Link
-                        </button>
-                    </form>
                 </div>
             </div>
         </div>

@@ -341,6 +341,25 @@ class PartnerAuth {
     
     // Change password
     public function changePassword($partnerId, $currentPassword, $newPassword) {
+        // Validate inputs
+        if (empty($currentPassword)) {
+            return ['success' => false, 'message' => 'Current password is required', 'field' => 'currentPassword'];
+        }
+        
+        if (empty($newPassword)) {
+            return ['success' => false, 'message' => 'New password is required', 'field' => 'newPassword'];
+        }
+        
+        if (strlen($newPassword) < 8) {
+            return ['success' => false, 'message' => 'Password must be at least 8 characters long', 'field' => 'newPassword'];
+        }
+        
+        // Check for weak passwords
+        $weakPasswords = ['password', '12345678', 'qwerty123', 'abc12345', 'password123'];
+        if (in_array(strtolower($newPassword), $weakPasswords)) {
+            return ['success' => false, 'message' => 'Password is too weak. Please choose a stronger password.', 'field' => 'newPassword'];
+        }
+        
         // Get current partner data
         $partner = $this->db->read("SELECT password FROM partners WHERE id = '$partnerId'");
         
@@ -352,37 +371,163 @@ class PartnerAuth {
         
         // Verify current password
         if (!password_verify($currentPassword, $partner['password'])) {
-            return ['success' => false, 'message' => 'Current password is incorrect'];
+            return ['success' => false, 'message' => 'Current password is incorrect', 'field' => 'currentPassword'];
+        }
+        
+        // Check if new password is same as current password
+        if (password_verify($newPassword, $partner['password'])) {
+            return ['success' => false, 'message' => 'New password must be different from current password', 'field' => 'newPassword'];
         }
         
         // Hash new password
         $hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
         
         // Update password
-        $query = "UPDATE partners SET password = '$hashedPassword' WHERE id = '$partnerId'";
+        $query = "UPDATE partners SET password = '$hashedPassword', updated_at = NOW() WHERE id = '$partnerId'";
         
         if ($this->db->save($query)) {
+            // Invalidate all existing sessions for security (except current session)
+            $this->invalidateOtherSessions($partnerId);
+            
             return ['success' => true, 'message' => 'Password changed successfully'];
         }
         
         return ['success' => false, 'message' => 'Failed to change password'];
     }
     
+    // Invalidate other sessions (keep current session active)
+    private function invalidateOtherSessions($partnerId) {
+        // Get current session token from session
+        $currentSessionToken = $_SESSION['session_token'] ?? '';
+        
+        if ($currentSessionToken) {
+            // Invalidate all sessions except current one
+            $query = "UPDATE partner_sessions SET expired_at = NOW() 
+                      WHERE partner_id = '$partnerId' AND session_token != '$currentSessionToken'";
+        } else {
+            // If no current session token, invalidate all sessions
+            $query = "UPDATE partner_sessions SET expired_at = NOW() WHERE partner_id = '$partnerId'";
+        }
+        
+        $this->db->save($query);
+    }
+    
     // Send password reset email
     private function sendPasswordResetEmail($email, $token) {
         $resetLink = "http://localhost/business/reset_password.php?token=$token";
-        $subject = "Password Reset Request";
+        $subject = "Password Reset Request - Calamus Education Partner Portal";
         $message = "
-        <h2>Password Reset Request</h2>
-        <p>Click the link below to reset your password:</p>
-        <a href='$resetLink'>Reset Password</a>
-        <p>This link will expire in 1 hour.</p>
+        <div style='font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;'>
+            <div style='background: linear-gradient(135deg, #4a5568 0%, #718096 100%); color: white; padding: 20px; text-align: center;'>
+                <h2 style='margin: 0;'>Calamus Education</h2>
+                <p style='margin: 10px 0 0 0;'>Partner Portal</p>
+            </div>
+            <div style='padding: 30px; background: #f8f9fa;'>
+                <h3 style='color: #4a5568; margin-top: 0;'>Password Reset Request</h3>
+                <p>Hello,</p>
+                <p>We received a request to reset your password for your Calamus Education Partner Portal account.</p>
+                <p>Click the button below to reset your password:</p>
+                <div style='text-align: center; margin: 30px 0;'>
+                    <a href='$resetLink' style='background: #4a5568; color: white; padding: 12px 30px; text-decoration: none; border-radius: 5px; display: inline-block; font-weight: bold;'>Reset Password</a>
+                </div>
+                <p><strong>Important:</strong></p>
+                <ul>
+                    <li>This link will expire in 1 hour for security reasons</li>
+                    <li>If you didn't request this password reset, please ignore this email</li>
+                    <li>Your password will remain unchanged until you create a new one</li>
+                </ul>
+                <p>If the button doesn't work, copy and paste this link into your browser:</p>
+                <p style='word-break: break-all; color: #4a5568; background: #e9ecef; padding: 10px; border-radius: 3px;'>$resetLink</p>
+                <hr style='border: none; border-top: 1px solid #dee2e6; margin: 30px 0;'>
+                <p style='color: #6c757d; font-size: 14px; margin-bottom: 0;'>
+                    This email was sent from Calamus Education Partner Portal.<br>
+                    If you have any questions, please contact our support team.
+                </p>
+            </div>
+        </div>
         ";
         
         $success = sendEmail($email, $subject, $message, 'password_reset');
         logEmailAttempt($email, $subject, $success);
         
         return $success;
+    }
+    
+    // Request password reset
+    public function requestPasswordReset($email) {
+        // Check if email exists
+        $partner = $this->db->read("SELECT id, contact_name FROM partners WHERE email = '$email'");
+        if (!$partner) {
+            return ['success' => false, 'message' => 'Email address not found'];
+        }
+        
+        $partner = $partner[0];
+        
+        // Generate reset token
+        $token = bin2hex(random_bytes(32));
+        $expiresAt = date('Y-m-d H:i:s', strtotime('+1 hour'));
+        
+        // Store reset token
+        $query = "INSERT INTO password_reset_tokens (partner_id, token, expires_at, created_at) 
+                  VALUES ('{$partner['id']}', '$token', '$expiresAt', NOW())";
+        
+        if (!$this->db->save($query)) {
+            return ['success' => false, 'message' => 'Failed to create reset token'];
+        }
+        
+        // Send email
+        if ($this->sendPasswordResetEmail($email, $token)) {
+            return ['success' => true, 'message' => 'Password reset link sent to your email'];
+        } else {
+            // Clean up token if email failed
+            $this->db->save("DELETE FROM password_reset_tokens WHERE token = '$token'");
+            return ['success' => false, 'message' => 'Failed to send reset email'];
+        }
+    }
+    
+    // Validate password reset token
+    public function validatePasswordResetToken($token) {
+        $query = "SELECT prt.*, p.email, p.contact_name 
+                  FROM password_reset_tokens prt 
+                  JOIN partners p ON prt.partner_id = p.id 
+                  WHERE prt.token = '$token' AND prt.expires_at > NOW() AND prt.used = 0";
+        
+        $result = $this->db->read($query);
+        
+        if (!$result) {
+            return ['success' => false, 'message' => 'Invalid or expired reset token'];
+        }
+        
+        return ['success' => true, 'partner' => $result[0]];
+    }
+    
+    // Reset password using token
+    public function resetPasswordWithToken($token, $newPassword) {
+        // Validate token
+        $tokenValidation = $this->validatePasswordResetToken($token);
+        if (!$tokenValidation['success']) {
+            return $tokenValidation;
+        }
+        
+        $partnerId = $tokenValidation['partner']['partner_id'];
+        
+        // Hash new password
+        $hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
+        
+        // Update password
+        $updateQuery = "UPDATE partners SET password = '$hashedPassword' WHERE id = '$partnerId'";
+        if (!$this->db->save($updateQuery)) {
+            return ['success' => false, 'message' => 'Failed to update password'];
+        }
+        
+        // Mark token as used
+        $markUsedQuery = "UPDATE password_reset_tokens SET used = 1 WHERE token = '$token'";
+        $this->db->save($markUsedQuery);
+        
+        // Invalidate all existing sessions for security
+        $this->db->save("UPDATE partner_sessions SET expired_at = NOW() WHERE partner_id = '$partnerId'");
+        
+        return ['success' => true, 'message' => 'Password reset successfully'];
     }
     
     // Extend session expiry

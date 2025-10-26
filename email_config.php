@@ -10,10 +10,10 @@
 require_once __DIR__ . '/classes/autoload.php';
 
 // Email Configuration
-define('EMAIL_FROM_ADDRESS', 'noreply@yourcompany.com');
-define('EMAIL_FROM_NAME', 'Your Company Name');
-define('EMAIL_REPLY_TO', 'support@yourcompany.com');
-define('EMAIL_SUPPORT_ADDRESS', 'support@yourcompany.com');
+define('EMAIL_FROM_ADDRESS', 'noreply@calamuseducation.com');
+define('EMAIL_FROM_NAME', 'Calamus Education');
+define('EMAIL_REPLY_TO', 'support@calamuseducation.com');
+define('EMAIL_SUPPORT_ADDRESS', 'support@calamuseducation.com');
 
 // SMTP Configuration (if using SMTP instead of mail())
 define('SMTP_HOST', 'smtp.gmail.com');
