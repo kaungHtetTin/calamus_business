@@ -204,7 +204,6 @@ function getCodeStatusColor($status) {
                         <li><a class="dropdown-item" href="partner_payment_histories.php"><i class="fas fa-credit-card me-2"></i>Payments</a></li>
                         <li><hr class="dropdown-divider"></li>
                         <li><a class="dropdown-item" href="profile.php#password-change"><i class="fas fa-key me-2"></i>Change Password</a></li>
-                        <li><a class="dropdown-item" href="settings.php"><i class="fas fa-cog me-2"></i>Settings</a></li>
                         <li><a class="dropdown-item" href="help.php"><i class="fas fa-question-circle me-2"></i>Help & Support</a></li>
                         <li><hr class="dropdown-divider"></li>
                         <li><a class="dropdown-item text-danger" href="logout.php"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
@@ -269,7 +268,6 @@ function getCodeStatusColor($status) {
                         <li><a class="dropdown-item" href="partner_payment_histories.php"><i class="fas fa-credit-card me-2"></i>Payments</a></li>
                         <li><hr class="dropdown-divider"></li>
                         <li><a class="dropdown-item" href="profile.php#password-change"><i class="fas fa-key me-2"></i>Change Password</a></li>
-                        <li><a class="dropdown-item" href="settings.php"><i class="fas fa-cog me-2"></i>Settings</a></li>
                         <li><a class="dropdown-item" href="help.php"><i class="fas fa-question-circle me-2"></i>Help & Support</a></li>
                         <li><hr class="dropdown-divider"></li>
                         <li><a class="dropdown-item text-danger" href="logout.php"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
