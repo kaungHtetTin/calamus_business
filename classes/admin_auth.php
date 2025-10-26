@@ -80,18 +80,25 @@ class AdminAuth {
     }
     
     /**
-     * Get all partners with pagination
+     * Get all partners with pagination and search
      */
-    public function getAllPartners($page = 1, $limit = 20) {
+    public function getAllPartners($page = 1, $limit = 20, $search = null) {
         $offset = ($page - 1) * $limit;
         
+        // Build search condition
+        $searchCondition = '';
+        if ($search && !empty(trim($search))) {
+            $sanitizedSearch = trim($search);
+            $searchCondition = " WHERE email LIKE '%$sanitizedSearch%' OR contact_name LIKE '%$sanitizedSearch%' OR company_name LIKE '%$sanitizedSearch%'";
+        }
+        
         // Get total count
-        $totalQuery = "SELECT COUNT(*) as total FROM partners";
+        $totalQuery = "SELECT COUNT(*) as total FROM partners $searchCondition";
         $totalResult = $this->db->read($totalQuery);
         $total = $totalResult[0]['total'];
         
         // Get partners with pagination
-        $partnersQuery = "SELECT * FROM partners ORDER BY created_at DESC LIMIT $limit OFFSET $offset";
+        $partnersQuery = "SELECT * FROM partners $searchCondition ORDER BY created_at DESC LIMIT $limit OFFSET $offset";
         $partners = $this->db->read($partnersQuery);
         
         return [
@@ -99,7 +106,8 @@ class AdminAuth {
             'total' => $total,
             'page' => $page,
             'limit' => $limit,
-            'total_pages' => ceil($total / $limit)
+            'total_pages' => ceil($total / $limit),
+            'search' => $search
         ];
     }
     
@@ -431,6 +439,24 @@ class AdminAuth {
         $stats['paid_amount'] = $result && $result[0]['total'] ? (float)$result[0]['total'] : 0.00;
         
         return $stats;
+    }
+    
+    /**
+     * Get partner payment methods
+     */
+    public function getPartnerPaymentMethods($partnerId) {
+        $query = "SELECT * FROM partner_payment_methods WHERE partner_id = '$partnerId' ORDER BY created_at DESC";
+        $result = $this->db->read($query);
+        return $result ? $result : [];
+    }
+    
+    /**
+     * Get pending payout amount for a partner
+     */
+    public function getPendingPayoutAmount($partnerId) {
+        $query = "SELECT SUM(amount_received) as total FROM partner_earnings WHERE partner_id = '$partnerId' AND status = 'pending'";
+        $result = $this->db->read($query);
+        return $result && $result[0]['total'] ? (float)$result[0]['total'] : 0.00;
     }
     
     /**

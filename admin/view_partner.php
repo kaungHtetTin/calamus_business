@@ -45,66 +45,8 @@ $payoutStats = $adminAuth->getPayoutLogsStatistics(null, null, null);
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="../css/app.css">
+    <link rel="stylesheet" href="css/app.css">
     <style>
-        .partner-header {
-            background: white;
-            border: 1px solid #e8eaed;
-            border-radius: 8px;
-            padding: 24px;
-            margin-bottom: 24px;
-        }
-        
-        .info-card {
-            background: white;
-            border: 1px solid #e8eaed;
-            border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 20px;
-        }
-        
-        .info-row {
-            padding: 12px 0;
-            border-bottom: 1px solid #f1f3f4;
-        }
-        
-        .info-row:last-child {
-            border-bottom: none;
-        }
-        
-        .info-label {
-            color: #5f6368;
-            font-size: 14px;
-            font-weight: 500;
-            margin-bottom: 4px;
-        }
-        
-        .info-value {
-            color: #202124;
-            font-size: 14px;
-        }
-        
-        .status-badge {
-            padding: 4px 12px;
-            border-radius: 12px;
-            font-size: 13px;
-            font-weight: 500;
-        }
-        
-        .status-active {
-            background: #e6f4ea;
-            color: #137333;
-        }
-        
-        .status-inactive {
-            background: #fce8e6;
-            color: #d93025;
-        }
-        
-        .status-suspended {
-            background: #fef7e0;
-            color: #ea8600;
-        }
-        
         .partner-avatar {
             width: 80px;
             height: 80px;

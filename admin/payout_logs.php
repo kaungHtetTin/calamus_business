@@ -40,78 +40,7 @@ $currentPage = 'payout_logs';
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="../css/app.css">
-    <style>
-        .filter-card {
-            background: white;
-            border: 1px solid #e8eaed;
-            border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 24px;
-        }
-        
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-        
-        .stat-card {
-            background: white;
-            border: 1px solid #e8eaed;
-            border-radius: 8px;
-            padding: 20px;
-            transition: box-shadow 0.2s;
-        }
-        
-        .stat-card:hover {
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-        
-        .stat-label {
-            font-size: 14px;
-            color: #5f6368;
-            margin-bottom: 8px;
-        }
-        
-        .stat-value {
-            font-size: 32px;
-            font-weight: 400;
-            color: #202124;
-        }
-        
-        .logs-table {
-            background: white;
-            border: 1px solid #e8eaed;
-            border-radius: 8px;
-            overflow: hidden;
-        }
-        
-        .table-header {
-            padding: 16px 24px;
-            border-bottom: 1px solid #e8eaed;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .status-badge {
-            padding: 4px 12px;
-            border-radius: 12px;
-            font-size: 13px;
-            font-weight: 500;
-        }
-        
-        .status-pending {
-            background: #fef7e0;
-            color: #ea8600;
-        }
-        
-        .status-paid {
-            background: #e6f4ea;
-            color: #137333;
-        }
-    </style>
+    <link rel="stylesheet" href="css/app.css">
 </head>
 <body>
     <!-- Admin Header -->
@@ -235,13 +164,9 @@ $currentPage = 'payout_logs';
                             </td>
                             <td>
                                 <?php if (strtolower($log['status']) == 'pending'): ?>
-                                    <form method="POST" action="process_payout.php" style="display: inline;" onsubmit="return confirm('Are you sure you want to process payout for <?php echo htmlspecialchars($log['contact_name']); ?>? Amount: <?php echo number_format($log['total_amount'], 2); ?> MMK');">
-                                        <input type="hidden" name="partner_id" value="<?php echo htmlspecialchars($log['partner_id']); ?>">
-                                        <input type="hidden" name="amount" value="<?php echo $log['total_amount']; ?>">
-                                        <button type="submit" class="btn btn-sm btn-success">
-                                            <i class="fas fa-check-circle me-1"></i>Process Payout
-                                        </button>
-                                    </form>
+                                    <a href="process_payout.php?partner_id=<?php echo htmlspecialchars($log['partner_id']); ?>" class="btn btn-sm btn-success">
+                                        <i class="fas fa-arrow-right me-1"></i>Process Payout
+                                    </a>
                                 <?php else: ?>
                                     <span class="text-muted">Already Paid</span>
                                 <?php endif; ?>

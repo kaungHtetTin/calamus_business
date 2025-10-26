@@ -24,3 +24,11 @@ add filtering feature with status and date range
 order by total amount_received in descending order and status pending first and paid second
 add pagination feature
 add action button to payout the amount to the partner.
+
+for process_payout.php, you have to handle as a page.
+This is page show the following information:
+partner Information:
+payment methods
+amount to payout
+action button to payout the amount to the partner. (only add button, the implementation will be in the next step)
+
