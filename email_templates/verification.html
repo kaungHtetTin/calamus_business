@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Verification - Calamus Education</title>
+</head>
+<body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #f5f5f5;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color: #f5f5f5; padding: 20px;">
+        <tr>
+            <td align="center">
+                <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="background-color: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                    <!-- Header -->
+                    <tr>
+                        <td style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; text-align: center;">
+                            <h1 style="margin: 0; font-size: 28px; font-weight: 600;">Verify Your Email</h1>
+                            <p style="margin: 8px 0 0 0; font-size: 16px; opacity: 0.9;">Calamus Education Partner Portal</p>
+                        </td>
+                    </tr>
+                    
+                    <!-- Content -->
+                    <tr>
+                        <td style="padding: 40px 30px;">
+                            <h2 style="color: #202124; font-size: 24px; font-weight: 400; margin: 0 0 20px 0;">Hi {{partner_name}},</h2>
+                            
+                            <p style="color: #5f6368; font-size: 14px; line-height: 24px; margin: 0 0 20px 0;">Thank you for registering with Calamus Education Partner Portal!</p>
+                            
+                            <p style="color: #5f6368; font-size: 14px; line-height: 24px; margin: 0 0 30px 0;">Please verify your email address by clicking the button below:</p>
+                            
+                            <!-- CTA Button -->
+                            <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+                                <tr>
+                                    <td align="center" style="padding: 20px 0;">
+                                        <a href="{{verification_link}}" style="background-color: #667eea; color: white; text-decoration: none; padding: 14px 32px; border-radius: 4px; font-size: 14px; font-weight: 500; display: inline-block;">Verify Email Address</a>
+                                    </td>
+                                </tr>
+                            </table>
+                            
+                            <!-- Info Section -->
+                            <div style="background-color: #f8f9fa; border: 1px solid #e8eaed; border-radius: 4px; padding: 16px; margin: 30px 0;">
+                                <p style="color: #202124; font-size: 14px; font-weight: 600; margin: 0 0 12px 0;">Can't click the button?</p>
+                                <p style="color: #5f6368; font-size: 13px; line-height: 20px; margin: 0 0 12px 0;">Copy and paste this link into your browser:</p>
+                                <p style="color: #667eea; font-size: 12px; word-break: break-all; background-color: white; padding: 12px; border-radius: 4px; border: 1px solid #e8eaed; margin: 0;">{{verification_link}}</p>
+                            </div>
+                            
+                            <p style="color: #5f6368; font-size: 13px; line-height: 20px; margin: 30px 0 0 0;">
+                                If you didn't create an account with us, please ignore this email.
+                            </p>
+                        </td>
+                    </tr>
+                    
+                    <!-- Footer -->
+                    <tr>
+                        <td style="background-color: #f8f9fa; padding: 20px 30px; border-top: 1px solid #e8eaed;">
+                            <p style="color: #5f6368; font-size: 13px; line-height: 20px; margin: 0;">
+                                This verification link will expire in 24 hours for security reasons.<br>
+                                If you have any questions, please contact our support team.
+                            </p>
+                            <p style="color: #5f6368; font-size: 12px; margin: 20px 0 0 0;">
+                                © 2024 Calamus Education. All rights reserved.
+                            </p>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>
+

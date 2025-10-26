@@ -1,5 +1,5 @@
 -- Password Reset Tokens Table Schema
-CREATE TABLE IF NOT EXISTS password_reset_tokens (
+CREATE TABLE IF NOT EXISTS partner_password_reset_tokens (
     id INT AUTO_INCREMENT PRIMARY KEY,
     partner_id INT NOT NULL,
     token VARCHAR(64) NOT NULL UNIQUE,
@@ -13,4 +13,4 @@ CREATE TABLE IF NOT EXISTS password_reset_tokens (
 );
 
 -- Clean up expired tokens (optional - can be run periodically)
--- DELETE FROM password_reset_tokens WHERE expires_at < NOW() OR used = 1;
+-- DELETE FROM partner_password_reset_tokens WHERE expires_at < NOW() OR used = 1;

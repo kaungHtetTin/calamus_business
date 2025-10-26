@@ -227,7 +227,18 @@ function getCodeStatusColor($status) {
                                 </div>
                             <?php endif; ?>
                         </div>
-                        <span class="navbar-text text-white">
+                        <span class="navbar-text text-white d-block d-sm-none">
+                            <?php 
+                            $name = htmlspecialchars($currentPartner['contact_name']);
+                            $words = explode(' ', $name);
+                            $initials = '';
+                            foreach ($words as $word) {
+                                $initials .= strtoupper(substr($word, 0, 1));
+                            }
+                            echo substr($initials, 0, 2);
+                            ?>
+                        </span>
+                        <span class="navbar-text text-white d-none d-sm-block">
                             <?php echo htmlspecialchars($currentPartner['contact_name']); ?>
                         </span>
                     </a>

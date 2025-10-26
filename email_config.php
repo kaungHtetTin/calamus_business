@@ -9,24 +9,55 @@
 // Include the autoloader
 require_once __DIR__ . '/classes/autoload.php';
 
-// Email Configuration
-define('EMAIL_FROM_ADDRESS', 'noreply@calamuseducation.com');
-define('EMAIL_FROM_NAME', 'Calamus Education');
-define('EMAIL_REPLY_TO', 'support@calamuseducation.com');
-define('EMAIL_SUPPORT_ADDRESS', 'support@calamuseducation.com');
+// Load PHPMailer
+require_once __DIR__ . '/vendor/autoload.php';
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
 
-// SMTP Configuration (if using SMTP instead of mail())
-define('SMTP_HOST', 'smtp.gmail.com');
-define('SMTP_PORT', 587);
-define('SMTP_USERNAME', 'your-email@gmail.com');
-define('SMTP_PASSWORD', 'your-app-password');
-define('SMTP_ENCRYPTION', 'tls');
+// Email Configuration from env or defaults
+define('EMAIL_FROM_ADDRESS', 'kaunghtettin@calamuseducation.com');
+define('EMAIL_FROM_NAME', 'Calamus Education');
+define('EMAIL_REPLY_TO', 'kaunghtettin@calamuseducation.com');
+define('EMAIL_SUPPORT_ADDRESS', 'kaunghtettin@calamuseducation.com');
+
+// SMTP Configuration - Hostinger
+define('SMTP_HOST', 'smtp.hostinger.com');
+define('SMTP_PORT', 465);
+define('SMTP_USERNAME', 'kaunghtettin@calamuseducation.com');
+define('SMTP_PASSWORD', 'Wyne75707@@');
+define('SMTP_ENCRYPTION', PHPMailer::ENCRYPTION_SMTPS); // SSL
 
 // Email Templates
 define('EMAIL_TEMPLATE_VERIFICATION', 'verification');
 define('EMAIL_TEMPLATE_WELCOME', 'welcome');
 define('EMAIL_TEMPLATE_PASSWORD_RESET', 'password_reset');
 define('EMAIL_TEMPLATE_COMMISSION_EARNED', 'commission_earned');
+
+/**
+ * Get the base URL dynamically
+ * Detects protocol (http/https) and host from server variables
+ * 
+ * @return string Base URL (e.g., https://example.com/business)
+ */
+function getBaseUrl() {
+    $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http';
+    $host = $_SERVER['HTTP_HOST'];
+    
+    // Get the base path from the script directory
+    $scriptPath = dirname($_SERVER['SCRIPT_NAME']);
+    
+    // Remove 'business' if it's at the end of the path (for backward compatibility)
+    $basePath = str_replace('/business', '', $scriptPath);
+    
+    // If we're in the business directory, add it to the path
+    if (strpos($_SERVER['SCRIPT_NAME'], '/business/') !== false || strpos($_SERVER['DOCUMENT_ROOT'], '/business') !== false) {
+        $basePath = '/business';
+    } else {
+        $basePath = '';
+    }
+    
+    return $protocol . '://' . $host . $basePath;
+}
 
 /**
  * Get email headers for sending emails
@@ -45,36 +76,21 @@ function getEmailHeaders($type = 'default') {
 }
 
 /**
- * Send email using PHP mail() function
+ * Send email using PHPMailer with SMTP (default method)
  * 
  * @param string $to Recipient email address
  * @param string $subject Email subject
  * @param string $message Email message (HTML)
- * @param string $type Email type for headers
+ * @param string $type Email type
  * @return bool Success status
  */
 function sendEmail($to, $subject, $message, $type = 'default') {
-    $headers = getEmailHeaders($type);
-    
-    // Add additional headers based on type
-    switch ($type) {
-        case 'verification':
-            $headers .= "X-Priority: 3\r\n";
-            break;
-        case 'welcome':
-            $headers .= "X-Priority: 3\r\n";
-            break;
-        case 'password_reset':
-            $headers .= "X-Priority: 1\r\n";
-            break;
-    }
-    
-    return mail($to, $subject, $message, $headers);
+    // Use SMTP by default for better deliverability
+    return sendEmailSMTP($to, $subject, $message, $type);
 }
 
 /**
- * Send email using SMTP (requires PHPMailer or similar)
- * This is a placeholder function - implement if you want to use SMTP
+ * Send email using PHPMailer with SMTP
  * 
  * @param string $to Recipient email address
  * @param string $subject Email subject
@@ -83,26 +99,66 @@ function sendEmail($to, $subject, $message, $type = 'default') {
  * @return bool Success status
  */
 function sendEmailSMTP($to, $subject, $message, $type = 'default') {
-    // This would require PHPMailer or similar library
-    // For now, fall back to regular mail()
-    return sendEmail($to, $subject, $message, $type);
+    try {
+        $mail = new PHPMailer(true);
+        
+        // Server settings
+        $mail->isSMTP();
+        $mail->Host = SMTP_HOST;
+        $mail->SMTPAuth = true;
+        $mail->Username = SMTP_USERNAME;
+        $mail->Password = SMTP_PASSWORD;
+        $mail->SMTPSecure = SMTP_ENCRYPTION;
+        $mail->Port = SMTP_PORT;
+        $mail->CharSet = 'UTF-8';
+        
+        // Recipients
+        $mail->setFrom(EMAIL_FROM_ADDRESS, EMAIL_FROM_NAME);
+        $mail->addAddress($to);
+        $mail->addReplyTo(EMAIL_REPLY_TO, EMAIL_FROM_NAME);
+        
+        // Content
+        $mail->isHTML(true);
+        $mail->Subject = $subject;
+        $mail->Body = $message;
+        $mail->AltBody = strip_tags($message); // Plain text version
+        
+        // Send email
+        $mail->send();
+        
+        // Log success
+        logEmailAttempt($to, $subject, true);
+        return true;
+        
+    } catch (Exception $e) {
+        // Log error
+        logEmailAttempt($to, $subject, false, $mail->ErrorInfo);
+        error_log("Email sending failed: " . $mail->ErrorInfo);
+        return false;
+    }
 }
 
 /**
- * Get email template
+ * Get email template and replace variables
  * 
  * @param string $templateName Template name
  * @param array $variables Variables to replace in template
- * @return string Processed template
+ * @return string|false Processed template or false on error
  */
 function getEmailTemplate($templateName, $variables = []) {
     $templatePath = __DIR__ . '/email_templates/' . $templateName . '.html';
     
     if (!file_exists($templatePath)) {
+        error_log("Email template not found: $templatePath");
         return false;
     }
     
     $template = file_get_contents($templatePath);
+    
+    if ($template === false) {
+        error_log("Failed to read email template: $templatePath");
+        return false;
+    }
     
     // Replace variables in template
     foreach ($variables as $key => $value) {

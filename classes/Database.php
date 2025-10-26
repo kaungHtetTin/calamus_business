@@ -34,6 +34,9 @@ class Database {
         // Set charset to UTF-8
         mysqli_set_charset($connection, "utf8");
         
+        // Set timezone to UTC for consistency
+        mysqli_query($connection, "SET time_zone = '+00:00'");
+        
         return $connection;
     }
 

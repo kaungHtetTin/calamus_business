@@ -110,10 +110,10 @@ class PartnerAuth {
         
         // Create session
         $sessionToken = bin2hex(random_bytes(32));
-        $expiresAt = date('Y-m-d H:i:s', strtotime('+7 days'));
         
+        // Store session with database calculating expiry time (UTC timezone)
         $sessionQuery = "INSERT INTO partner_sessions (partner_id, session_token, expired_at) 
-                        VALUES ('{$partner['id']}', '$sessionToken', '$expiresAt')";
+                        VALUES ('{$partner['id']}', '$sessionToken', DATE_ADD(NOW(), INTERVAL 7 DAY))";
         
         if ($this->db->save($sessionQuery)) {
             // Update last login
@@ -169,9 +169,9 @@ class PartnerAuth {
         }
         
         $resetToken = bin2hex(random_bytes(32));
-        $expiresAt = date('Y-m-d H:i:s', strtotime('+1 hour'));
         
-        $query = "UPDATE partners SET reset_token = '$resetToken', reset_token_expires = '$expiresAt' WHERE email = '$email'";
+        // Store reset token with database calculating expiry time (UTC timezone)
+        $query = "UPDATE partners SET reset_token = '$resetToken', reset_token_expires = DATE_ADD(NOW(), INTERVAL 1 HOUR) WHERE email = '$email'";
         
         if ($this->db->save($query)) {
             $this->sendPasswordResetEmail($email, $resetToken);
@@ -229,13 +229,36 @@ class PartnerAuth {
     
     // Send verification email
     private function sendVerificationEmail($email, $verificationCode) {
-        $subject = "Verify Your Partner Account";
-        $message = "
-        <h2>Welcome to Our Partner Program!</h2>
-        <p>Your verification code is: <strong>$verificationCode</strong></p>
-        <p>Please use this code to verify your email address.</p>
-        <p>If you didn't create an account, please ignore this email.</p>
-        ";
+        $subject = "Verify Your Partner Account - Calamus Education";
+        
+        // Use dynamic base URL
+        $baseUrl = getBaseUrl();
+        $verificationLink = "$baseUrl/verify_email.php?code=$verificationCode";
+        
+        // Get partner name
+        $partner = $this->db->read("SELECT contact_name FROM partners WHERE email = '$email' LIMIT 1");
+        $partnerName = $partner ? $partner[0]['contact_name'] : 'User';
+        
+        // Use template
+        $variables = [
+            'partner_name' => $partnerName,
+            'verification_link' => $verificationLink
+        ];
+        
+        $message = getEmailTemplate('verification', $variables);
+        
+        // Fallback to inline HTML if template fails
+        if (!$message) {
+            $message = "
+            <div style='font-family: Arial, sans-serif; padding: 20px;'>
+                <h2>Verify Your Email</h2>
+                <p>Hi $partnerName,</p>
+                <p>Thank you for registering with Calamus Education Partner Portal!</p>
+                <p>Click the link below to verify your email:</p>
+                <p><a href='$verificationLink'>Verify Email</a></p>
+            </div>
+            ";
+        }
         
         $success = sendEmail($email, $subject, $message, 'verification');
         logEmailAttempt($email, $subject, $success);
@@ -300,22 +323,38 @@ class PartnerAuth {
     
     // Send welcome email
     public function sendWelcomeEmail($email, $contactName, $companyName) {
-        $subject = "Welcome to Our Partner Program!";
-        $message = "
-        <h2>Welcome to Our Partner Program!</h2>
-        <p>Dear $contactName,</p>
-        <p>Thank you for registering $companyName as a partner!</p>
-        <p>Your account is currently pending approval. You will receive an email once your account is activated.</p>
-        <p>Once approved, you will be able to:</p>
-        <ul>
-            <li>Generate promotion codes for your clients</li>
-            <li>Track your earnings and commissions</li>
-            <li>Access detailed analytics</li>
-            <li>Manage your payment settings</li>
-        </ul>
-        <p>If you have any questions, please don't hesitate to contact us.</p>
-        <p>Best regards,<br>The Partner Team</p>
-        ";
+        $subject = "Welcome to Calamus Education Partner Portal!";
+        
+        // Get partner details
+        $partner = $this->db->read("SELECT private_code FROM partners WHERE email = '$email' LIMIT 1");
+        $privateCode = $partner ? $partner[0]['private_code'] : '';
+        
+        // Use dynamic base URL
+        $baseUrl = getBaseUrl();
+        $loginLink = "$baseUrl/partner_login.php";
+        
+        // Use template
+        $variables = [
+            'partner_name' => $contactName,
+            'partner_email' => $email,
+            'partner_code' => $privateCode,
+            'login_link' => $loginLink
+        ];
+        
+        $message = getEmailTemplate('welcome', $variables);
+        
+        // Fallback to inline HTML if template fails
+        if (!$message) {
+            $message = "
+            <div style='font-family: Arial, sans-serif; padding: 20px;'>
+                <h2>Welcome to Calamus Education Partner Portal!</h2>
+                <p>Dear $contactName,</p>
+                <p>Thank you for registering $companyName as a partner!</p>
+                <p>Your private code: <strong>$privateCode</strong></p>
+                <p><a href='$loginLink'>Login to your dashboard</a></p>
+            </div>
+            ";
+        }
         
         $success = sendEmail($email, $subject, $message, 'welcome');
         logEmailAttempt($email, $subject, $success);
@@ -414,38 +453,31 @@ class PartnerAuth {
     
     // Send password reset email
     private function sendPasswordResetEmail($email, $token) {
-        $resetLink = "http://localhost/business/reset_password.php?token=$token";
+        // Use dynamic base URL
+        $baseUrl = getBaseUrl();
+        $resetLink = "$baseUrl/reset_password.php?token=$token";
         $subject = "Password Reset Request - Calamus Education Partner Portal";
-        $message = "
-        <div style='font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;'>
-            <div style='background: linear-gradient(135deg, #4a5568 0%, #718096 100%); color: white; padding: 20px; text-align: center;'>
-                <h2 style='margin: 0;'>Calamus Education</h2>
-                <p style='margin: 10px 0 0 0;'>Partner Portal</p>
-            </div>
-            <div style='padding: 30px; background: #f8f9fa;'>
-                <h3 style='color: #4a5568; margin-top: 0;'>Password Reset Request</h3>
+        
+        // Use template
+        $variables = [
+            'reset_link' => $resetLink
+        ];
+        
+        $message = getEmailTemplate('password_reset', $variables);
+        
+        // Fallback to inline HTML if template fails
+        if (!$message) {
+            $message = "
+            <div style='font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;'>
+                <h2 style='color: #202124;'>Password Reset Request</h2>
                 <p>Hello,</p>
                 <p>We received a request to reset your password for your Calamus Education Partner Portal account.</p>
-                <p>Click the button below to reset your password:</p>
-                <div style='text-align: center; margin: 30px 0;'>
-                    <a href='$resetLink' style='background: #4a5568; color: white; padding: 12px 30px; text-decoration: none; border-radius: 5px; display: inline-block; font-weight: bold;'>Reset Password</a>
-                </div>
-                <p><strong>Important:</strong></p>
-                <ul>
-                    <li>This link will expire in 1 hour for security reasons</li>
-                    <li>If you didn't request this password reset, please ignore this email</li>
-                    <li>Your password will remain unchanged until you create a new one</li>
-                </ul>
-                <p>If the button doesn't work, copy and paste this link into your browser:</p>
-                <p style='word-break: break-all; color: #4a5568; background: #e9ecef; padding: 10px; border-radius: 3px;'>$resetLink</p>
-                <hr style='border: none; border-top: 1px solid #dee2e6; margin: 30px 0;'>
-                <p style='color: #6c757d; font-size: 14px; margin-bottom: 0;'>
-                    This email was sent from Calamus Education Partner Portal.<br>
-                    If you have any questions, please contact our support team.
-                </p>
+                <p>Click the link below to reset your password:</p>
+                <p><a href='$resetLink'>$resetLink</a></p>
+                <p>This link will expire in 1 hour for security reasons.</p>
             </div>
-        </div>
-        ";
+            ";
+        }
         
         $success = sendEmail($email, $subject, $message, 'password_reset');
         logEmailAttempt($email, $subject, $success);
@@ -465,11 +497,10 @@ class PartnerAuth {
         
         // Generate reset token
         $token = bin2hex(random_bytes(32));
-        $expiresAt = date('Y-m-d H:i:s', strtotime('+1 hour'));
         
-        // Store reset token
-        $query = "INSERT INTO password_reset_tokens (partner_id, token, expires_at, created_at) 
-                  VALUES ('{$partner['id']}', '$token', '$expiresAt', NOW())";
+        // Store reset token - database calculates expiry time in UTC
+        $query = "INSERT INTO partner_password_reset_tokens (partner_id, token, expires_at, created_at) 
+                  VALUES ('{$partner['id']}', '$token', DATE_ADD(NOW(), INTERVAL 1 HOUR), NOW())";
         
         if (!$this->db->save($query)) {
             return ['success' => false, 'message' => 'Failed to create reset token'];
@@ -480,7 +511,7 @@ class PartnerAuth {
             return ['success' => true, 'message' => 'Password reset link sent to your email'];
         } else {
             // Clean up token if email failed
-            $this->db->save("DELETE FROM password_reset_tokens WHERE token = '$token'");
+            $this->db->save("DELETE FROM partner_password_reset_tokens WHERE token = '$token'");
             return ['success' => false, 'message' => 'Failed to send reset email'];
         }
     }
@@ -488,7 +519,7 @@ class PartnerAuth {
     // Validate password reset token
     public function validatePasswordResetToken($token) {
         $query = "SELECT prt.*, p.email, p.contact_name 
-                  FROM password_reset_tokens prt 
+                  FROM partner_password_reset_tokens prt 
                   JOIN partners p ON prt.partner_id = p.id 
                   WHERE prt.token = '$token' AND prt.expires_at > NOW() AND prt.used = 0";
         
@@ -521,7 +552,7 @@ class PartnerAuth {
         }
         
         // Mark token as used
-        $markUsedQuery = "UPDATE password_reset_tokens SET used = 1 WHERE token = '$token'";
+        $markUsedQuery = "UPDATE partner_password_reset_tokens SET used = 1 WHERE token = '$token'";
         $this->db->save($markUsedQuery);
         
         // Invalidate all existing sessions for security

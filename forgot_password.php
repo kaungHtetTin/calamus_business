@@ -88,6 +88,7 @@ document.getElementById('forgotPasswordForm').addEventListener('submit', functio
     })
     .then(response => response.json())
     .then(data => {
+        console.log(data);
         if (data.success) {
             // Show success message
             document.getElementById('forgotPasswordForm').style.display = 'none';
