@@ -58,17 +58,10 @@ include 'layout/header.php';
     padding: 24px;
 }
 
-.profile-image-section {
-    background: #f8f9fa;
-    border: 1px solid #e8eaed;
-    border-radius: 4px;
-    padding: 24px;
-}
-
 .profile-image-preview {
     width: 96px;
     height: 96px;
-    margin: 0 auto 20px;
+    margin: 0 auto;
     border-radius: 50%;
     overflow: hidden;
     background: #dadce0;
@@ -90,10 +83,7 @@ include 'layout/header.php';
     align-items: center;
     justify-content: center;
     color: #5f6368;
-}
-
-.upload-section {
-    margin-top: 16px;
+    font-size: 48px;
 }
 
 .google-form-group {
@@ -308,51 +298,49 @@ include 'layout/header.php';
     </div>
 
     <div class="content-wrapper">
-    <!-- Profile Image Section -->
+        <!-- Profile Image Section -->
         <div class="google-card">
             <div class="card-header">
                 <h5>Profile picture</h5>
             </div>
-        <div class="card-body">
-                <div class="profile-image-section">
-            <div class="row align-items-center">
-                        <div class="col-md-4 text-center">
-                            <div class="profile-image-preview">
+            <div class="card-body">
+                <div class="row align-items-center">
+                    <div class="col-md-4 text-center mb-3 mb-md-0">
+                        <div class="profile-image-preview">
                             <?php if (!empty($currentPartner['profile_image']) && file_exists($currentPartner['profile_image'])): ?>
                                 <img src="<?php echo htmlspecialchars($currentPartner['profile_image']); ?>" 
                                      alt="Profile Picture" 
-                                     id="profileImagePreview">
+                                     id="profileImagePreview"
+                                     style="width: 100%; height: 100%; object-fit: cover;">
                             <?php else: ?>
-                                    <div class="profile-image-placeholder" id="profileImagePreview">
-                                        <i class="fas fa-user fa-3x"></i>
+                                <div class="profile-image-placeholder" id="profileImagePreview">
+                                    <i class="fas fa-user"></i>
                                 </div>
                             <?php endif; ?>
                         </div>
                     </div>
-                        <div class="col-md-8">
-                            <div class="upload-section">
-                                <div class="google-form-group">
-                        <input type="file" class="form-control" id="profileImageInput" accept="image/*">
-                                    <div class="help-text">
-                                        JPG, PNG, GIF, WebP up to 5MB
-                        </div>
-                    </div>
-                                <div class="d-flex gap-2 flex-wrap">
-                                    <button type="button" class="google-btn google-btn-outline" id="uploadImageBtn" disabled>
-                                        Upload image
-                    </button>
-                    <?php if (!empty($currentPartner['profile_image'])): ?>
-                                    <button type="button" class="google-btn google-btn-secondary" id="removeImageBtn">
-                                        Remove
-                    </button>
-                    <?php endif; ?>
-                                </div>
+                    <div class="col-md-8">
+                        <div class="google-form-group">
+                            <label>Upload new picture</label>
+                            <input type="file" class="form-control" id="profileImageInput" accept="image/*">
+                            <div class="help-text">
+                                JPG, PNG, GIF, WebP up to 5MB
                             </div>
                         </div>
+                        <div class="d-flex gap-2 flex-wrap mt-2">
+                            <button type="button" class="google-btn google-btn-outline" id="uploadImageBtn" disabled>
+                                Upload
+                            </button>
+                            <?php if (!empty($currentPartner['profile_image'])): ?>
+                            <button type="button" class="google-btn google-btn-secondary" id="removeImageBtn">
+                                Remove
+                            </button>
+                            <?php endif; ?>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
     
     <!-- Profile Information Section -->
         <div class="google-card">

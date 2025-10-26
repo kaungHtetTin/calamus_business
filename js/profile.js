@@ -98,7 +98,7 @@ function uploadProfileImage(file) {
     // Show loading state
     const uploadBtn = document.getElementById('uploadImageBtn');
     const originalText = uploadBtn.innerHTML;
-    uploadBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Uploading...';
+    uploadBtn.innerHTML = 'Uploading...';
     uploadBtn.disabled = true;
     
     $.ajax({
@@ -117,32 +117,33 @@ function uploadProfileImage(file) {
                     if (preview.tagName === 'IMG') {
                         preview.src = response.profile_image;
                     } else {
-                        preview.innerHTML = `<img src="${response.profile_image}" alt="Profile Picture" class="profile-image rounded-circle">`;
+                        preview.innerHTML = `<img src="${response.profile_image}" alt="Profile Picture" style="width: 100%; height: 100%; object-fit: cover;">`;
                     }
-                }
-                
-                // Show remove button if it doesn't exist
-                if (!document.getElementById('removeImageBtn')) {
-                    const uploadBtn = document.getElementById('uploadImageBtn');
-                    const removeBtn = document.createElement('button');
-                    removeBtn.type = 'button';
-                    removeBtn.className = 'btn btn-outline-danger ms-2';
-                    removeBtn.id = 'removeImageBtn';
-                    removeBtn.innerHTML = '<i class="fas fa-trash me-2"></i>Remove Image';
-                    removeBtn.addEventListener('click', removeProfileImage);
-                    uploadBtn.parentNode.appendChild(removeBtn);
+                    
+                    // Show remove button if it doesn't exist
+                    if (!document.getElementById('removeImageBtn')) {
+                        const buttonContainer = uploadBtn.parentNode;
+                        const removeBtn = document.createElement('button');
+                        removeBtn.type = 'button';
+                        removeBtn.className = 'google-btn google-btn-secondary';
+                        removeBtn.id = 'removeImageBtn';
+                        removeBtn.textContent = 'Remove';
+                        removeBtn.addEventListener('click', removeProfileImage);
+                        buttonContainer.appendChild(removeBtn);
+                    }
                 }
                 
                 // Clear file input
                 document.getElementById('profileImageInput').value = '';
                 selectedFile = null;
+                uploadBtn.disabled = true;
             } else {
-                showAlert('Error: ' + response.message, 'danger');
+                showAlert('Error: ' + response.message, 'error');
             }
         },
         error: function(xhr, status, error) {
             console.error('Error uploading image:', error);
-            showAlert('Error uploading image. Please try again.', 'danger');
+            showAlert('Error uploading image. Please try again.', 'error');
         },
         complete: function() {
             // Reset button state
@@ -182,7 +183,7 @@ function removeProfileImage() {
                 
                 // Reset to placeholder
                 const preview = document.getElementById('profileImagePreview');
-                preview.innerHTML = '<div class="profile-image-placeholder rounded-circle d-flex align-items-center justify-content-center"><i class="fas fa-user fa-3x text-muted"></i></div>';
+                preview.innerHTML = '<div class="profile-image-placeholder"><i class="fas fa-user"></i></div>';
                 
                 // Remove the remove button
                 const removeBtn = document.getElementById('removeImageBtn');
@@ -194,12 +195,12 @@ function removeProfileImage() {
                 document.getElementById('profileImageInput').value = '';
                 selectedFile = null;
             } else {
-                showAlert('Error: ' + response.message, 'danger');
+                showAlert('Error: ' + response.message, 'error');
             }
         },
         error: function(xhr, status, error) {
             console.error('Error removing image:', error);
-            showAlert('Error removing image. Please try again.', 'danger');
+            showAlert('Error removing image. Please try again.', 'error');
         }
     });
 }

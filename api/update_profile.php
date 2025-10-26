@@ -104,6 +104,12 @@ if (isset($_FILES['profile_image']) && $_FILES['profile_image']['error'] === UPL
         if (!empty($partner['profile_image']) && file_exists(__DIR__ . '/../' . $partner['profile_image'])) {
             unlink(__DIR__ . '/../' . $partner['profile_image']);
         }
+
+        $partner['profile_image'] = $profileImagePath;
+        $result = $auth->updatePartner($partnerId, ['profile_image' => $profileImagePath]);
+        echo json_encode($result);
+        exit();
+
     } else {
         echo json_encode([
             'success' => false,
