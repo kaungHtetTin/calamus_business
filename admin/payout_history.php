@@ -168,9 +168,9 @@ $currentPage = 'payout_history';
                             </td>
                             <td><?php echo date('M d, Y', strtotime($history['created_at'])); ?></td>
                             <td>
-                                <button type="button" class="btn btn-sm btn-outline-secondary" onclick="viewPayoutDetails(<?php echo $history['id']; ?>)">
+                                <a href="payout_detail.php?id=<?php echo $history['id']; ?>" class="btn btn-sm btn-outline-secondary">
                                     <i class="fas fa-eye"></i> View
-                                </button>
+                                </a>
                             </td>
                         </tr>
                         <?php endforeach; ?>
@@ -251,12 +251,5 @@ $currentPage = 'payout_history';
     </div>
     
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        function viewPayoutDetails(id) {
-            // Implement view payout details logic
-            alert('View payout details for ID: ' + id);
-            // You can redirect to a details page or open a modal here
-        }
-    </script>
 </body>
 </html>

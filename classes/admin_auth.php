@@ -642,6 +642,37 @@ class AdminAuth {
     }
     
     /**
+     * Get staff by ID
+     */
+    public function getStaffById($staffId) {
+        $query = "SELECT id, name, ranking FROM staffs WHERE id = '$staffId'";
+        $result = $this->db->read($query);
+        return $result ? $result[0] : null;
+    }
+    
+    /**
+     * Get payout history detail
+     */
+    public function getPayoutHistoryDetail($paymentHistoryId) {
+        $query = "SELECT 
+                    pph.*,
+                    p.company_name,
+                    p.contact_name,
+                    p.email,
+                    p.phone,
+                    p.website,
+                    s.name as staff_name,
+                    s.ranking as staff_ranking
+                  FROM partner_payment_histories pph
+                  LEFT JOIN partners p ON pph.partner_id = p.id
+                  LEFT JOIN staffs s ON pph.staff_id = s.id
+                  WHERE pph.id = '$paymentHistoryId'";
+        
+        $result = $this->db->read($query);
+        return $result ? $result[0] : null;
+    }
+    
+    /**
      * Process partner payout
      */
     public function processPartnerPayout($partnerId, $paymentMethodId, $staffId, $amount, $screenshotPath) {
