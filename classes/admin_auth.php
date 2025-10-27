@@ -308,11 +308,11 @@ class AdminAuth {
     /**
      * Get payout logs (grouped by partner)
      */
-    public function getPayoutLogs($page = 1, $limit = 20, $status = null, $startDate = null, $endDate = null) {
+    public function getPayoutLogs($page = 1, $limit = 20, $startDate = null, $endDate = null) {
         $offset = ($page - 1) * $limit;
         
         // Build WHERE clause
-        $whereClause = "WHERE 1=1";
+        $whereClause = "WHERE 1=1 ";
         
         if ($startDate) {
             $whereClause .= " AND DATE(created_at) >= '$startDate'";
@@ -321,12 +321,13 @@ class AdminAuth {
         if ($endDate) {
             $whereClause .= " AND DATE(created_at) <= '$endDate'";
         }
-        
+
         // Get total count
-        $countQuery = "SELECT COUNT(DISTINCT partner_id) as total FROM partner_earnings $whereClause";
+        $countQuery = "SELECT COUNT(DISTINCT partner_id) as total FROM partner_earnings $whereClause ";
         $countResult = $this->db->read($countQuery);
         $total = $countResult[0]['total'];
         
+        $whereClause .= " AND pe.status = 'Pending'";
         // Get payout logs grouped by partner
         $query = "SELECT 
                     pe.partner_id,
@@ -335,42 +336,12 @@ class AdminAuth {
                     p.contact_name,
                     p.company_name,
                     p.email,
-                    p.phone,
-                    MAX(pe.status) as status
+                    p.phone
                  FROM partner_earnings pe 
                  LEFT JOIN partners p ON pe.partner_id = p.id 
                  $whereClause 
-                 GROUP BY pe.partner_id, p.contact_name, p.company_name, p.email, p.phone";
-        
-        // Apply status filter after grouping
-        if ($status) {
-            // For grouped data, we need to filter by each partner's status
-            // We'll do this by checking if all their earnings have the same status
-            $query = "SELECT 
-                        pe.partner_id,
-                        SUM(pe.amount_received) as total_amount,
-                        COUNT(pe.id) as transaction_count,
-                        p.contact_name,
-                        p.company_name,
-                        p.email,
-                        p.phone,
-                        MAX(pe.status) as status
-                     FROM partner_earnings pe 
-                     LEFT JOIN partners p ON pe.partner_id = p.id 
-                     $whereClause 
-                     GROUP BY pe.partner_id, p.contact_name, p.company_name, p.email, p.phone
-                     HAVING MAX(pe.status) = '$status'";
-        }
-        
-        // Order by status (pending first, then paid), then by total amount descending
-        $query .= " ORDER BY 
-                     CASE 
-                         WHEN pe.status = 'pending' THEN 0 
-                         WHEN pe.status = 'paid' THEN 1 
-                         ELSE 2 
-                     END,
-                     total_amount DESC 
-                   LIMIT $limit OFFSET $offset";
+                 GROUP BY pe.partner_id, p.contact_name, p.company_name, p.email, p.phone
+                 LIMIT $limit OFFSET $offset";
         
         $logs = $this->db->read($query);
         
@@ -387,7 +358,7 @@ class AdminAuth {
     /**
      * Get payout logs statistics
      */
-    public function getPayoutLogsStatistics($status = null, $startDate = null, $endDate = null) {
+    public function getPayoutLogsStatistics($startDate = null, $endDate = null) {
         $whereClause = "WHERE 1=1";
         
         if ($startDate) {
@@ -397,6 +368,8 @@ class AdminAuth {
         if ($endDate) {
             $whereClause .= " AND DATE(created_at) <= '$endDate'";
         }
+
+         $whereClause .= " AND status = 'pending'";
         
         $stats = [];
         
@@ -406,13 +379,13 @@ class AdminAuth {
             FROM partner_earnings pe 
             $whereClause 
             GROUP BY pe.partner_id
-            " . ($status ? " HAVING MAX(pe.status) = '$status'" : "") . "
         ) as grouped_earnings";
+        
         $result = $this->db->read($totalQuery);
         $stats['total_amount'] = $result && $result[0]['total'] ? (float)$result[0]['total'] : 0.00;
         
         // Total partners
-        $countQuery = "SELECT COUNT(DISTINCT partner_id) as total FROM partner_earnings $whereClause" . ($status ? " AND status = '$status'" : "");
+        $countQuery = "SELECT COUNT(DISTINCT partner_id) as total FROM partner_earnings $whereClause";
         $result = $this->db->read($countQuery);
         $stats['total_partners'] = $result ? (int)$result[0]['total'] : 0;
         

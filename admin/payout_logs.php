@@ -17,15 +17,16 @@ if (!$adminAuth->isLoggedIn()) {
 // Get filter parameters
 $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 $limit = 20;
-$status = isset($_GET['status']) && $_GET['status'] != '' ? $_GET['status'] : null;
+// Default to showing only pending payouts, but allow filtering
+$status = isset($_GET['status']) && $_GET['status'] != '' ? $_GET['status'] : 'pending';
 $startDate = isset($_GET['start_date']) && $_GET['start_date'] != '' ? $_GET['start_date'] : null;
 $endDate = isset($_GET['end_date']) && $_GET['end_date'] != '' ? $_GET['end_date'] : null;
 
 // Get payout logs with filters
-$logsData = $adminAuth->getPayoutLogs($page, $limit, $status, $startDate, $endDate);
+$logsData = $adminAuth->getPayoutLogs($page, $limit, $startDate, $endDate);
 
 // Get statistics
-$stats = $adminAuth->getPayoutLogsStatistics($status, $startDate, $endDate);
+$stats = $adminAuth->getPayoutLogsStatistics($startDate, $endDate);
 
 $pageTitle = 'Payout Logs';
 $currentPage = 'payout_logs';
@@ -67,20 +68,12 @@ $currentPage = 'payout_logs';
         <!-- Statistics -->
         <div class="stats-grid">
             <div class="stat-card">
-                <div class="stat-label">Total Payout</div>
-                <div class="stat-value"><?php echo number_format($stats['total_amount'], 2); ?> MMK</div>
-            </div>
-            <div class="stat-card">
                 <div class="stat-label">Total Partners</div>
                 <div class="stat-value"><?php echo number_format($stats['total_partners']); ?></div>
             </div>
-            <div class="stat-card">
+           <div class="stat-card">
                 <div class="stat-label">Pending Payout</div>
                 <div class="stat-value"><?php echo number_format($stats['pending_amount'], 2); ?> MMK</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-label">Paid Amount</div>
-                <div class="stat-value"><?php echo number_format($stats['paid_amount'], 2); ?> MMK</div>
             </div>
         </div>
         
@@ -90,32 +83,24 @@ $currentPage = 'payout_logs';
                 <i class="fas fa-filter me-2"></i>Filters
             </h5>
             <form method="GET" class="row g-3">
-                <div class="col-md-3">
-                    <label for="status" class="form-label">Status</label>
-                    <select class="form-select" id="status" name="status">
-                        <option value="">All Status</option>
-                        <option value="pending" <?php echo $status == 'pending' ? 'selected' : ''; ?>>Pending</option>
-                        <option value="paid" <?php echo $status == 'paid' ? 'selected' : ''; ?>>Paid</option>
-                    </select>
-                </div>
-                <div class="col-md-3">
+                <div class="col-md-4">
                     <label for="start_date" class="form-label">Start Date</label>
                     <input type="date" class="form-control" id="start_date" name="start_date" value="<?php echo $startDate; ?>">
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-4">
                     <label for="end_date" class="form-label">End Date</label>
                     <input type="date" class="form-control" id="end_date" name="end_date" value="<?php echo $endDate; ?>">
                 </div>
-                <div class="col-md-3 d-flex align-items-end">
+                <div class="col-md-4 d-flex align-items-end">
                     <button type="submit" class="btn btn-primary w-100">
                         <i class="fas fa-search me-2"></i>Apply Filters
                     </button>
                 </div>
             </form>
-            <?php if ($status || $startDate || $endDate): ?>
+            <?php if ($status != 'pending' || $startDate || $endDate): ?>
             <div class="mt-3">
                 <a href="payout_logs.php" class="btn btn-sm btn-outline-secondary">
-                    <i class="fas fa-times me-2"></i>Clear Filters
+                    <i class="fas fa-times me-2"></i>Show Pending Only
                 </a>
             </div>
             <?php endif; ?>
@@ -125,10 +110,16 @@ $currentPage = 'payout_logs';
         <div class="logs-table">
             <div class="table-header">
                 <h2 class="mb-0" style="font-size: 18px; font-weight: 400; color: #202124;">
-                    All Payout Logs (<?php echo number_format($logsData['total']); ?>)
+                    <?php if ($status === 'pending'): ?>
+                        Pending Payouts (<?php echo number_format($logsData['total']); ?>)
+                    <?php elseif ($status === 'paid'): ?>
+                        Paid Payouts (<?php echo number_format($logsData['total']); ?>)
+                    <?php else: ?>
+                        All Payout Logs (<?php echo number_format($logsData['total']); ?>)
+                    <?php endif; ?>
                 </h2>
             </div>
-            
+   
             <div class="table-responsive">
                 <table class="table table-hover mb-0">
                     <thead>
@@ -163,13 +154,9 @@ $currentPage = 'payout_logs';
                                 <span class="status-badge <?php echo $statusClass; ?>"><?php echo ucfirst($logStatus); ?></span>
                             </td>
                             <td>
-                                <?php if (strtolower($log['status']) == 'pending'): ?>
-                                    <a href="process_payout.php?partner_id=<?php echo htmlspecialchars($log['partner_id']); ?>" class="btn btn-sm btn-success">
-                                        <i class="fas fa-arrow-right me-1"></i>Process Payout
-                                    </a>
-                                <?php else: ?>
-                                    <span class="text-muted">Already Paid</span>
-                                <?php endif; ?>
+                                <a href="process_payout.php?partner_id=<?php echo htmlspecialchars($log['partner_id']); ?>" class="btn btn-sm btn-success">
+                                    <i class="fas fa-arrow-right me-1"></i>Process Payout
+                                </a>
                             </td>
                         </tr>
                         <?php endforeach; ?>
