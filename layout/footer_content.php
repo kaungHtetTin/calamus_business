@@ -67,7 +67,7 @@
                 </h6>
                 <ul class="list-unstyled">
                     <li class="mb-2">
-                        <a href="#" class="text-decoration-none text-muted" data-bs-toggle="modal" data-bs-target="#helpModal">
+                        <a href="help.php" class="text-decoration-none text-muted">
                             <i class="fas fa-question-circle me-2"></i>Help Center
                         </a>
                     </li>
@@ -132,49 +132,6 @@
     </div>
 </footer>
 
-<!-- Modals for Footer Links -->
-
-<!-- Help Center Modal -->
-<div class="modal fade" id="helpModal" tabindex="-1">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">
-                    <i class="fas fa-question-circle me-2"></i>Help Center
-                </h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <h6>Getting Started</h6>
-                <ul>
-                    <li>How to set up your partner account</li>
-                    <li>Understanding your dashboard</li>
-                    <li>Setting up payment methods</li>
-                    <li>Tracking your earnings</li>
-                </ul>
-                
-                <h6>Account Management</h6>
-                <ul>
-                    <li>Updating your profile information</li>
-                    <li>Changing payment methods</li>
-                    <li>Managing notifications</li>
-                    <li>Account security tips</li>
-                </ul>
-                
-                <h6>Earnings & Payments</h6>
-                <ul>
-                    <li>How earnings are calculated</li>
-                    <li>Payment processing times</li>
-                    <li>Understanding transaction history</li>
-                    <li>Tax reporting information</li>
-                </ul>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            </div>
-        </div>
-    </div>
-</div>
 
 <!-- FAQ Modal -->
 <div class="modal fade" id="faqModal" tabindex="-1">
