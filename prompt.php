@@ -64,3 +64,74 @@ make private code generation
 make status verification
 make created at and updated at
 submit button
+
+
+Now let implement the payout process. 
+The partner can have multiple payment methods.
+In payout process submission,
+make the partner payment method selector.
+add file input for screenshot of the payment proof.
+we need to determine which admin pay for this. 
+so use can fetch the admin from staffs table with ranking = 1. you can get name and id from the staffs table.
+then make selector for the admin.
+
+and then input the data into the partner_payment_histories with the following columns:
+partner_id
+payment_method
+payment_account
+amount
+status
+date
+staff_id (id from staffs table, I have already add this column to the partner_payment_histories table)
+transaction_screenshot
+
+then change the partner_earnings status to paid for this partner_id.
+
+after that you have to add the records to funds table. this operation can be learn from this function:
+in this function,
+title = 'Payment to partner $partner_name'
+amount = $amount
+type = 1
+staff_id = $staff_id
+transferring_id = $partner_payment_history_id
+    function add($req){
+
+        $title=$req['title'];
+        $amount=$req['amount'];
+        $type=$req['type'];
+        $staff_id=$req['staff_id'];
+
+        if(isset($req['transferring_id'])){
+            $transferring_id=$req['transferring_id'];
+        }else{
+            $transferring_id=0;
+        }
+
+        $DB=new Database();
+        $query="Select * from funds where staff_id=$staff_id order by id desc limit 1";
+        $lastTrans=$DB->read($query)[0];
+        $current_balance=$lastTrans['current_balance'];
+        
+        if($type==0){
+            $current_balance=$current_balance+$amount;
+        }else{
+             $current_balance=$current_balance-$amount;
+        }
+        
+        $query="INSERT INTO funds (title,amount,current_balance,type,staff_id,transfer_id) VALUE ('$title',$amount,'$current_balance','$type',$staff_id,$transferring_id)";
+        $result=$DB->save($query);
+        if($result){
+            $response['status']="success";
+            $response['msg']="Transaction added successfully";
+           
+            return $response;
+        }else{
+            $result['status']="fail";
+            $result['msg']="An unexpected error occurred!";
+            return $response;
+        }
+    }
+
+
+    Do you understand the your task. Explain your plan to me. Don't make any code. Just explain the plan.
+

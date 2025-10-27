@@ -10,6 +10,7 @@ CREATE TABLE IF NOT EXISTS partner_payment_histories (
     amount DECIMAL(10,2) NOT NULL,
     status ENUM('pending', 'received', 'rejected') DEFAULT 'pending',
     transaction_screenshot VARCHAR(500) NULL,
+    staff_id INT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     
@@ -20,7 +21,8 @@ CREATE TABLE IF NOT EXISTS partner_payment_histories (
     INDEX idx_partner_payment_histories_partner_id (partner_id),
     INDEX idx_partner_payment_histories_status (status),
     INDEX idx_partner_payment_histories_created_at (created_at),
-    INDEX idx_partner_payment_histories_partner_status (partner_id, status)
+    INDEX idx_partner_payment_histories_partner_status (partner_id, status),
+    INDEX idx_partner_payment_histories_staff_id (staff_id)
 );
 
 -- Insert sample data for testing

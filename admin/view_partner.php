@@ -37,6 +37,30 @@ $pendingAmount = $adminAuth->getPendingPayoutAmount($partnerId);
 
 // Get partner payment methods
 $paymentMethods = $adminAuth->getPartnerPaymentMethods($partnerId);
+
+// Handle password reset
+$resetError = '';
+$resetSuccess = '';
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['reset_password'])) {
+    $newPassword = isset($_POST['new_password']) ? $_POST['new_password'] : '';
+    $confirmPassword = isset($_POST['confirm_password']) ? $_POST['confirm_password'] : '';
+    
+    if (empty($newPassword) || empty($confirmPassword)) {
+        $resetError = 'Please fill in all fields';
+    } elseif (strlen($newPassword) < 8) {
+        $resetError = 'Password must be at least 8 characters long';
+    } elseif ($newPassword !== $confirmPassword) {
+        $resetError = 'Passwords do not match';
+    } else {
+        $result = $adminAuth->resetPartnerPassword($partnerId, $newPassword);
+        if ($result['success']) {
+            $resetSuccess = $result['message'];
+        } else {
+            $resetError = $result['message'];
+        }
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -264,6 +288,54 @@ $paymentMethods = $adminAuth->getPartnerPaymentMethods($partnerId);
                     <p>No payment methods found for this partner.</p>
                 </div>
             <?php endif; ?>
+        </div>
+        
+        <!-- Password Reset -->
+        <div class="info-card">
+            <h5 class="mb-3" style="color: #202124;">
+                <i class="fas fa-key me-2"></i>Reset Password
+            </h5>
+            
+            <?php if ($resetError): ?>
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <?php echo htmlspecialchars($resetError); ?>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            <?php endif; ?>
+            
+            <?php if ($resetSuccess): ?>
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <?php echo htmlspecialchars($resetSuccess); ?>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            <?php endif; ?>
+            
+            <div class="alert alert-warning" role="alert">
+                <i class="fas fa-exclamation-triangle me-2"></i>
+                Resetting the password will terminate all active sessions for this partner. They will need to log in again with the new password.
+            </div>
+            
+            <form method="POST" action="view_partner.php?id=<?php echo htmlspecialchars($partner['id']); ?>" style="margin-top: 20px;">
+                <input type="hidden" name="reset_password" value="1">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="new_password" class="form-label">New Password <span class="text-danger">*</span></label>
+                            <input type="password" class="form-control" id="new_password" name="new_password" required minlength="8">
+                            <div class="form-text">Minimum 8 characters</div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="confirm_password" class="form-label">Confirm Password <span class="text-danger">*</span></label>
+                            <input type="password" class="form-control" id="confirm_password" name="confirm_password" required minlength="8">
+                        </div>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-warning" onclick="return confirm('Are you sure you want to reset this partner\'s password? All active sessions will be terminated.');">
+                    <i class="fas fa-key me-2"></i>Reset Password
+                </button>
+            </form>
         </div>
         
         <!-- Action Buttons -->

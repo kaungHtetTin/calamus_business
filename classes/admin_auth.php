@@ -661,6 +661,120 @@ class AdminAuth {
     }
     
     /**
+     * Get staff by ranking
+     */
+    public function getStaffByRanking($ranking) {
+        $query = "SELECT id, name, ranking FROM staffs WHERE ranking = '$ranking' ORDER BY name ASC";
+        return $this->db->read($query);
+    }
+    
+    /**
+     * Process partner payout
+     */
+    public function processPartnerPayout($partnerId, $paymentMethodId, $staffId, $amount, $screenshotPath) {
+        // Start transaction by getting all data first
+        $partner = $this->getPartnerById($partnerId);
+        if (!$partner) {
+            return ['success' => false, 'message' => 'Partner not found'];
+        }
+        
+        // Get payment method details
+        $paymentMethods = $this->getPartnerPaymentMethods($partnerId);
+        $selectedMethod = null;
+        foreach ($paymentMethods as $method) {
+            if ($method['id'] == $paymentMethodId) {
+                $selectedMethod = $method;
+                break;
+            }
+        }
+        
+        if (!$selectedMethod) {
+            return ['success' => false, 'message' => 'Payment method not found'];
+        }
+        
+        // Get staff details
+        $staff = $this->db->read("SELECT id, name FROM staffs WHERE id = '$staffId'");
+        if (!$staff) {
+            return ['success' => false, 'message' => 'Staff not found'];
+        }
+        $staff = $staff[0];
+        
+        // Insert into partner_payment_histories
+        $query = "INSERT INTO partner_payment_histories 
+                  (partner_id, payment_method, account_number, account_name, amount, status, transaction_screenshot, staff_id, created_at) 
+                  VALUES ('$partnerId', '{$selectedMethod['payment_method']}', '{$selectedMethod['account_number']}', 
+                         '{$selectedMethod['account_name']}', '$amount', 'completed', '$screenshotPath', '$staffId', NOW())";
+        
+        $result = $this->db->save($query);
+        if (!$result) {
+            return ['success' => false, 'message' => 'Failed to insert payment history'];
+        }
+        
+        // Get the inserted payment history ID
+        $paymentHistory = $this->db->read("SELECT id FROM partner_payment_histories WHERE partner_id = '$partnerId' AND staff_id = '$staffId' ORDER BY id DESC LIMIT 1");
+        $paymentHistoryId = $paymentHistory[0]['id'];
+        
+        // Update partner_earnings status to 'paid'
+        $updateQuery = "UPDATE partner_earnings SET status = 'paid', updated_at = NOW() WHERE partner_id = '$partnerId' AND status = 'pending'";
+        if (!$this->db->save($updateQuery)) {
+            return ['success' => false, 'message' => 'Failed to update earnings status'];
+        }
+        
+        // Add record to funds table
+        $title = "Payment to partner {$partner['contact_name']}";
+        
+        // Get last transaction for the staff
+        $lastTrans = $this->db->read("SELECT * FROM funds WHERE staff_id = '$staffId' ORDER BY id DESC LIMIT 1");
+        
+        $currentBalance = 0;
+        if ($lastTrans && isset($lastTrans[0])) {
+            $currentBalance = $lastTrans[0]['current_balance'];
+        }
+        
+        // Subtract amount (type = 1 means outgoing payment)
+        $currentBalance = $currentBalance - $amount;
+        
+        // Insert into funds
+        $fundsQuery = "INSERT INTO funds (title, amount, current_balance, type, staff_id, transfer_id) 
+                       VALUES ('$title', '$amount', '$currentBalance', '1', '$staffId', '$paymentHistoryId')";
+        
+        if (!$this->db->save($fundsQuery)) {
+            return ['success' => false, 'message' => 'Failed to update funds'];
+        }
+        
+        return [
+            'success' => true, 
+            'message' => 'Payout processed successfully',
+            'payment_history_id' => $paymentHistoryId
+        ];
+    }
+    
+    /**
+     * Reset partner password
+     */
+    public function resetPartnerPassword($partnerId, $newPassword) {
+        // Validate password length
+        if (strlen($newPassword) < 8) {
+            return ['success' => false, 'message' => 'Password must be at least 8 characters long'];
+        }
+        
+        // Hash password
+        $hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
+        
+        // Update password
+        $query = "UPDATE partners SET password = '$hashedPassword', updated_at = NOW() WHERE id = '$partnerId'";
+        
+        if ($this->db->save($query)) {
+            // Invalidate all existing sessions for this partner
+            $this->db->save("DELETE FROM partner_sessions WHERE partner_id = '$partnerId'");
+            
+            return ['success' => true, 'message' => 'Password reset successfully. All sessions have been terminated.'];
+        }
+        
+        return ['success' => false, 'message' => 'Failed to reset password'];
+    }
+    
+    /**
      * Process payout for a partner
      */
     public function processPayout($partnerId) {
