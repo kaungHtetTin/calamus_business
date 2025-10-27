@@ -83,7 +83,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $result = $adminAuth->processPartnerPayout($partnerId, $paymentMethodId, $staffId, $pendingAmount, $screenshotPath);
                 
                 if ($result['success']) {
-                    header('Location: payout_logs.php?success=' . urlencode('Payout processed successfully'));
+                    // Check if email was sent
+                    $emailStatus = isset($result['email_sent']) && $result['email_sent'] ? ' and notification email sent' : '';
+                    $successMessage = 'Payout processed successfully' . $emailStatus;
+                    
+                    header('Location: payout_logs.php?success=' . urlencode($successMessage));
                     exit();
                 } else {
                     $error = $result['message'];

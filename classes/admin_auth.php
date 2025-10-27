@@ -673,6 +673,58 @@ class AdminAuth {
     }
     
     /**
+     * Send payout notification email
+     */
+    public function sendPayoutNotificationEmail($paymentHistoryId) {
+        require_once __DIR__ . '/../email_config.php';
+        
+        // Get payment history details
+        $history = $this->getPayoutHistoryDetail($paymentHistoryId);
+        
+        if (!$history) {
+            return ['success' => false, 'message' => 'Payment history not found'];
+        }
+        
+        // Prepare email variables
+        $baseUrl = getBaseUrl();
+        $variables = [
+            'partner_name' => $history['contact_name'] ?? 'Partner',
+            'amount' => number_format($history['amount'], 2),
+            'transaction_date' => date('F d, Y', strtotime($history['created_at'])),
+            'payment_method' => $history['payment_method'],
+            'account_name' => $history['account_name'],
+            'account_number' => $history['account_number'],
+            'dashboard_link' => $baseUrl . '/partner_dashboard.php'
+        ];
+        
+        // Get email template
+        $template = getEmailTemplate('payout_notification', $variables);
+        
+        // Fallback if template fails
+        if (!$template) {
+            $template = "
+            <div style='font-family: Arial, sans-serif; padding: 20px;'>
+                <h2>Payout Processed</h2>
+                <p>Hi {$variables['partner_name']},</p>
+                <p>Your payout of {$variables['amount']} MMK has been successfully processed.</p>
+                <p>Payment Method: {$variables['payment_method']}</p>
+                <p>Account: {$variables['account_name']} ({$variables['account_number']})</p>
+                <p>Date: {$variables['transaction_date']}</p>
+                <p><a href='{$variables['dashboard_link']}'>View Dashboard</a></p>
+            </div>
+            ";
+        }
+        
+        $subject = "Payout Processed - Calamus Education";
+        $success = sendEmail($history['email'], $subject, $template, 'payout_notification');
+        
+        return [
+            'success' => $success,
+            'message' => $success ? 'Payout notification email sent' : 'Failed to send payout notification email'
+        ];
+    }
+    
+    /**
      * Process partner payout
      */
     public function processPartnerPayout($partnerId, $paymentMethodId, $staffId, $amount, $screenshotPath) {
@@ -746,10 +798,18 @@ class AdminAuth {
             return ['success' => false, 'message' => 'Failed to update funds'];
         }
         
+        // Send payout notification email to partner
+        $emailResult = $this->sendPayoutNotificationEmail($paymentHistoryId);
+        if (!$emailResult['success']) {
+            // Log email failure but don't fail the entire payout process
+            error_log("Failed to send payout notification email: " . $emailResult['message']);
+        }
+        
         return [
             'success' => true, 
             'message' => 'Payout processed successfully',
-            'payment_history_id' => $paymentHistoryId
+            'payment_history_id' => $paymentHistoryId,
+            'email_sent' => $emailResult['success']
         ];
     }
     

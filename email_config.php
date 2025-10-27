@@ -32,6 +32,7 @@ define('EMAIL_TEMPLATE_VERIFICATION', 'verification');
 define('EMAIL_TEMPLATE_WELCOME', 'welcome');
 define('EMAIL_TEMPLATE_PASSWORD_RESET', 'password_reset');
 define('EMAIL_TEMPLATE_COMMISSION_EARNED', 'commission_earned');
+define('EMAIL_TEMPLATE_PAYOUT_NOTIFICATION', 'payout_notification');
 
 /**
  * Get the base URL dynamically
