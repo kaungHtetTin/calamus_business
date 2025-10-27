@@ -38,23 +38,23 @@
                 </h6>
                 <ul class="list-unstyled">
                     <li class="mb-2">
-                        <a href="#" class="text-decoration-none text-muted" data-bs-toggle="modal" data-bs-target="#aboutModal">
+                        <a href="https://www.calamuseducation.com/calamus/about_us.php" class="text-decoration-none text-muted">
                             <i class="fas fa-info-circle me-2"></i>About Us
                         </a>
                     </li>
                     <li class="mb-2">
-                        <a href="#" class="text-decoration-none text-muted" data-bs-toggle="modal" data-bs-target="#careersModal">
-                            <i class="fas fa-briefcase me-2"></i>Careers
+                        <a href="https://www.calamuseducation.com/app-portfolio/easy-english.php" class="text-decoration-none text-muted">
+                            <i class="fas fa-mobile-alt"></i> Easy English
                         </a>
                     </li>
                     <li class="mb-2">
-                        <a href="#" class="text-decoration-none text-muted" data-bs-toggle="modal" data-bs-target="#newsModal">
-                            <i class="fas fa-newspaper me-2"></i>News & Updates
+                        <a href="https://www.calamuseducation.com/app-portfolio/easy-korean.php" class="text-decoration-none text-muted">
+                            <i class="fas fa-mobile-alt"></i> English Korean
                         </a>
                     </li>
                     <li class="mb-2">
-                        <a href="#" class="text-decoration-none text-muted" data-bs-toggle="modal" data-bs-target="#partnersModal">
-                            <i class="fas fa-handshake me-2"></i>Become a Partner
+                        <a href="https://www.calamuseducation.com" class="text-decoration-none text-muted" data-bs-toggle="modal">
+                            <i class="fas fa-globe me-2"></i>Learning Website
                         </a>
                     </li>
                 </ul>
@@ -74,11 +74,6 @@
                     <li class="mb-2">
                         <a href="#" class="text-decoration-none text-muted" data-bs-toggle="modal" data-bs-target="#faqModal">
                             <i class="fas fa-question me-2"></i>FAQ
-                        </a>
-                    </li>
-                    <li class="mb-2">
-                        <a href="#" class="text-decoration-none text-muted" data-bs-toggle="modal" data-bs-target="#contactModal">
-                            <i class="fas fa-envelope me-2"></i>Contact Support
                         </a>
                     </li>
                     <li class="mb-2">
@@ -123,24 +118,7 @@
         <div class="row border-top pt-4 mt-4">
             <div class="col-md-6 mb-3">
                 <div class="d-flex align-items-center flex-wrap">
-                    <h6 class="mb-0 me-3">Follow Us:</h6>
-                    <div class="d-flex gap-3">
-                        <a href="#" class="text-muted" data-bs-toggle="modal" data-bs-target="#socialModal" title="Facebook">
-                            <i class="fab fa-facebook fa-lg"></i>
-                        </a>
-                        <a href="#" class="text-muted" data-bs-toggle="modal" data-bs-target="#socialModal" title="Twitter">
-                            <i class="fab fa-twitter fa-lg"></i>
-                        </a>
-                        <a href="#" class="text-muted" data-bs-toggle="modal" data-bs-target="#socialModal" title="LinkedIn">
-                            <i class="fab fa-linkedin fa-lg"></i>
-                        </a>
-                        <a href="#" class="text-muted" data-bs-toggle="modal" data-bs-target="#socialModal" title="Instagram">
-                            <i class="fab fa-instagram fa-lg"></i>
-                        </a>
-                        <a href="#" class="text-muted" data-bs-toggle="modal" data-bs-target="#socialModal" title="YouTube">
-                            <i class="fab fa-youtube fa-lg"></i>
-                        </a>
-                    </div>
+                  
                 </div>
             </div>
             <div class="col-md-6 text-md-end text-center">
@@ -280,57 +258,6 @@
             </div>
             <div class="modal-body">
                 <p>We are a leading partner platform connecting businesses with opportunities to grow their revenue through strategic partnerships.</p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="modal fade" id="careersModal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Careers</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <p>Join our team! We're always looking for talented individuals to help us grow. Check our careers page for current openings.</p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="modal fade" id="newsModal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">News & Updates</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <p>Stay updated with the latest news, feature releases, and platform improvements.</p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="modal fade" id="partnersModal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Become a Partner</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <p>Interested in becoming a partner? Contact our partnership team to learn about opportunities.</p>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>

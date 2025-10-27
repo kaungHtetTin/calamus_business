@@ -123,6 +123,7 @@ function getCodeStatusColor($status) {
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="stylesheet" href="css/app.css">
+    <link rel="icon" href="logo.png" type="image/x-icon">
 </head>
 <body>
     <!-- Top Navigation Bar -->
@@ -135,6 +136,7 @@ function getCodeStatusColor($status) {
             
             <!-- Brand/Logo -->
             <a class="navbar-brand fw-bold" href="dashboard.php">
+                <img src="logo.png" alt="Calamus" width="30" height="30">
                 Calamus
             </a>
             
@@ -280,9 +282,11 @@ function getCodeStatusColor($status) {
     <!-- Bootstrap Offcanvas for Navigation (Mobile & Desktop) -->
     <div class="offcanvas offcanvas-start" tabindex="-1" id="mobileSidebar" aria-labelledby="mobileSidebarLabel">
         <div class="offcanvas-header">
+            <br>
             <strong class="offcanvas-title text-white" id="mobileSidebarLabel">
                 <i class="fas fa-handshake me-2"></i>Partner Portal
             </strong>
+            <br>
             <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
         </div>
         <div class="offcanvas-body">
@@ -319,7 +323,9 @@ function getCodeStatusColor($status) {
                 <div class="p-3">
                     <div class="d-flex justify-content-between align-items-center mb-4">
                         <h5 class="text-white mb-0">
+                            <br>
                             <i class="fas fa-handshake me-2"></i>Partner Portal
+                            <br>
                         </h5>
                     </div>
                     <div class="text-white-50 mb-3">

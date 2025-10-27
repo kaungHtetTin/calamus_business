@@ -590,7 +590,7 @@ if (!$isLoggedIn) {
             </a>
             <a href="https://play.google.com/store/apps/details?id=com.qanda.learnroom" class="drawer-item" target="_blank">
                 <i class="fas fa-play"></i>
-                <span>Q&A Learn Room</span>
+                <span>Easy English (Play Store)</span>
             </a>
             <a href="https://play.google.com/store/apps/details?id=com.calamus.easykorean" class="drawer-item" target="_blank">
                 <i class="fas fa-play"></i>
