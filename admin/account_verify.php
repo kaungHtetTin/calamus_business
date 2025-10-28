@@ -45,8 +45,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $db = new Database();
         $updated = $db->save("UPDATE partners SET account_verified = 1, updated_at = NOW() WHERE id = '$partnerId'");
         if ($updated) {
-            $successMessage = 'Partner account verified successfully.';
+            // Refresh partner details
             $partner = $adminAuth->getPartnerById($partnerId);
+
+            // Send confirmation email using general_action template
+            $subject = 'Your account has been verified - Calamus Education';
+            $variables = [
+                'partner_name' => $partner['contact_name'] ?? 'Partner',
+                'message' => 'Your partner account has been reviewed and verified. You can now fully access payouts and all partner features.'
+            ];
+            $template = getEmailTemplate('general_action', $variables);
+            if (!$template) {
+                $template = "<div style='font-family: Arial, sans-serif;'>"
+                          . "<p>Dear " . htmlspecialchars($partner['contact_name'] ?? 'Partner') . ",</p>"
+                          . "<p>Your partner account has been reviewed and verified. You can now fully access payouts and all partner features.</p>"
+                          . "<p>Regards,<br>Calamus Education</p>"
+                          . "</div>";
+            }
+            $emailSent = sendEmail($partner['email'], $subject, $template, 'general_action');
+
+            $successMessage = 'Partner account verified successfully.' . ($emailSent ? ' Verification email sent.' : ' Email sending failed.');
         } else {
             $errorMessage = 'Failed to verify partner account.';
         }
