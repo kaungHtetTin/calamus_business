@@ -17,7 +17,7 @@ switch ($endpoint) {
     case 'register':
         if ($method === 'POST') {
             // Validate required fields
-            $requiredFields = ['company_name', 'contact_name', 'email', 'phone', 'password'];
+            $requiredFields = ['company_name', 'contact_name', 'email', 'phone', 'password', 'address', 'city', 'state', 'national_id_card_number'];
             $missingFields = [];
             
             foreach ($requiredFields as $field) {
@@ -72,7 +72,11 @@ switch ($endpoint) {
                 'website' => isset($input['website']) ? trim($input['website']) : '',
                 'description' => isset($input['description']) ? trim($input['description']) : '',
                 'commission_rate' => isset($input['commission_rate']) ? floatval($input['commission_rate']) : 10.0,
-                'status' => 'pending' // New partners start as pending
+                'status' => 'pending', // New partners start as pending
+                'address' => trim($input['address']),
+                'city' => trim($input['city']),
+                'state' => trim($input['state']),
+                'national_id_card_number' => trim($input['national_id_card_number'])
             ];
             
             // Register the partner (this will send welcome email automatically)

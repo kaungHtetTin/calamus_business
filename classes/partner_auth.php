@@ -56,15 +56,17 @@ class PartnerAuth {
         // Generate verification code
         $verificationCode = str_pad(rand(100000, 999999), 6, '0', STR_PAD_LEFT);
         
-        // Insert partner
+        // Insert partner (including address and national ID fields)
         $query = "INSERT INTO partners 
                  (company_name, contact_name, email, phone, password, website, description, 
-                  commission_rate, private_code, status, verification_code, created_at) 
+                  commission_rate, private_code, status, verification_code, created_at,
+                  address, city, state, national_id_card_number, national_id_card_front_image, national_id_card_back_image) 
                  VALUES ('{$partnerData['company_name']}', '{$partnerData['contact_name']}', 
-                         '{$partnerData['email']}', '{$partnerData['phone']}', '$hashedPassword', 
-                         '{$partnerData['website']}', '{$partnerData['description']}', 
-                         '{$partnerData['commission_rate']}', '$privateCode', 
-                         '{$partnerData['status']}', '$verificationCode', NOW())";
+                        '{$partnerData['email']}', '{$partnerData['phone']}', '$hashedPassword', 
+                        '{$partnerData['website']}', '{$partnerData['description']}', 
+                        '{$partnerData['commission_rate']}', '$privateCode', 
+                        '{$partnerData['status']}', '$verificationCode', NOW(),
+                        '{$partnerData['address']}', '{$partnerData['city']}', '{$partnerData['state']}', '{$partnerData['national_id_card_number']}', '', '')";
         
         $result = $this->db->save($query);
         if ($result) {
@@ -422,7 +424,7 @@ class PartnerAuth {
             return ['success' => true, 'message' => 'Partner information updated successfully'];
         }
         
-        return ['success' => false, 'message' => 'Failed to update partner information'];
+        return ['success' => false, 'message' => 'Failed to update partner information','query' => $query];
     }
     
     // Change password

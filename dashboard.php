@@ -6,6 +6,15 @@ include 'layout/header.php';
 
 <!-- Dashboard Section -->
 <div class="content-section">
+    <?php if (empty($currentPartner['address']) || empty($currentPartner['city']) || empty($currentPartner['state']) || empty($currentPartner['national_id_card_number'])): ?>
+    <div class="alert alert-warning d-flex align-items-center" role="alert">
+        <i class="fas fa-exclamation-triangle me-2"></i>
+        <div>
+            Please fill out the address information and the national id card information. Otherwise, you will not be able to receive payments.
+            <a href="profile.php" class="ms-2">Go to profile</a>
+        </div>
+    </div>
+    <?php endif; ?>
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2><i class="fas fa-tachometer-alt me-2"></i>Dashboard</h2>
         <div class="text-muted">

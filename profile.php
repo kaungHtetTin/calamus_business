@@ -401,6 +401,74 @@ include 'layout/header.php';
                             </div>
                         </div>
                     </div>
+                    <!-- Address Information -->
+                    <div class="row mt-2">
+                        <div class="col-12">
+                            <hr>
+                            <h6 style="font-weight:500;color:#202124;">Address information</h6>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="google-form-group">
+                                <label>Address</label>
+                                <input type="text" class="form-control" id="address" name="address" 
+                                       value="<?php echo htmlspecialchars($currentPartner['address'] ?? ''); ?>">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="google-form-group">
+                                <label>City</label>
+                                <input type="text" class="form-control" id="city" name="city" 
+                                       value="<?php echo htmlspecialchars($currentPartner['city'] ?? ''); ?>">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="google-form-group">
+                                <label>State</label>
+                                <input type="text" class="form-control" id="state" name="state" 
+                                       value="<?php echo htmlspecialchars($currentPartner['state'] ?? ''); ?>">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- National ID Card Information -->
+                    <div class="row mt-2">
+                        <div class="col-12">
+                            <hr>
+                            <h6 style="font-weight:500;color:#202124;">National ID card</h6>
+                            <div class="help-text">Upload clear images of the front and back of your national ID card.</div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="google-form-group">
+                                <label>National ID card number</label>
+                                <input type="text" class="form-control" id="national_id_card_number" name="national_id_card_number" 
+                                       value="<?php echo htmlspecialchars($currentPartner['national_id_card_number'] ?? ''); ?>">
+                            </div>
+                        </div>
+                        <div class="col-md-6"></div>
+                        <div class="col-md-6">
+                            <div class="google-form-group">
+                                <label>Front image</label>
+                                <input type="file" class="form-control" id="national_id_card_front_image" name="national_id_card_front_image" accept="image/*">
+                                <?php if (!empty($currentPartner['national_id_card_front_image'])): ?>
+                                    <div class="help-text" style="margin-top:8px;">
+                                        <a href="<?php echo htmlspecialchars($currentPartner['national_id_card_front_image']); ?>" target="_blank">View current front image</a>
+                                    </div>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="google-form-group">
+                                <label>Back image</label>
+                                <input type="file" class="form-control" id="national_id_card_back_image" name="national_id_card_back_image" accept="image/*">
+                                <?php if (!empty($currentPartner['national_id_card_back_image'])): ?>
+                                    <div class="help-text" style="margin-top:8px;">
+                                        <a href="<?php echo htmlspecialchars($currentPartner['national_id_card_back_image']); ?>" target="_blank">View current back image</a>
+                                    </div>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="text-end mt-4">
                         <button type="submit" class="google-btn google-btn-primary">
                             Save
