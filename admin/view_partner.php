@@ -491,15 +491,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['suspend_account'])) {
             <a href="partners.php" class="btn btn-outline-secondary">
                 <i class="fas fa-arrow-left me-2"></i>Back to List
             </a>
-            <a href="edit_partner.php?id=<?php echo htmlspecialchars($partner['id']); ?>" class="btn btn-primary">
-                <i class="fas fa-edit me-2"></i>Edit Partner
-            </a>
-            <form method="POST" action="delete_partner.php" style="display: inline;" onsubmit="return confirm('Are you sure you want to delete this partner? This action cannot be undone.');">
-                <input type="hidden" name="partner_id" value="<?php echo htmlspecialchars($partner['id']); ?>">
-                <button type="submit" class="btn btn-danger">
-                    <i class="fas fa-trash me-2"></i>Delete Partner
-                </button>
-            </form>
         </div>
     </div>
     

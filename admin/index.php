@@ -48,6 +48,7 @@ $currentPage = 'index';
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="../css/app.css">
     <link rel="stylesheet" href="css/app.css">
+    <link rel="icon" href="../logo.png" type="image/x-icon">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <style>
         .verified-icon {
