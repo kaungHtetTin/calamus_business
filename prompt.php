@@ -30,3 +30,14 @@ status: active or inactive
 
 tell the user that only these 5 status are required to receive payments.
 for admin dashboard, don't make any implementation for this page. It will be next step.
+
+
+It's time to implement from the admin dashboard to check the account status of the partner
+in the page of partners.php, add new table when a partner is present to check the account status of the partner
+a partner will be listed in the table only when
+email_verified is 1
+payment_method added
+personal_information added. 
+
+the table is placed before the table of partners.
+if no partner is listed in the table, hide the table.   

@@ -216,6 +216,30 @@ class AdminAuth {
         
         return $stats;
     }
+
+    /**
+     * Get partners eligible for account status check
+     * Conditions:
+     *  - email_verified = 1
+     *  - has at least one payment method
+     *  - personal information filled (address, city, state, national_id_card_number)
+     */
+    public function getPartnersEligibleForStatusCheck() {
+        $query = "SELECT p.*
+                  FROM partners p
+                  WHERE p.email_verified = 1
+                    AND COALESCE(p.address, '') <> ''
+                    AND COALESCE(p.city, '') <> ''
+                    AND COALESCE(p.state, '') <> ''
+                    AND COALESCE(p.national_id_card_number, '') <> ''
+                    AND EXISTS (
+                        SELECT 1 FROM partner_payment_methods pm
+                        WHERE pm.partner_id = p.id
+                    )
+                  ORDER BY p.created_at DESC";
+        $result = $this->db->read($query);
+        return $result ? $result : [];
+    }
     
     /**
      * Get all earning logs with pagination and filtering

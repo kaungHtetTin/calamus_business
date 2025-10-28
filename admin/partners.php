@@ -122,6 +122,83 @@ $currentPage = 'partners';
             </form>
         </div>
         
+        <!-- Account Status Check Table (Eligible Partners) -->
+        <?php 
+            $eligiblePartners = $adminAuth->getPartnersEligibleForStatusCheck();
+            $hasEligible = is_array($eligiblePartners) && count($eligiblePartners) > 0;
+        ?>
+        <?php if ($hasEligible): ?>
+        <div class="partners-table mb-4">
+            <div class="table-header">
+                <h2 class="table-title">Account Status Check (<?php echo number_format(count($eligiblePartners)); ?>)</h2>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead>
+                        <tr>
+                            <th>Partner ID</th>
+                            <th>Company Name</th>
+                            <th>Contact Name</th>
+                            <th>Email</th>
+                            <th>Email Verified</th>
+                            <th>Payment Method</th>
+                            <th>Personal Info</th>
+                            <th>Joined</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($eligiblePartners as $partner): ?>
+                        <?php
+                            $emailVerified = !empty($partner['email_verified']);
+                            // minimal flags already ensured by query; compute for display
+                            $personalInfoComplete = (!empty($partner['address']) && !empty($partner['city']) && !empty($partner['state']) && !empty($partner['national_id_card_number']));
+                            // has payment method check via a quick existence query
+                            $pmCountRes = (new Database())->read("SELECT COUNT(*) AS cnt FROM partner_payment_methods WHERE partner_id = '" . $partner['id'] . "'");
+                            $hasPaymentMethod = $pmCountRes && isset($pmCountRes[0]['cnt']) && (int)$pmCountRes[0]['cnt'] > 0;
+                        ?>
+                        <tr>
+                            <td>#<?php echo htmlspecialchars($partner['id']); ?></td>
+                            <td><?php echo htmlspecialchars($partner['company_name'] ?? 'N/A'); ?></td>
+                            <td><?php echo htmlspecialchars($partner['contact_name'] ?? 'N/A'); ?></td>
+                            <td><?php echo htmlspecialchars($partner['email']); ?></td>
+                            <td>
+                                <?php if ($emailVerified): ?>
+                                    <span class="badge bg-success">Verified</span>
+                                <?php else: ?>
+                                    <span class="badge bg-danger">Not Verified</span>
+                                <?php endif; ?>
+                            </td>
+                            <td>
+                                <?php if ($hasPaymentMethod): ?>
+                                    <span class="badge bg-success">Added</span>
+                                <?php else: ?>
+                                    <span class="badge bg-danger">Missing</span>
+                                <?php endif; ?>
+                            </td>
+                            <td>
+                                <?php if ($personalInfoComplete): ?>
+                                    <span class="badge bg-success">Complete</span>
+                                <?php else: ?>
+                                    <span class="badge bg-danger">Incomplete</span>
+                                <?php endif; ?>
+                            </td>
+                            <td><?php echo date('M d, Y', strtotime($partner['created_at'])); ?></td>
+                            <td>
+                                <div class="btn-group" role="group">
+                                    <button type="button" class="btn btn-sm btn-outline-secondary" onclick="window.location.href='account_verify.php?id=<?php echo $partner['id']; ?>'">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <?php endif; ?>
+
         <!-- Partners Table -->
         <div class="partners-table">
             <div class="table-header">
