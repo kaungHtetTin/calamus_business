@@ -223,6 +223,7 @@ $currentPage = 'partners';
                             <th>Email</th>
                             <th>Status</th>
                             <th>Verified</th>
+                            <th>Account Verified</th>
                             <th>Joined</th>
                             <th>Last Login</th>
                             <th>Actions</th>
@@ -246,6 +247,13 @@ $currentPage = 'partners';
                             </td>
                             <td>
                                 <?php if ($partner['email_verified']): ?>
+                                    <i class="fas fa-check-circle verified-icon"></i>
+                                <?php else: ?>
+                                    <i class="fas fa-times-circle unverified-icon"></i>
+                                <?php endif; ?>
+                            </td>
+                            <td>
+                                <?php if ($partner['account_verified']): ?>
                                     <i class="fas fa-check-circle verified-icon"></i>
                                 <?php else: ?>
                                     <i class="fas fa-times-circle unverified-icon"></i>

@@ -236,6 +236,7 @@ class AdminAuth {
                         SELECT 1 FROM partner_payment_methods pm
                         WHERE pm.partner_id = p.id
                     )
+                    AND account_verified = 0
                   ORDER BY p.created_at DESC";
         $result = $this->db->read($query);
         return $result ? $result : [];

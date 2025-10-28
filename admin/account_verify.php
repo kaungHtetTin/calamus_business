@@ -62,7 +62,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'message' => nl2br(htmlspecialchars($message))
             ];
             // Try to use a template, fallback to simple HTML
-            $template = getEmailTemplate('verification', $variables);
+            $template = getEmailTemplate('general_action', $variables);
             if (!$template) {
                 $template = "<div style='font-family: Arial, sans-serif;'>"
                           . "<p>Dear " . htmlspecialchars($partner['contact_name'] ?? 'Partner') . ",</p>"
@@ -177,7 +177,11 @@ $currentPage = 'partners';
                             <div class="col-md-6">
                                 <div class="text-muted">NID Front Image</div>
                                 <?php if (!empty($partner['national_id_card_front_image'])): ?>
-                                    <div><a href="<?php echo htmlspecialchars($partner['national_id_card_front_image']); ?>" target="_blank">View front image</a></div>
+                                    <div class="mt-1">
+                                        <a href="../<?php echo htmlspecialchars($partner['national_id_card_front_image']); ?>" target="_blank">
+                                            <img src="../<?php echo htmlspecialchars($partner['national_id_card_front_image']); ?>" alt="NID Front" class="img-fluid border rounded" style="max-height: 220px; object-fit: cover;">
+                                        </a>
+                                    </div>
                                 <?php else: ?>
                                     <div>N/A</div>
                                 <?php endif; ?>
@@ -185,7 +189,11 @@ $currentPage = 'partners';
                             <div class="col-md-6">
                                 <div class="text-muted">NID Back Image</div>
                                 <?php if (!empty($partner['national_id_card_back_image'])): ?>
-                                    <div><a href="<?php echo htmlspecialchars($partner['national_id_card_back_image']); ?>" target="_blank">View back image</a></div>
+                                    <div class="mt-1">
+                                        <a href="../<?php echo htmlspecialchars($partner['national_id_card_back_image']); ?>" target="_blank">
+                                            <img src="../<?php echo htmlspecialchars($partner['national_id_card_back_image']); ?>" alt="NID Back" class="img-fluid border rounded" style="max-height: 220px; object-fit: cover;">
+                                        </a>
+                                    </div>
                                 <?php else: ?>
                                     <div>N/A</div>
                                 <?php endif; ?>
