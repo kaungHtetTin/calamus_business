@@ -36,7 +36,9 @@ $currentPage = 'partners';
 $pendingAmount = $adminAuth->getPendingPayoutAmount($partnerId);
 
 // Get partner payment methods
-$paymentMethods = $adminAuth->getPartnerPaymentMethods($partnerId);
+require_once '../classes/payment_methods_manager.php';
+$paymentManager = new PaymentMethodsManager();
+$paymentMethods = $paymentManager->getPartnerPaymentMethods($partnerId);
 
 // Handle password reset
 $resetError = '';
@@ -58,6 +60,49 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['reset_password'])) {
             $resetSuccess = $result['message'];
         } else {
             $resetError = $result['message'];
+        }
+    }
+}
+
+// Handle account suspension
+$suspendError = '';
+$suspendSuccess = '';
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['suspend_account'])) {
+    require_once '../email_config.php';
+    
+    $message = isset($_POST['suspend_message']) ? trim($_POST['suspend_message']) : '';
+    
+    if (empty($message)) {
+        $suspendError = 'Please enter a suspension message.';
+    } else {
+        // Update partner status to suspended
+        $db = new Database();
+        $updateResult = $db->save("UPDATE partners SET status = 'suspended', updated_at = NOW() WHERE id = '$partnerId'");
+        
+        if ($updateResult) {
+            // Refresh partner details
+            $partner = $adminAuth->getPartnerById($partnerId);
+            
+            // Send suspension email using general_action template
+            $subject = 'Account Suspension Notice - Calamus Education';
+            $variables = [
+                'partner_name' => $partner['contact_name'] ?? 'Partner',
+                'message' => nl2br(htmlspecialchars($message))
+            ];
+            $template = getEmailTemplate('general_action', $variables);
+            if (!$template) {
+                $template = "<div style='font-family: Arial, sans-serif;'>"
+                          . "<p>Dear " . htmlspecialchars($partner['contact_name'] ?? 'Partner') . ",</p>"
+                          . "<p>" . nl2br(htmlspecialchars($message)) . "</p>"
+                          . "<p>Regards,<br>Calamus Education</p>"
+                          . "</div>";
+            }
+            $emailSent = sendEmail($partner['email'], $subject, $template, 'general_action');
+            
+            $suspendSuccess = 'Account suspended successfully. ' . ($emailSent ? 'Suspension email sent to partner.' : 'Email sending failed.');
+        } else {
+            $suspendError = 'Failed to suspend account.';
         }
     }
 }
@@ -238,6 +283,69 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['reset_password'])) {
             </div>
         </div>
         
+        <!-- Personal Information -->
+        <div class="info-card">
+            <h5 class="mb-3" style="color: #202124;">
+                <i class="fas fa-id-card me-2"></i>Personal Information
+            </h5>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="info-row">
+                        <div class="info-label">Address</div>
+                        <div class="info-value"><?php echo htmlspecialchars($partner['address'] ?? 'N/A'); ?></div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="info-row">
+                        <div class="info-label">City</div>
+                        <div class="info-value"><?php echo htmlspecialchars($partner['city'] ?? 'N/A'); ?></div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="info-row">
+                        <div class="info-label">State</div>
+                        <div class="info-value"><?php echo htmlspecialchars($partner['state'] ?? 'N/A'); ?></div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="info-row">
+                        <div class="info-label">National ID Number</div>
+                        <div class="info-value"><?php echo htmlspecialchars($partner['national_id_card_number'] ?? 'N/A'); ?></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- National ID Card Images -->
+            <?php if (!empty($partner['national_id_card_front_image']) || !empty($partner['national_id_card_back_image'])): ?>
+            <div class="row mt-3">
+                <div class="col-md-6">
+                    <div class="text-muted mb-2">National ID Card (Front)</div>
+                    <?php if (!empty($partner['national_id_card_front_image'])): ?>
+                        <div>
+                            <a href="../<?php echo htmlspecialchars($partner['national_id_card_front_image']); ?>" target="_blank">
+                                <img src="../<?php echo htmlspecialchars($partner['national_id_card_front_image']); ?>" alt="NID Front" class="img-fluid border rounded" style="max-height: 250px; width: 100%; object-fit: contain;">
+                            </a>
+                        </div>
+                    <?php else: ?>
+                        <div class="text-muted">Not provided</div>
+                    <?php endif; ?>
+                </div>
+                <div class="col-md-6">
+                    <div class="text-muted mb-2">National ID Card (Back)</div>
+                    <?php if (!empty($partner['national_id_card_back_image'])): ?>
+                        <div>
+                            <a href="../<?php echo htmlspecialchars($partner['national_id_card_back_image']); ?>" target="_blank">
+                                <img src="../<?php echo htmlspecialchars($partner['national_id_card_back_image']); ?>" alt="NID Back" class="img-fluid border rounded" style="max-height: 250px; width: 100%; object-fit: contain;">
+                            </a>
+                        </div>
+                    <?php else: ?>
+                        <div class="text-muted">Not provided</div>
+                    <?php endif; ?>
+                </div>
+            </div>
+            <?php endif; ?>
+        </div>
+        
         <!-- Description -->
         <?php if ($partner['description']): ?>
         <div class="info-card">
@@ -337,6 +445,46 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['reset_password'])) {
                 </button>
             </form>
         </div>
+        
+        <!-- Account Suspension -->
+        <?php if (($partner['status'] ?? 'active') !== 'suspended'): ?>
+        <div class="info-card">
+            <h5 class="mb-3" style="color: #202124;">
+                <i class="fas fa-ban me-2"></i>Suspend Account
+            </h5>
+            
+            <?php if ($suspendError): ?>
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <?php echo htmlspecialchars($suspendError); ?>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            <?php endif; ?>
+            
+            <?php if ($suspendSuccess): ?>
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <?php echo htmlspecialchars($suspendSuccess); ?>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            <?php endif; ?>
+            
+            <div class="alert alert-danger" role="alert">
+                <i class="fas fa-exclamation-triangle me-2"></i>
+                Suspending the account will prevent the partner from accessing their account and will send them a notification email.
+            </div>
+            
+            <form method="POST" action="view_partner.php?id=<?php echo htmlspecialchars($partner['id']); ?>" style="margin-top: 20px;">
+                <input type="hidden" name="suspend_account" value="1">
+                <div class="mb-3">
+                    <label for="suspend_message" class="form-label">Suspension Reason <span class="text-danger">*</span></label>
+                    <textarea class="form-control" id="suspend_message" name="suspend_message" rows="4" placeholder="Enter the reason for suspension..." required></textarea>
+                    <div class="form-text">This message will be sent to the partner via email.</div>
+                </div>
+                <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to suspend this partner\'s account?');">
+                    <i class="fas fa-ban me-2"></i>Suspend Account
+                </button>
+            </form>
+        </div>
+        <?php endif; ?>
         
         <!-- Action Buttons -->
         <div class="action-buttons">
