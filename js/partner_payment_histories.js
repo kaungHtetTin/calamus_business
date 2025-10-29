@@ -386,7 +386,7 @@ class PartnerPaymentHistories {
                         <div class="row mt-3">
                             <div class="col-12">
                                 <h6>Transaction Screenshot</h6>
-                                <img src="uploads/transaction_screenshots/${payment.transaction_screenshot}" 
+                                <img src="${payment.transaction_screenshot}" 
                                      class="img-fluid rounded" 
                                      alt="Transaction Screenshot"
                                      style="max-height: 300px;">
