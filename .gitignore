@@ -2,6 +2,9 @@
 connect.php
 classes/Database.php
 
+# Email configuration files (contains sensitive SMTP credentials)
+email_config.php
+
 # Environment and configuration files
 .env
 config.php
