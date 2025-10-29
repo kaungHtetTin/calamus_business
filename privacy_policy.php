@@ -215,12 +215,12 @@ ob_start();
                         <div class="row">
                             <div class="col-md-6">
                                 <h6><i class="fas fa-envelope me-2"></i>Email</h6>
-                                <p>privacy@calamuseducation.com<br>
-                                support@calamuseducation.com</p>
+                                <p>calamuseducation@gmail.com<br>
+                        
                             </div>
                             <div class="col-md-6">
                                 <h6><i class="fas fa-phone me-2"></i>Phone</h6>
-                                <p>+95 1 234 5678<br>
+                                <p>09688683805<br>
                                 Monday - Friday: 9:00 AM - 6:00 PM</p>
                             </div>
                         </div>

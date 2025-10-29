@@ -156,14 +156,19 @@ ob_start();
                             </div>
                         </div>
 
-                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <div class="mb-3" style="color: red;">
+                             This feature is not available yet.
+                        </div>
+
+
+                        <!-- <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                             <button type="button" class="btn btn-outline-secondary me-md-2" onclick="resetForm()">
                                 <i class="fas fa-undo me-2"></i>Reset
                             </button>
                             <button type="submit" class="btn btn-primary">
                                 <i class="fas fa-paper-plane me-2"></i>Send Message
                             </button>
-                        </div>
+                        </div> -->
                     </form>
                 </div>
             </div>

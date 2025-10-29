@@ -65,14 +65,14 @@
     <div class="login-container">
         <div class="container">
             <div class="row justify-content-center">
-                <div class="col-md-6 col-lg-4">
+                <div class="col-md-4 col-lg-4">
                     <div class="login-card">
                         <div class="login-header">
                             <h3 class="mb-3">
                                 <i class="fas fa-handshake me-2"></i>
                                 Partner Login
                             </h3>
-                            <p class="mb-0">Access your partner dashboard</p>
+                            <p class="mb-0">Calamus Education Partner Login</p>
                         </div>
                         
                         <div class="login-body">
@@ -106,12 +106,12 @@
                                     </a>
                                 </div>
                                 
-                                <div class="text-center">
+                                <!-- <div class="text-center">
                                     <small class="text-muted">
                                         Don't have an account? 
                                         <a href="partner_register.php" class="text-primary">Register here</a>
                                     </small>
-                                </div>
+                                </div> -->
                             </form>
                         </div>
                     </div>

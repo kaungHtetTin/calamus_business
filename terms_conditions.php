@@ -25,7 +25,7 @@ ob_start();
                         <ul>
                             <li><strong>Easy Korean App</strong> - Korean language learning application</li>
                             <li><strong>Easy English App</strong> - English language learning application</li>
-                            <li><strong>Q&A Learn Room</strong> - Interactive learning platform</li>
+                            <li><strong>Learning Website</strong> - Interactive learning platform</li>
                             <li>Other educational products and services as introduced</li>
                         </ul>
                         
@@ -155,8 +155,8 @@ ob_start();
                         <h4>9. Contact Information</h4>
                         <p>For questions about these terms, please contact us:</p>
                         <ul>
-                            <li><strong>Email:</strong> legal@calamuseducation.com</li>
-                            <li><strong>Phone:</strong> +95 1 234 5678</li>
+                            <li><strong>Email:</strong> calamuseducation@gmail.com</li>
+                            <li><strong>Phone:</strong> 09688683805</li>
                             <li><strong>Address:</strong> Calamus Education, Yangon, Myanmar</li>
                         </ul>
                     </div>
