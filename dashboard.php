@@ -1,12 +1,24 @@
 <?php
 $pageTitle = 'Dashboard';
 include 'layout/header.php';
+
 ?>
 
 
 <!-- Dashboard Section -->
 <div class="content-section">
-    <?php if (empty($currentPartner['address']) || empty($currentPartner['city']) || empty($currentPartner['state']) || empty($currentPartner['national_id_card_number'])): ?>
+    <?php
+    // Check if personal information is missing
+    $missingPersonalInfo = empty($currentPartner['address']) || empty($currentPartner['city']) || empty($currentPartner['state']) || empty($currentPartner['national_id_card_number']);
+    
+    // Check if payment method is missing
+    require_once 'classes/payment_methods_manager.php';
+    $paymentManager = new PaymentMethodsManager();
+    $paymentMethods = $paymentManager->getPartnerPaymentMethods($currentPartner['id']);
+    $missingPaymentMethod = empty($paymentMethods);
+    ?>
+    
+    <?php if ($missingPersonalInfo): ?>
     <div class="alert alert-warning d-flex align-items-center" role="alert">
         <i class="fas fa-exclamation-triangle me-2"></i>
         <div>
@@ -15,6 +27,17 @@ include 'layout/header.php';
         </div>
     </div>
     <?php endif; ?>
+    
+    <?php if ($missingPaymentMethod): ?>
+    <div class="alert alert-warning d-flex align-items-center" role="alert">
+        <i class="fas fa-credit-card me-2"></i>
+        <div>
+            Please add at least one payment method to receive payments.
+            <a href="partner_payment_methods.php" class="ms-2">Add payment method</a>
+        </div>
+    </div>
+    <?php endif; ?>
+    
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2><i class="fas fa-tachometer-alt me-2"></i>Dashboard</h2>
         <div class="text-muted">

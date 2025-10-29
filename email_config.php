@@ -57,7 +57,7 @@ function getBaseUrl() {
         $basePath = '';
     }
     
-    return $protocol . '://' . $host . $basePath;
+    return $protocol . '://' . $host;
 }
 
 /**

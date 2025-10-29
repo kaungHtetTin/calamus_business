@@ -6,7 +6,7 @@
  */
 
 let currentStep = 1;
-const totalSteps = 3;
+const totalSteps = 2;
 
 // Initialize registration page
 document.addEventListener("DOMContentLoaded", function () {
@@ -118,20 +118,7 @@ function validateCurrentStep() {
     }
   }
 
-  if (currentStep === 2) {
-    // Validate address and ID
-    const address = document.getElementById("address").value.trim();
-    const city = document.getElementById("city").value.trim();
-    const state = document.getElementById("state").value.trim();
-    const nid = document.getElementById("national_id_card_number").value.trim();
-    if (!address || !city || !state || !nid) {
-      showAlert(
-        "Please complete address and national ID information",
-        "danger"
-      );
-      return false;
-    }
-  }
+  // No step-2 personal info validation anymore
 
   if (currentStep === 3) {
     const password = document.getElementById("password").value;
@@ -229,12 +216,6 @@ function setupFormSubmission() {
       description: document.getElementById("description").value,
       commission_rate: document.getElementById("commission_rate").value,
       password: document.getElementById("password").value,
-      address: document.getElementById("address").value,
-      city: document.getElementById("city").value,
-      state: document.getElementById("state").value,
-      national_id_card_number: document.getElementById(
-        "national_id_card_number"
-      ).value,
     };
 
     // Include optional images via separate upload after registration success (simple flow)

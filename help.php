@@ -38,7 +38,7 @@ ob_start();
                         
                         <div class="alert alert-info">
                             <h6><i class="fas fa-check-circle me-2"></i>Step 4: Add Payment Methods</h6>
-                            <p class="mb-0">Add at least one payment method (Bank Transfer, PayPal, WavePay, etc.) so we can send your earnings to you.</p>
+                            <p class="mb-0">Add at least one payment method (KBZ pay, Wave pay, AYA pay, Mytel Pay) so we can send your earnings to you.</p>
                         </div>
                         
                         <h4>Understanding Your Dashboard</h4>
@@ -56,7 +56,7 @@ ob_start();
                         <ol>
                             <li>Go to your dashboard and click on "Payment Methods"</li>
                             <li>Click "Add New Payment Method"</li>
-                            <li>Select your preferred payment method (Bank Transfer, PayPal, WavePay, KBZ Pay, etc.)</li>
+                            <li>Select your preferred payment method (KBZ pay, Wave pay, AYA pay, Mytel Pay)</li>
                             <li>Enter your account details (account name and number)</li>
                             <li>Click "Save" to add the payment method</li>
                         </ol>
@@ -139,7 +139,7 @@ ob_start();
                         
                         <div class="alert alert-info">
                             <h6>Example Calculation:</h6>
-                            <p class="mb-0">If a customer purchases a course package worth 100,000 MMK and your commission rate is 20%, you earn 20,000 MMK.</p>
+                            <p class="mb-0">If a customer purchases a course package worth 100,000 MMK and your commission rate is 10%, you earn 20,000 MMK.</p>
                             <p class="mb-0"><code>Earnings = Sale Amount × Commission Rate</code></p>
                         </div>
                         
@@ -149,11 +149,10 @@ ob_start();
                         </div>
                         <ul>
                             <li><strong>Monthly Payment Cycle:</strong> Earnings from the previous month are paid on the 1st</li>
-                            <li><strong>Minimum Payout:</strong> Your earnings must reach the minimum threshold to be processed</li>
                             <li><strong>Payment Methods & Times:</strong>
                                 <ul>
-                                    <li>Bank Transfer: 1-3 business days after processing</li>
-                                    <li>PayPal: Instant to 24 hours</li>
+                                    <!-- <li>Bank Transfer: 1-3 business days after processing</li>
+                                    <li>PayPal: Instant to 24 hours</li> -->
                                     <li>Mobile Wallets (WavePay, KBZ Pay): Usually instant to 1 business day</li>
                                 </ul>
                             </li>
@@ -196,7 +195,7 @@ ob_start();
                                 <div class="card">
                                     <div class="card-body">
                                         <h5><i class="fas fa-envelope me-2 text-primary"></i>Email Support</h5>
-                                        <p class="mb-2">Send us an email at <a href="mailto:kaunghtettin@calamuseducation.com">kaunghtettin@calamuseducation.com</a></p>
+                                        <p class="mb-2">Send us an email at <a href="mailto:calamuseducation@gmail.com">calamuseducation@gmail.com</a></p>
                                         <small class="text-muted">We typically respond within 24-48 hours</small>
                                     </div>
                                 </div>

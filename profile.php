@@ -450,8 +450,10 @@ include 'layout/header.php';
                                 <label>Front image</label>
                                 <input type="file" class="form-control" id="national_id_card_front_image" name="national_id_card_front_image" accept="image/*">
                                 <?php if (!empty($currentPartner['national_id_card_front_image'])): ?>
-                                    <div class="help-text" style="margin-top:8px;">
-                                        <a href="<?php echo htmlspecialchars($currentPartner['national_id_card_front_image']); ?>" target="_blank">View current front image</a>
+                                    <div style="margin-top:12px;">
+                                        <a href="<?php echo htmlspecialchars($currentPartner['national_id_card_front_image']); ?>" target="_blank">
+                                            <img src="<?php echo htmlspecialchars($currentPartner['national_id_card_front_image']); ?>" alt="NID Front" class="img-fluid border rounded" style="max-height: 200px; width: 100%; object-fit: contain;">
+                                        </a>
                                     </div>
                                 <?php endif; ?>
                             </div>
@@ -461,8 +463,10 @@ include 'layout/header.php';
                                 <label>Back image</label>
                                 <input type="file" class="form-control" id="national_id_card_back_image" name="national_id_card_back_image" accept="image/*">
                                 <?php if (!empty($currentPartner['national_id_card_back_image'])): ?>
-                                    <div class="help-text" style="margin-top:8px;">
-                                        <a href="<?php echo htmlspecialchars($currentPartner['national_id_card_back_image']); ?>" target="_blank">View current back image</a>
+                                    <div style="margin-top:12px;">
+                                        <a href="<?php echo htmlspecialchars($currentPartner['national_id_card_back_image']); ?>" target="_blank">
+                                            <img src="<?php echo htmlspecialchars($currentPartner['national_id_card_back_image']); ?>" alt="NID Back" class="img-fluid border rounded" style="max-height: 200px; width: 100%; object-fit: contain;">
+                                        </a>
                                     </div>
                                 <?php endif; ?>
                             </div>

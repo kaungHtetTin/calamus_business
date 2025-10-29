@@ -23,46 +23,35 @@ ob_start();
                     <div class="mb-4">
                         <h6><i class="fas fa-envelope me-2 text-primary"></i>Email Support</h6>
                         <p class="mb-2">
-                            <strong>General Support:</strong><br>
-                            <a href="mailto:support@calamuseducation.com" class="text-decoration-none">support@calamuseducation.com</a>
-                        </p>
-                        <p class="mb-2">
-                            <strong>Partner Support:</strong><br>
-                            <a href="mailto:partners@calamuseducation.com" class="text-decoration-none">partners@calamuseducation.com</a>
-                        </p>
-                        <p class="mb-2">
-                            <strong>Technical Issues:</strong><br>
-                            <a href="mailto:tech@calamuseducation.com" class="text-decoration-none">tech@calamuseducation.com</a>
-                        </p>
-                        <p class="mb-0">
                             <strong>Business Inquiries:</strong><br>
                             <a href="mailto:business@calamuseducation.com" class="text-decoration-none">business@calamuseducation.com</a>
+                        </p>
+                        <p class="mb-2">
+                            <strong>Technical Support:</strong><br>
+                            <a href="mailto:kaunghtettin17204@gmail.com" class="text-decoration-none">kaunghtettin17204@gmail.com</a>
+                        </p>
+                        <p class="mb-0">
+                            <strong>General Support:</strong><br>
+                            <a href="mailto:calamuseducation@gmail.com" class="text-decoration-none">calamuseducation@gmail.com</a>
                         </p>
                     </div>
 
                     <div class="mb-4">
                         <h6><i class="fas fa-phone me-2 text-primary"></i>Phone Support</h6>
                         <p class="mb-2">
-                            <strong>Main Office:</strong><br>
-                            <a href="tel:+9512345678" class="text-decoration-none">+95 1 234 5678</a>
-                        </p>
-                        <p class="mb-2">
-                            <strong>Partner Hotline:</strong><br>
-                            <a href="tel:+9512345679" class="text-decoration-none">+95 1 234 5679</a>
+                            <strong>Phone 1:</strong><br>
+                            <a href="tel:+959682537158" class="text-decoration-none">09682537158</a>
                         </p>
                         <p class="mb-0">
-                            <strong>Emergency Support:</strong><br>
-                            <a href="tel:+9512345680" class="text-decoration-none">+95 1 234 5680</a>
+                            <strong>Phone 2:</strong><br>
+                            <a href="tel:+959688683805" class="text-decoration-none">09688683805</a>
                         </p>
                     </div>
 
                     <div class="mb-4">
                         <h6><i class="fas fa-map-marker-alt me-2 text-primary"></i>Office Address</h6>
                         <p class="mb-0">
-                            Calamus Education<br>
-                            No. 123, Business District<br>
-                            Yangon, Myanmar<br>
-                            Postal Code: 11001
+                            Yangon, Myanmar
                         </p>
                     </div>
 
@@ -149,14 +138,14 @@ ob_start();
                             <textarea class="form-control" id="message" name="message" rows="6" placeholder="Please describe your inquiry in detail..." required></textarea>
                         </div>
 
-                        <div class="mb-3">
+                        <!-- <div class="mb-3">
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" id="newsletter" name="newsletter">
                                 <label class="form-check-label" for="newsletter">
                                     Subscribe to our newsletter for updates and tips
                                 </label>
                             </div>
-                        </div>
+                        </div> -->
 
                         <div class="mb-3">
                             <div class="form-check">
@@ -183,7 +172,7 @@ ob_start();
 
     <!-- Additional Information -->
     <div class="row mt-4">
-        <div class="col-lg-6 mb-4">
+        <div class="col-lg-12 mb-12">
             <div class="card">
                 <div class="card-header">
                     <h5 class="mb-0"><i class="fas fa-question-circle me-2"></i>Frequently Asked Questions</h5>
@@ -232,7 +221,7 @@ ob_start();
                 </div>
             </div>
         </div>
-
+<!-- 
         <div class="col-lg-6 mb-4">
             <div class="card">
                 <div class="card-header">
@@ -261,11 +250,11 @@ ob_start();
                     </div>
                 </div>
             </div>
-        </div>
+        </div> -->
     </div>
 
     <!-- Social Media & Additional Contact -->
-    <div class="row mt-4">
+    <!-- <div class="row mt-4">
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
@@ -309,7 +298,7 @@ ob_start();
                 </div>
             </div>
         </div>
-    </div>
+    </div> -->
 </div>
 
 <script>

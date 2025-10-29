@@ -6,6 +6,7 @@
     <title>Partner Registration</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="icon" href="logo.png" type="image/x-icon">
     <style>
         body {
             background: linear-gradient(135deg, #4a5568 0%, #718096 100%);
@@ -95,7 +96,6 @@
                             <div class="step-indicator">
                                 <div class="step active" id="step1">1</div>
                                 <div class="step" id="step2">2</div>
-                                <div class="step" id="step3">3</div>
                             </div>
                             
                             <!-- Registration Form -->
@@ -153,60 +153,8 @@
                                     </div>
                                 </div>
                                 
-                                <!-- Step 2: Address & National ID -->
+                                <!-- Step 2: Password -->
                                 <div id="step2-content" class="step-content" style="display: none;">
-                                    <h4 class="mb-4">Address & National ID</h4>
-                                    <div class="row">
-                                        <div class="col-12">
-                                            <h6 class="mb-3">Address</h6>
-                                        </div>
-                                        <div class="col-md-12">
-                                            <div class="mb-3">
-                                                <label class="form-label">Address *</label>
-                                                <input type="text" class="form-control" id="address" required>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="mb-3">
-                                                <label class="form-label">City *</label>
-                                                <input type="text" class="form-control" id="city" required>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="mb-3">
-                                                <label class="form-label">State *</label>
-                                                <input type="text" class="form-control" id="state" required>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row mt-2">
-                                        <div class="col-12">
-                                            <h6 class="mb-3">National ID</h6>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="mb-3">
-                                                <label class="form-label">National ID Number *</label>
-                                                <input type="text" class="form-control" id="national_id_card_number" required>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6"></div>
-                                        <div class="col-md-6">
-                                            <div class="mb-3">
-                                                <label class="form-label">Front Image (optional)</label>
-                                                <input type="file" class="form-control" id="national_id_card_front_image" accept="image/*">
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="mb-3">
-                                                <label class="form-label">Back Image (optional)</label>
-                                                <input type="file" class="form-control" id="national_id_card_back_image" accept="image/*">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Step 3: Password -->
-                                <div id="step3-content" class="step-content" style="display: none;">
                                     <h4 class="mb-4">Create Password</h4>
                                     <div class="row">
                                         <div class="col-md-6">

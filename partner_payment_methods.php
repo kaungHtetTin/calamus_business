@@ -119,7 +119,7 @@ $paymentMethods = $paymentMethodsManager->getPartnerPaymentMethods($currentPartn
                     </div>
                     <div class="mb-3">
                         <label for="accountNumber" class="form-label">Phone Number</label>
-                        <input type="text" class="form-control" id="accountNumber" name="account_number" placeholder="e.g., +1234567890" required>
+                        <input type="text" class="form-control" id="accountNumber" name="account_number" placeholder="e.g.,09123456789" required>
                         <div class="form-text">
                             <small class="text-muted">
                                 <i class="fas fa-info-circle me-1"></i>
@@ -174,7 +174,7 @@ $paymentMethods = $paymentMethodsManager->getPartnerPaymentMethods($currentPartn
                     </div>
                     <div class="mb-3">
                         <label for="editAccountNumber" class="form-label">Phone Number</label>
-                        <input type="text" class="form-control" id="editAccountNumber" name="account_number" placeholder="e.g., +1234567890" required>
+                        <input type="text" class="form-control" id="editAccountNumber" name="account_number" placeholder="e.g., 09123456789" required>
                         <div class="form-text">
                             <small class="text-muted">
                                 <i class="fas fa-info-circle me-1"></i>
