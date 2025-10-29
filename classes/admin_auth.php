@@ -719,7 +719,7 @@ class AdminAuth {
             'payment_method' => $history['payment_method'],
             'account_name' => $history['account_name'],
             'account_number' => $history['account_number'],
-            'dashboard_link' => $baseUrl . '/partner_dashboard.php'
+            'dashboard_link' => $baseUrl . '/dashboard.php'
         ];
         
         // Get email template
