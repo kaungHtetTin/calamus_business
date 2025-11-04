@@ -59,14 +59,12 @@ class PartnerAuth {
         // Insert partner (including address and national ID fields)
         $query = "INSERT INTO partners 
                  (company_name, contact_name, email, phone, password, website, description, 
-                  commission_rate, private_code, status, verification_code, created_at,
-                  address, city, state, national_id_card_number, national_id_card_front_image, national_id_card_back_image) 
+                  commission_rate, private_code, status, verification_code, created_at) 
                  VALUES ('{$partnerData['company_name']}', '{$partnerData['contact_name']}', 
                         '{$partnerData['email']}', '{$partnerData['phone']}', '$hashedPassword', 
                         '{$partnerData['website']}', '{$partnerData['description']}', 
                         '{$partnerData['commission_rate']}', '$privateCode', 
-                        '{$partnerData['status']}', '$verificationCode', NOW(),
-                        '{$partnerData['address']}', '{$partnerData['city']}', '{$partnerData['state']}', '{$partnerData['national_id_card_number']}', '', '')";
+                        '{$partnerData['status']}', '$verificationCode', NOW())";
         
         $result = $this->db->save($query);
         if ($result) {

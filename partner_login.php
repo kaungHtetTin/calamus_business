@@ -106,12 +106,12 @@
                                     </a>
                                 </div>
                                 
-                                <!-- <div class="text-center">
+                                <div class="text-center">
                                     <small class="text-muted">
                                         Don't have an account? 
                                         <a href="partner_register.php" class="text-primary">Register here</a>
                                     </small>
-                                </div> -->
+                                </div>
                             </form>
                         </div>
                     </div>

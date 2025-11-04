@@ -99,7 +99,7 @@
                             </div>
                             
                             <!-- Registration Form -->
-                            <form id="registrationForm">
+                            <form id="registrationForm" novalidate>
                                 <!-- Step 1: Basic Information -->
                                 <div id="step1-content" class="step-content">
                                     <h4 class="mb-4">Basic Information</h4>
@@ -133,28 +133,22 @@
                                         </div>
                                     </div>
                                     <div class="row">
-                                        <div class="col-md-6">
+                                        <div class="col-md-12">
                                             <div class="mb-3">
-                                                <label class="form-label">Website</label>
-                                                <input type="url" class="form-control" id="website" placeholder="https://example.com">
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="mb-3">
-                                                <label class="form-label">Commission Rate (%)</label>
-                                                <input type="number" class="form-control" id="commission_rate" value="10" readonly>
-                                                <div class="form-text">Fixed at 10%</div>
+                                                <label class="form-label">Social Media Link</label>
+                                                <input type="url" class="form-control" id="website" name="website" placeholder="facebook, tiktok, instagram, etc.">
                                             </div>
                                         </div>
                                     </div>
+                                   
                                     <div class="mb-3">
-                                        <label class="form-label">Company Description</label>
+                                        <label class="form-label">Company (or) Personal Description</label>
                                         <textarea class="form-control" id="description" rows="3" placeholder="Tell us about your business..."></textarea>
                                     </div>
                                 </div>
                                 
                                 <!-- Step 2: Password -->
-                                <div id="step2-content" class="step-content" style="display: none;">
+                                <div id="step2-content" class="step-content" style="">
                                     <h4 class="mb-4">Create Password</h4>
                                     <div class="row">
                                         <div class="col-md-6">

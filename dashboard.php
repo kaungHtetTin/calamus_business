@@ -18,6 +18,34 @@ include 'layout/header.php';
     $missingPaymentMethod = empty($paymentMethods);
     ?>
     
+    <!-- Private Code Display -->
+    <?php if (!empty($currentPartner['private_code'])): ?>
+    <div class="card mb-3" style="background: linear-gradient(135deg, #4a5568 0%, #718096 100%); border: none;">
+        <div class="card-body text-white p-3">
+            <div class="row align-items-center g-3">
+                <div class="col-md-8">
+                    <div class="d-flex align-items-center gap-3">
+                        <i class="fas fa-key text-white"></i>
+                        <div class="flex-grow-1">
+                            <div class="d-flex align-items-center gap-2 flex-wrap">
+                                <span class="small text-white-50">Your Private Code:</span>
+                                <code class=" text-primary px-3 py-1 rounded" style="font-size: 1.1rem;color: white; font-weight: 600; letter-spacing: 0.2em; font-family: 'Courier New', monospace;">
+                                   <span id="privateCode" style="color: white;"><?php echo htmlspecialchars($currentPartner['private_code']); ?></span>
+                                </code>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 text-md-end">
+                    <button type="button" class="btn btn-light btn-sm" onclick="copyPrivateCode(event)" title="Copy to clipboard">
+                        <i class="fas fa-copy me-1"></i>Copy
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <?php endif; ?>
+    
     <?php if ($missingPersonalInfo): ?>
     <div class="alert alert-warning d-flex align-items-center" role="alert">
         <i class="fas fa-exclamation-triangle me-2"></i>
@@ -241,5 +269,60 @@ include 'layout/header.php';
 
 
 <!-- Load dashboard-specific JavaScript -->
+<script>
+function copyPrivateCode(event) {
+    const privateCode = '<?php echo htmlspecialchars($currentPartner['private_code'] ?? ''); ?>';
+    const btn = event ? event.target.closest('button') : document.querySelector('button[onclick*="copyPrivateCode"]');
+    
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(privateCode).then(function() {
+            // Show success feedback
+            if (btn) {
+                const originalHTML = btn.innerHTML;
+                btn.innerHTML = '<i class="fas fa-check me-2"></i>Copied!';
+                btn.classList.remove('btn-light');
+                btn.classList.add('btn-success');
+                
+                setTimeout(function() {
+                    btn.innerHTML = originalHTML;
+                    btn.classList.remove('btn-success');
+                    btn.classList.add('btn-light');
+                }, 2000);
+            }
+        }).catch(function(err) {
+            console.error('Failed to copy:', err);
+            alert('Failed to copy private code. Please copy manually: ' + privateCode);
+        });
+    } else {
+        // Fallback for older browsers
+        const textArea = document.createElement('textarea');
+        textArea.value = privateCode;
+        textArea.style.position = 'fixed';
+        textArea.style.left = '-999999px';
+        document.body.appendChild(textArea);
+        textArea.select();
+        try {
+            document.execCommand('copy');
+            if (btn) {
+                const originalHTML = btn.innerHTML;
+                btn.innerHTML = '<i class="fas fa-check me-2"></i>Copied!';
+                btn.classList.remove('btn-light');
+                btn.classList.add('btn-success');
+                setTimeout(function() {
+                    btn.innerHTML = originalHTML;
+                    btn.classList.remove('btn-success');
+                    btn.classList.add('btn-light');
+                }, 2000);
+            } else {
+                alert('Private code copied to clipboard!');
+            }
+        } catch (err) {
+            console.error('Failed to copy:', err);
+            alert('Failed to copy. Please copy manually: ' + privateCode);
+        }
+        document.body.removeChild(textArea);
+    }
+}
+</script>
 
 <?php include 'layout/footer.php'; ?>

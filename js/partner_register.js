@@ -45,20 +45,33 @@ function setupStepNavigation() {
 
 // Update step display
 function updateStepDisplay() {
-  // Hide all step contents
+  // Hide all step contents and disable their fields
   for (let i = 1; i <= totalSteps; i++) {
     const stepContent = document.getElementById(`step${i}-content`);
     if (stepContent) {
-      stepContent.style.display = "none";
+      stepContent.style.setProperty("display", "none", "important");
+      // Disable all form fields in hidden steps to prevent browser validation
+      const fields = stepContent.querySelectorAll("input, textarea, select");
+      fields.forEach(field => {
+        field.disabled = true;
+        field.setAttribute("formnovalidate", "true");
+      });
     }
   }
 
-  // Show current step content
+  // Show current step content and enable its fields
   const currentStepContent = document.getElementById(
     `step${currentStep}-content`
   );
+ 
   if (currentStepContent) {
     currentStepContent.style.display = "block";
+    // Enable all form fields in the visible step
+    const fields = currentStepContent.querySelectorAll("input, textarea, select");
+    fields.forEach(field => {
+      field.disabled = false;
+      field.removeAttribute("formnovalidate");
+    });
   }
 
   // Update step indicators
@@ -96,9 +109,18 @@ function validateCurrentStep() {
   const stepContent = document.getElementById(`step${currentStep}-content`);
   if (!stepContent) return false;
 
+  // Only validate fields that are visible in the current step
+  // This ensures we don't validate hidden fields from other steps
+  // querySelectorAll within stepContent already scopes to current step, but we add a safety check
   const requiredFields = stepContent.querySelectorAll("[required]");
 
   for (let field of requiredFields) {
+    // Skip hidden fields - offsetParent is null when field or any parent is hidden
+    // This ensures we don't validate fields that are hidden (e.g., in other steps)
+    if (field.offsetParent === null) {
+      continue;
+    }
+    
     if (!field.value.trim()) {
       field.focus();
       const label = field.previousElementSibling;
@@ -108,7 +130,7 @@ function validateCurrentStep() {
     }
   }
 
-  // Additional validations
+  // Additional validations for step 1
   if (currentStep === 1) {
     const email = document.getElementById("email").value;
 
@@ -118,9 +140,8 @@ function validateCurrentStep() {
     }
   }
 
-  // No step-2 personal info validation anymore
-
-  if (currentStep === 3) {
+  // Additional validations for step 2 (password step)
+  if (currentStep === 2) {
     const password = document.getElementById("password").value;
     const confirmPassword = document.getElementById("confirm_password").value;
 
@@ -214,7 +235,6 @@ function setupFormSubmission() {
       phone: document.getElementById("phone").value,
       website: document.getElementById("website").value,
       description: document.getElementById("description").value,
-      commission_rate: document.getElementById("commission_rate").value,
       password: document.getElementById("password").value,
     };
 
@@ -236,6 +256,7 @@ function setupFormSubmission() {
     })
       .then((response) => response.json())
       .then((data) => {
+        console.log(data);
         if (data.success) {
           // Display success message with private code
           const privateCode = data.private_code;

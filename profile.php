@@ -395,7 +395,7 @@ include 'layout/header.php';
                         </div>
                         <div class="col-md-6">
                             <div class="google-form-group">
-                                <label>Website</label>
+                                <label>Social Media Link</label>
                                 <input type="url" class="form-control" id="website" name="website" 
                                        value="<?php echo htmlspecialchars($currentPartner['website']); ?>">
                             </div>
