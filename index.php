@@ -603,7 +603,7 @@ $isLoggedIn = !empty($_SESSION['partner_session_token']);
     </section>
 
     <!-- Terms and Conditions Section -->
-    <section class="terms-section">
+    <section class="terms-section" id="terms-conditions-section">
         <div class="container">
             <h2>Affiliate Program ဆိုင်ရာ စည်းကမ်းသတ်မှတ်ချက်များ</h2>
             

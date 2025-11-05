@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="css/app.css">
     <style>
         body {
-            background: linear-gradient(135deg, #4a5568 0%, #718096 100%);
+            background: #f5f7fb;
             min-height: 100vh;
         }
         
@@ -66,45 +66,47 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 2rem 0;
+            padding: 3rem 1rem;
         }
         .login-card {
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.06);
+            border: 1px solid #e9ecef;
             overflow: hidden;
-            max-width: 400px;
+            max-width: 420px;
             width: 100%;
         }
         .login-header {
-            background: linear-gradient(135deg, #4a5568 0%, #718096 100%);
-            color: white;
-            padding: 2rem;
+            background: #ffffff;
+            color: #4a5568;
+            padding: 1.5rem 1.5rem 1rem 1.5rem;
             text-align: center;
+            border-bottom: 1px solid #eef2f6;
         }
         .login-body {
-            padding: 2rem;
+            padding: 1.5rem;
         }
         .form-control {
             border-radius: 10px;
-            border: 2px solid #e9ecef;
-            padding: 12px 15px;
-            transition: all 0.3s;
+            border: 1px solid #e2e8f0;
+            padding: 12px 14px;
+            transition: all 0.2s ease;
         }
         .form-control:focus {
-            border-color: #4a5568;
-            box-shadow: 0 0 0 0.2rem rgba(74, 85, 104, 0.25);
+            border-color: #718096;
+            box-shadow: 0 0 0 3px rgba(113, 128, 150, 0.15);
         }
         .btn-primary {
-            background: linear-gradient(135deg, #4a5568 0%, #718096 100%);
+            background: #4a5568;
             border: none;
             border-radius: 10px;
             padding: 12px 30px;
             font-weight: 600;
         }
         .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(74, 85, 104, 0.20);
         }
         .alert {
             border-radius: 10px;

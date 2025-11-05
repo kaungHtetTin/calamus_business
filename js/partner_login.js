@@ -82,7 +82,7 @@ function setupLoginForm() {
             if (data.success) {
                 // Store session token
                 localStorage.setItem('partner_session_token', data.session_token);
-                window.location.href = 'index.php';
+                window.location.href = 'dashboard.php';
             } else if (data.needs_verification) {
                 // Show special message for unverified accounts
                 showVerificationAlert(data.message, data.verification_code);

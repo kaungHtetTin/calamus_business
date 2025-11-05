@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="css/app.css">
     <style>
         body {
-            background: linear-gradient(135deg, #4a5568 0%, #718096 100%);
+            background: #f5f7fb;
             min-height: 100vh;
         }
         
@@ -66,39 +66,41 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 2rem 0;
+            padding: 3rem 1rem;
         }
         .registration-card {
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.06);
+            border: 1px solid #e9ecef;
             overflow: hidden;
-            max-width: 800px;
+            max-width: 860px;
             width: 100%;
         }
         .registration-header {
-            background: linear-gradient(135deg, #4a5568 0%, #718096 100%);
-            color: white;
-            padding: 2rem;
+            background: #ffffff;
+            color: #4a5568;
+            padding: 1.5rem 1.5rem 1rem 1.5rem;
             text-align: center;
+            border-bottom: 1px solid #eef2f6;
         }
         .registration-body {
-            padding: 2rem;
+            padding: 1.5rem;
         }
         .btn-primary {
-            background: linear-gradient(135deg, #4a5568 0%, #718096 100%);
+            background: #4a5568;
             border: none;
             border-radius: 10px;
             padding: 12px 30px;
             font-weight: 600;
         }
         .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(74, 85, 104, 0.4);
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(74, 85, 104, 0.20);
         }
         .form-control:focus {
-            border-color: #4a5568;
-            box-shadow: 0 0 0 0.2rem rgba(74, 85, 104, 0.25);
+            border-color: #718096;
+            box-shadow: 0 0 0 3px rgba(113, 128, 150, 0.15);
         }
         .step-indicator {
             display: flex;
@@ -109,7 +111,7 @@
             width: 40px;
             height: 40px;
             border-radius: 50%;
-            background: #e9ecef;
+            background: #eef2f6;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -119,11 +121,11 @@
         }
         .step.active {
             background: #4a5568;
-            color: white;
+            color: #ffffff;
         }
         .step.completed {
             background: #38a169;
-            color: white;
+            color: #ffffff;
         }
         
         /* Footer */
@@ -216,7 +218,7 @@
                                         <div class="col-md-6">
                                             <div class="mb-3">
                                                 <label class="form-label">Company Name *</label>
-                                                <input type="text" class="form-control" id="company_name" required>
+                                                <input type="text" class="form-control" id="company_name" required placeholder="Company Name, Personal Name, Channel Name, etc.">
                                             </div>
                                         </div>
                                         <div class="col-md-6">
@@ -251,8 +253,9 @@
                                     </div>
                                    
                                     <div class="mb-3">
-                                        <label class="form-label">Company (or) Personal Description</label>
-                                        <textarea class="form-control" id="description" rows="3" placeholder="Tell us about your business..."></textarea>
+                                        <label class="form-label">How will you promote or sell our products?</label>
+                                        <textarea class="form-control" id="description" rows="3" placeholder="Tell us about your business. Express your channel, page links. Tell us how will you  
+                                        promote or sell our products?"></textarea>
                                     </div>
                                 </div>
                                 
@@ -276,7 +279,8 @@
                                     </div>
                                     <div class="alert alert-info">
                                         <i class="fas fa-info-circle me-2"></i>
-                                        <strong>Terms & Conditions:</strong> By registering, you agree to our partner terms and conditions. Your account will be reviewed and activated within 24-48 hours.
+                                        <strong>Terms & Conditions:</strong> By registering, you agree to our partner terms and conditions.
+                                        <a href="index.php#terms-conditions-section" class="text-primary">Terms and Conditions</a>
                                     </div>
                                 </div>
                                 
