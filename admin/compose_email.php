@@ -19,6 +19,10 @@ $pageTitle = 'Compose Email';
 $isAdmin = true;
 $currentPage = 'compose_email';
 
+// Defaults from query params (for deep-linking)
+$defaultAudience = isset($_GET['audience']) && in_array($_GET['audience'], ['all','verified','active','specific']) ? $_GET['audience'] : 'all';
+$defaultSpecificEmail = isset($_GET['email']) ? trim($_GET['email']) : '';
+
 $successMessage = '';
 $errorMessage = '';
 $details = [];
@@ -137,6 +141,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="../css/app.css">
     <link rel="stylesheet" href="css/app.css">
+    <link rel="icon" href="../logo.png" type="image/x-icon">
 </head>
 <body>
     <?php include 'layout/admin_header.php'; ?>
@@ -182,10 +187,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <div class="col-md-6">
                             <label class="form-label">Audience</label>
                             <select name="audience" id="audience" class="form-select" onchange="toggleSpecificPartner()">
-                                <option value="all">All partners</option>
-                                <option value="verified">Verified partners (email verified)</option>
-                                <option value="active">Active partners (status = active)</option>
-                                <option value="specific">Specific partner</option>
+                                <option value="all" <?php echo $defaultAudience==='all'?'selected':''; ?>>All partners</option>
+                                <option value="verified" <?php echo $defaultAudience==='verified'?'selected':''; ?>>Verified partners (email verified)</option>
+                                <option value="active" <?php echo $defaultAudience==='active'?'selected':''; ?>>Active partners (status = active)</option>
+                                <option value="specific" <?php echo $defaultAudience==='specific'?'selected':''; ?>>Specific partner</option>
                             </select>
                         </div>
                         <div class="col-md-6">
@@ -197,7 +202,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <div class="row mb-3" id="specificPartnerRow" style="display:none;">
                         <div class="col-md-6">
                             <label class="form-label">Specific Partner Email</label>
-                            <input type="email" name="specific_email" class="form-control" placeholder="partner@example.com">
+                            <input type="email" name="specific_email" class="form-control" placeholder="partner@example.com" value="<?php echo htmlspecialchars($defaultSpecificEmail); ?>">
                             <div class="form-text">Enter a single partner email address.</div>
                         </div>
                     </div>

@@ -491,6 +491,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['suspend_account'])) {
             <a href="partners.php" class="btn btn-outline-secondary">
                 <i class="fas fa-arrow-left me-2"></i>Back to List
             </a>
+            <a href="compose_email.php?audience=specific&email=<?php echo urlencode($partner['email']); ?>" class="btn btn-success">
+                <i class="fas fa-envelope me-2"></i>Send Email
+            </a>
         </div>
     </div>
     

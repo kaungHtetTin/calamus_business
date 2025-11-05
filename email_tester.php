@@ -11,13 +11,13 @@ try {
     $mail->isSMTP();
     $mail->Host = 'smtp.hostinger.com';
     $mail->SMTPAuth = true;
-    $mail->Username = 'kaunghtettin@calamuseducation.com'; // your Hostinger email
+    $mail->Username = 'business@calamuseducation.com'; // your Hostinger email
     $mail->Password = 'Wyne75707@@';       // your email password
     $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS; // for SSL (port 465)
     $mail->Port = 465;                       // or use 587 with STARTTLS
 
     //Recipients
-    $mail->setFrom('kaunghtettin@calamuseducation.com', 'Kaung Htet Tin');
+    $mail->setFrom('business@calamuseducation.com', 'Kaung Htet Tin');
     $mail->addAddress('kaunghtettin17204@gmail.com');
 
     //Content

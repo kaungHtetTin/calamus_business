@@ -15,15 +15,15 @@ use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
 // Email Configuration from env or defaults
-define('EMAIL_FROM_ADDRESS', 'kaunghtettin@calamuseducation.com');
+define('EMAIL_FROM_ADDRESS', 'business@calamuseducation.com');
 define('EMAIL_FROM_NAME', 'Calamus Education');
-define('EMAIL_REPLY_TO', 'kaunghtettin@calamuseducation.com');
-define('EMAIL_SUPPORT_ADDRESS', 'kaunghtettin@calamuseducation.com');
+define('EMAIL_REPLY_TO', 'business@calamuseducation.com');
+define('EMAIL_SUPPORT_ADDRESS', 'business@calamuseducation.com');
 
 // SMTP Configuration - Hostinger
 define('SMTP_HOST', 'smtp.hostinger.com');
 define('SMTP_PORT', 465);
-define('SMTP_USERNAME', 'kaunghtettin@calamuseducation.com');
+define('SMTP_USERNAME', 'business@calamuseducation.com');
 define('SMTP_PASSWORD', 'Wyne75707@@');
 define('SMTP_ENCRYPTION', PHPMailer::ENCRYPTION_SMTPS); // SSL
 
