@@ -13,6 +13,7 @@ database.php
 # Logs
 logs/
 *.log
+logs/email.log
 
 # Uploads and user-generated content
 uploads/

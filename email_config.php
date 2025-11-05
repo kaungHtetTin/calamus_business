@@ -9,7 +9,7 @@
 // Include the autoloader
 require_once __DIR__ . '/classes/autoload.php';
 
-// Load PHPMailer
+// Load PHPMailer 
 require_once __DIR__ . '/vendor/autoload.php';
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
