@@ -24,7 +24,7 @@ define('EMAIL_SUPPORT_ADDRESS', 'business@calamuseducation.com');
 define('SMTP_HOST', 'smtp.hostinger.com');
 define('SMTP_PORT', 465);
 define('SMTP_USERNAME', 'business@calamuseducation.com');
-define('SMTP_PASSWORD', 'Wyne75707@@');
+define('SMTP_PASSWORD', '@$Calamus5241$@');
 define('SMTP_ENCRYPTION', PHPMailer::ENCRYPTION_SMTPS); // SSL
 
 // Email Templates
