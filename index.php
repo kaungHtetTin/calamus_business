@@ -496,8 +496,8 @@ $isLoggedIn = !empty($_SESSION['partner_session_token']);
                     သင်တန်းဝင်ကြေးများကို အောက်ဖော်ပြပါ link များတွင် ဝင်ရောက်လေ့လာနိုင်ပါသည်။
                 </p>
                 <ul>
-                    <li><a href="">English ဘာသာစကားသင်တန်းများ</a></li>
-                    <li><a href="">Korean ဘာသာစကားသင်တန်းများ</a></li>
+                    <li><a href="https://www.calamuseducation.com/app-portfolio/easy-english.php">English ဘာသာစကားသင်တန်းများ</a></li>
+                    <li><a href="https://www.calamuseducation.com/app-portfolio/easy-korean.php">Korean ဘာသာစကားသင်တန်းများ</a></li>
                 </ul>
             </div>
             
