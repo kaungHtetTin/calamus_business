@@ -117,7 +117,7 @@ function checkExistingSession() {
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                window.location.href = 'index.php';
+                window.location.href = 'dashboard.php';
             } else {
                 localStorage.removeItem('partner_session_token');
             }

@@ -135,13 +135,19 @@ function getCodeStatusColor($status) {
             </button>
             
             <!-- Brand/Logo -->
-            <a class="navbar-brand fw-bold" href="dashboard.php">
+            <a class="navbar-brand fw-bold" href="index.php">
                 <img src="logo.png" alt="Calamus" width="30" height="30">
                 Calamus
             </a>
             
             <!-- Quick Stats & User Info -->
             <div class="navbar-nav ms-auto d-none d-md-flex align-items-center">
+                <!-- Home Link -->
+                <div class="nav-item me-3">
+                    <a class="nav-link text-white" href="index.php">
+                        <i class="fas fa-home me-1"></i>Home
+                    </a>
+                </div>
                 <!-- Pending Payments Count -->
                 <div class="nav-item me-3">
                     <span class="navbar-text text-white">
@@ -200,6 +206,7 @@ function getCodeStatusColor($status) {
                             </div>
                         </li>
                         <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="index.php"><i class="fas fa-home me-2"></i>Welcome</a></li>
                         <li><a class="dropdown-item" href="profile.php"><i class="fas fa-user me-2"></i>My Profile</a></li>
                         <li><a class="dropdown-item" href="dashboard.php"><i class="fas fa-tachometer-alt me-2"></i>Dashboard</a></li>
                         <li><a class="dropdown-item" href="earning_history.php"><i class="fas fa-chart-line me-2"></i>Earnings</a></li>
@@ -294,6 +301,9 @@ function getCodeStatusColor($status) {
                 <small>Welcome, <?php echo htmlspecialchars($currentPartner['contact_name']); ?></small>
             </div>
             <nav class="nav flex-column">
+                <a class="nav-link" href="index.php">
+                    <i class="fas fa-home me-2"></i>Home
+                </a>
                 <a class="nav-link <?php echo basename($_SERVER['PHP_SELF']) == 'dashboard.php' ? 'active' : ''; ?>" href="dashboard.php">
                     <i class="fas fa-tachometer-alt me-2"></i>Dashboard
                 </a>

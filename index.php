@@ -1,3 +1,10 @@
+<?php
+// Session check to toggle navbar/CTA based on authentication
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+$isLoggedIn = !empty($_SESSION['partner_session_token']);
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -17,20 +24,22 @@
         .welcome-navbar {
             background: linear-gradient(135deg, #4a5568 0%, #718096 100%);
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            padding: 1rem 0;
+            padding: 0.25rem 0;
+            min-height: auto;
         }
         
         .welcome-navbar .navbar-brand {
-            font-size: 1.5rem;
+            font-size: 1.25rem;
             font-weight: 600;
             color: white !important;
+            padding: 0.25rem 0;
         }
         
         .welcome-navbar .nav-link {
             color: rgba(255, 255, 255, 0.9) !important;
             font-weight: 500;
-            padding: 0.5rem 1rem;
-            margin: 0 0.25rem;
+            padding: 0.375rem 0.75rem;
+            margin: 0 0.125rem;
             border-radius: 6px;
             transition: all 0.3s ease;
         }
@@ -227,6 +236,132 @@
             max-width: 800px;
         }
         
+        /* Terms Section */
+        .terms-section {
+            padding: 5rem 0;
+            background: white;
+        }
+        
+        .terms-section h2 {
+            color: #4a5568;
+            font-weight: 600;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        
+        .terms-card {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 3rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            border: 1px solid #e9ecef;
+        }
+        
+        .terms-header {
+            background: linear-gradient(135deg, #4a5568 0%, #718096 100%);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+        }
+        
+        .terms-header h3 {
+            color: white;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        
+        .terms-header p {
+            color: rgba(255, 255, 255, 0.9);
+            margin: 0;
+            font-size: 0.95rem;
+        }
+        
+        .terms-content h4 {
+            color: #4a5568;
+            font-weight: 600;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #e9ecef;
+        }
+        
+        .terms-content h4:first-child {
+            margin-top: 0;
+        }
+        
+        .terms-content p {
+            color: #6c757d;
+            line-height: 1.8;
+            margin-bottom: 1rem;
+            text-align: justify;
+        }
+        
+        .terms-content ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        
+        .terms-content ul li {
+            color: #6c757d;
+            line-height: 1.8;
+            margin-bottom: 0.75rem;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+        
+        .terms-content ul li::before {
+            content: '•';
+            position: absolute;
+            left: 0;
+            color: #4a5568;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+        
+        .terms-section .container {
+            max-width: 900px;
+        }
+        
+        .terms-content a {
+            color: #4a5568;
+            text-decoration: underline;
+            transition: color 0.3s ease;
+        }
+        
+        .terms-content a:hover {
+            color: #718096;
+        }
+        
+        .terms-content .highlight-box {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 1.5rem 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        
+        .terms-content .highlight-box h4 {
+            color: #856404;
+            border-bottom: 2px solid #ffc107;
+            margin-top: 0;
+        }
+        
+        .terms-content .highlight-box p {
+            color: #856404;
+        }
+        
+        .terms-content .highlight-box ul li {
+            color: #856404;
+        }
+        
+        .terms-content .highlight-box ul li::before {
+            color: #856404;
+        }
+        
         /* Footer */
         .welcome-footer {
             background: linear-gradient(135deg, #4a5568 0%, #718096 100%);
@@ -284,7 +419,7 @@
     <nav class="navbar navbar-expand-lg welcome-navbar">
         <div class="container">
             <a class="navbar-brand" href="index.php">
-                <img src="logo.png" alt="Calamus" width="40" height="40" class="me-2">
+                <img src="logo.png" alt="Calamus" width="30" height="30" class="me-2">
                 Calamus Education
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -293,14 +428,21 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto align-items-center">
                     <li class="nav-item">
-                        <a class="nav-link" href="index.php">Home</a>
+                        <a class="nav-link" href="index.php">Welcome</a>
                     </li>
+                    <?php if ($isLoggedIn): ?>
+                    <li class="nav-item">
+                        <a class="nav-link" href="dashboard.php">Dashboard</a>
+                    </li>
+                    <?php else: ?>
                     <li class="nav-item">
                         <a class="nav-link" href="partner_login.php">Login</a>
                     </li>
                     <li class="nav-item">
                         <a class="btn btn-outline-light" href="partner_register.php">Register</a>
                     </li>
+                    <?php endif; ?>
+                    
                 </ul>
             </div>
         </div>
@@ -312,9 +454,15 @@
             <div class="cover-content">
                 <h1>Join Our Partner Program</h1>
                 <p>Unlock unlimited earning potential by becoming a Calamus Education partner. Help students achieve their language learning goals while building your own business.</p>
+                <?php if ($isLoggedIn): ?>
+                <a href="dashboard.php" class="btn btn-light btn-lg">
+                    <i class="fas fa-tachometer-alt me-2"></i>Go to Dashboard
+                </a>
+                <?php else: ?>
                 <a href="partner_register.php" class="btn btn-light btn-lg">
                     <i class="fas fa-handshake me-2"></i>Get Started Today
                 </a>
+                <?php endif; ?>
             </div>
         </div>
     </section>
@@ -454,50 +602,116 @@
         </div>
     </section>
 
-    <!-- Footer -->
-    <footer class="welcome-footer">
+    <!-- Terms and Conditions Section -->
+    <section class="terms-section">
         <div class="container">
-            <div class="row">
-                <div class="col-md-3 mb-4 mb-md-0">
-                    <h5>
-                        <img src="logo.png" alt="Calamus" width="30" height="30" class="me-2">
-                        Calamus Education
-                    </h5>
-                    <p class="text-white-50 small">Empowering language learning through quality education.</p>
+            <h2>Affiliate Program ဆိုင်ရာ စည်းကမ်းသတ်မှတ်ချက်များ</h2>
+            
+            <div class="terms-card">
+                <div class="terms-header">
+                    <h3>Affiliate Program Terms and Conditions</h3>
+                    <p>စတင်အသက်ဝင်သည့်နေ့: 11-5-2025 | ကုမ္ပဏီအမည်: Calamus Education | ပရိုဂရမ်အမည်: Affiliate Program</p>
                 </div>
-                <div class="col-md-3 mb-4 mb-md-0">
-                    <h5>Company</h5>
+                
+                <div class="terms-content">
+                    <h4>၁။ အကျဉ်းချုပ်</h4>
+                    <p>
+                        ဤပရိုဂရမ်သည် အတည်ပြုထားသော ကိုယ်စားလှယ်များအား Calamus Education product များကို ၎င်းတို့၏ သီးသန့် referral code များ အသုံးပြု၍ ကြော်ငြာရောင်းချခွင့်ပြုပေးမည်ဖြစ်သည်။ ကိုယ်စားလှယ်၏ code ကို အသုံးပြု၍ ဝယ်ယူသော သုံးစွဲသူများသည် ဒစ်စကောင့် ရရှိမည်ဖြစ်ပြီး၊ ကိုယ်စားလှယ်သည် အတည်ပြုပြီးသော ရောင်းချမှုတစ်ခုစီအတွက် ကော်မရှင် (အကျိုးဆောင်ခ) ရရှိမည်ဖြစ်သည်။
+                    </p>
+                    <p>
+                        ဤပရိုဂရမ်တွင် ပါဝင်သည့် ကိုယ်စားလှယ်များနှင့် သုံးစွဲသူများ အားလုံးတို့သည် ဤစည်းကမ်းသတ်မှတ်ချက်များကို သဘောတူသည်ဟု သတ်မှတ်သည်။
+                    </p>
+
+                    <h4>၂။ ကိုယ်စားလှယ် မှတ်ပုံတင်ခြင်း</h4>
                     <ul>
-                        <li><a href="#about">About Us</a></li>
-                        <li><a href="#contact">Contact</a></li>
-                        <li><a href="#careers">Careers</a></li>
+                        <li>ကိုယ်စားလှယ်များသည် အမည်အပြည့်အစုံ၊ ဖုန်းနံပါတ်၊ အီးမေးလ် နှင့် နိုင်ငံသားစိစစ်ရေးကတ်(သို့) ပတ်စ်ပို့ အပါအဝင် တိကျမှန်ကန်သော ကိုယ်ရေးအချက်အလက်များကို အသုံးပြု၍ မှတ်ပုံတင်ရမည်။</li>
+                        <li>အတည်ပြုပြီးသော ကိုယ်စားလှယ်တစ်ဦးစီသည် ကုမ္ပဏီမှ ထုတ်ပေးမည့် သီးသန့် referral code တစ်ခု ရရှိမည်ဖြစ်သည်။</li>
+                        <li>ကုမ္ပဏီသည် မည်သည့် မှတ်ပုံတင်ခြင်းကိုမဆို ဖြေရှင်းချက်မပေးဘဲ လက်ခံရန် သို့မဟုတ် ငြင်းပယ်ရန် အခွင့်အရေးရှိသည်။</li>
                     </ul>
-                </div>
-                <div class="col-md-3 mb-4 mb-md-0">
-                    <h5>Legal</h5>
+
+                    <h4>၃။ ကော်မရှင် (အကျိုးဆောင်ခ) နှင့် ငွေပေးချေမှု</h4>
                     <ul>
-                        <li><a href="#terms">Terms of Service</a></li>
-                        <li><a href="#privacy">Privacy Policy</a></li>
+                        <li>ကိုယ်စားလှယ်များသည် ၎င်းတို့၏ code ကို အသုံးပြု၍ ပြုလုပ်ခဲ့သော အတည်ပြုပြီး ရောင်းချမှုတိုင်းအတွက် ၁၀% ကော်မရှင် ရရှိမည်ဖြစ်သည်။</li>
+                        <li>ရောင်းချမှုကို အတည်ပြုပြီးနောက်၊ သုံးစွဲသူမှ ငွေပြန်အမ်းခိုင်းခြင်း သို့မဟုတ် ပယ်ဖျက်ခြင်း မပြုလုပ်မှသာ ကော်မရှင်ကို တွက်ချက်မည်ဖြစ်သည်။</li>
+                        <li>ငွေပေးချေမှုများကို လကုန်တိုင်း WavePay သို့ KBZPay မှတဆင့် ပြုလုပ်ပေးမည်။ (တခြားငွေပေးချေမည့်နည်းလမ်းများလည်းညှိနှိုင်းနိုင်သည်)</li>
+                        <li>အနည်းဆုံး ငွေထုတ်ပမာဏမှာ ၁၀,၀၀၀ ကျပ် ဖြစ်သည်။ ဤပမာဏထက် နည်းသော လက်ကျန်ငွေများကို နောက်လသို့ပေါင်းထည့်၍ သတ်မှတ်ငွေထုတ်ပမာဏပြည့်မှထုတ်ပေးသွားမည်ဖြစ်သည်။</li>
+                        <li>ကုမ္ပဏီသည် ကြိုတင်အကြောင်းကြားခြင်းဖြင့် ကော်မရှင်နှုန်းထားများကို အချိန်မရွေး ချိန်ညှိခွင့်ရှိသည်။</li>
                     </ul>
-                </div>
-                <div class="col-md-3">
-                    <h5>Connect</h5>
-                    <div class="d-flex gap-3">
-                        <a href="#" class="text-white"><i class="fab fa-facebook fa-lg"></i></a>
-                        <a href="#" class="text-white"><i class="fab fa-twitter fa-lg"></i></a>
-                        <a href="#" class="text-white"><i class="fab fa-linkedin fa-lg"></i></a>
-                        <a href="#" class="text-white"><i class="fab fa-instagram fa-lg"></i></a>
+
+                    <h4>၄။ သုံးစွဲသူများအတွက် လျှော့စျေး</h4>
+                    <ul>
+                        <li>ဝယ်ယူမှုပြုလုပ်စဉ် တရားဝင် referral code ကို အသုံးပြုသော သုံးစွဲသူများသည် ၁၀% လျှော့စျေး ရရှိမည်ဖြစ်သည်။</li>
+                        <li>လျှော့စျေးသည် ဝယ်ယူသည့်အချိန်တွင် code ထည့်သွင်းမှသာ အကျုံးဝင်မည်။</li>
+                        <li>သုံးစွဲသူသည် Referral code ကို တစ်ခေါက်သာ အသုံးပြုနိုင်မည် ဖြစ်သည်။</li>
+                    </ul>
+
+                    <h4>၅။ ရောင်းချမှုများအား အတည်ပြုခြင်း</h4>
+                    <p>ရောင်းချမှုတစ်ခုအား အောက်ပါအခြေအနေများနှင့် ပြည့်စုံမှသာ အတည်ပြုပြီးဖြစ်သည်ဟု မှတ်ယူမည်-</p>
+                    <ul>
+                        <li>ငွေကို အပြည့်အဝ လက်ခံရရှိခြင်း။</li>
+                        <li>ငွေလက်ခံရရှိမှုအား ကုမ္ပဏီ၏ စနစ်မှ စစ်မှန်ကြောင်း အတည်ပြုခြင်း။</li>
+                    </ul>
+                    <p>ကုမ္ပဏီသည် အတည်မပြုရသေးသော သို့မဟုတ် သံသယဖြစ်ဖွယ် မှာယူမှုများအတွက် ကော်မရှင်ပေးချေမှုများကို ရပ်ဆိုင်းထားခြင်း သို့မဟုတ် ငြင်းပယ်ပိုင်ခွင့်ရှိသည်။</p>
+
+                    <div class="highlight-box">
+                        <h4>၆။ လိမ်လည်မှု နှင့် အလွဲသုံးစားပြုမှု</h4>
+                        <p>ရောင်းချမှု အတုအယောင်များ ပြုလုပ်ရန် ကြိုးပမ်းမှု၊ မိမိဝယ်ယူရန်အတွက် ကုဒ်ထုတ်ခြင်း သို့မဟုတ် စနစ်အား လှည့်ဖြားခြင်းများ ပြုလုပ်ပါက အောက်ပါတို့ကို ဖြစ်စေမည်-</p>
+                        <ul>
+                            <li>ပရိုဂရမ်မှ ချက်ချင်း ဆိုင်းငံ့ခြင်း သို့မဟုတ် ရပ်စဲခြင်း။</li>
+                            <li>မရရှိသေးသော ကော်မရှင်များအားလုံးကို ဆုံးရှုံးခြင်း။</li>
+                        </ul>
+                        <p>ကိုယ်စားလှယ်များသည် ၎င်းတို့၏ code ကို ကြော်ငြာရန်အတွက် မှားယွင်းသော၊ လှည့်ဖြားသော၊ တရားဉပဒေနှင့်မလွတ်ကင်းသော ကြော်ငြာများ၊ သို့မဟုတ် ကိုယ်ကျင့်တရားနှင့် မညီသော နည်းလမ်းများကို အသုံးမပြုရ။</p>
+                        <p>ကုမ္ပဏီသည် ကိုယ်စားလှယ်များ၏ လုပ်ဆောင်မှုအားလုံးကို စစ်ဆေးအတည်ပြုပိုင်ခွင့်ရှိသည်။</p>
                     </div>
-                </div>
-            </div>
-            <hr class="my-4" style="border-color: rgba(255,255,255,0.2);">
-            <div class="row">
-                <div class="col-12 text-center">
-                    <p class="mb-0 text-white-50 small">&copy; <?php echo date('Y'); ?> Calamus Education. All rights reserved.</p>
+
+                    <h4>၇။ ကိုယ်စားလှယ်၏ တာဝန်များ</h4>
+                    <ul>
+                        <li>ကိုယ်စားလှယ်များသည် Calamus Education ၏ Product များ ကို ရိုးသားစွာနှင့် တိကျမှန်ကန်စွာ ကြော်ငြာရန် တာဝန်ရှိသည်။</li>
+                        <li>ကိုယ်စားလှယ်များသည် ကုမ္ပဏီ၏ဝန်ထမ်း သို့မဟုတ် တရားဝင်မိတ်ဖက်အဖြစ် ကိုယ်စားပြုကြောင်း မပြောဆိုရ။</li>
+                        <li>ကိုယ်စားလှယ်များသည် ကုမ္ပဏီ၏ စျေးကွက်ရှာဖွေရေး လမ်းညွှန်ချက်များနှင့် ပြည်တွင်းဥပဒေများအားလုံးကို လိုက်နာရမည်။</li>
+                    </ul>
+
+                    <h4>၈။ Active မဖြစ်သောအကောင့်များ</h4>
+                    <ul>
+                        <li>၃ လကြာသည်အထိ အတည်ပြုပြီး ရောင်းချမှု မရှိသော ကိုယ်စားလှယ်များကို Active မဖြစ်ဟု အမှတ်အသားပြုနိုင်သည်။</li>
+                        <li>Active မဖြစ်သော အကောင့်များကို ဖျက်သိမ်းခြင်း သို့မဟုတ် ကုမ္ပဏီ၏ ခွင့်ပြုချက်ဖြင့် ပြန်လည်အသက်သွင်းခြင်း ပြုလုပ်နိုင်သည်။</li>
+                    </ul>
+
+                    <h4>၉။ ပြင်ဆင်ခြင်း သို့မဟုတ် ရပ်စဲခြင်း</h4>
+                    <ul>
+                        <li>ကုမ္ပဏီသည် ကြိုတင်အသိပေးခြင်းမရှိဘဲ အချိန်မရွေး ပရိုဂရမ်ကို ပြင်ဆင်ခြင်း၊ ဆိုင်းငံ့ခြင်း သို့မဟုတ် ရပ်စဲခြင်းများ ပြုလုပ်နိုင်သည်။</li>
+                        <li>ပရိုဂရမ် ရပ်စဲပါက၊ အတည်ပြုပြီးသော ရောင်းချမှုများအတွက် ကော်မရှင်များကို ပုံမှန်လုပ်ထုံးလုပ်နည်းများအတိုင်း ဆက်လက်ပေးချေသွားမည်။</li>
+                    </ul>
+
+                    <h4>၁၀။ တာဝန်ယူမှု အကန့်အသတ်</h4>
+                    <p>ကုမ္ပဏီသည် အောက်ပါတို့အတွက် တာဝန်မရှိပါ-</p>
+                    <ul>
+                        <li>စနစ်ရပ်တန့်မှု သို့မဟုတ် နည်းပညာပိုင်းဆိုင်ရာ အမှားများကြောင့် ဝင်ငွေဆုံးရှုံးမှုများ။</li>
+                        <li>ကိုယ်စားလှယ်၏ အချက်အလက် မှားယွင်းမှုကြောင့် ငွေပေးချေမှု နှောင့်နှေးခြင်း။</li>
+                        <li>ကိုယ်စားလှယ်များနှင့် သုံးစွဲသူများကြား အငြင်းပွားမှုများ။</li>
+                    </ul>
+
+                    <h4>၁၁။ အငြင်းပွားမှု ဖြေရှင်းခြင်း</h4>
+                    <ul>
+                        <li>မည်သည့် အငြင်းပွားမှုကိုမဆို ငွေပေးငွေယူ ပြုလုပ်ပြီး ၇ ရက်အတွင်း ကုမ္ပဏီ၏ support team သို့ တိုင်ကြားရမည်။</li>
+                        <li>ကော်မရှင်များနှင့် ရောင်းချမှု အတည်ပြုခြင်းဆိုင်ရာ ကိစ္စရပ်အားလုံးတွင် ကုမ္ပဏီ၏ ဆုံးဖြတ်ချက်သည်သာ အတည် ဖြစ်သည်။</li>
+                    </ul>
+
+                    <h4>၁၂။ ဆက်သွယ်ရန်</h4>
+                    <p>မေးခွန်းများ၊ အကူအညီများ သို့မဟုတ် အငြင်းပွားမှုများ တိုင်ကြားရန်အတွက် ကျေးဇူးပြု၍ ဆက်သွယ်ပါ-</p>
+                    <ul>
+                        <li>📧 <a href="mailto:calamuseducation@gmail.com">calamuseducation@gmail.com</a></li>
+                        <li>📱 Telegram / Viber: <a href="tel:09688683805">09688683805</a></li>
+                    </ul>
+
+                    <h4>၁၃။ သဘောတူညီချက်</h4>
+                    <p><strong>ဤပရိုဂရမ်တွင် ပါဝင်ခြင်းဖြင့်၊ အထက်တွင်ဖော်ပြထားသော စည်းကမ်းချက်များအားလုံးကို သင်ဖတ်ရှု နားလည်ပြီး သဘောတူကြောင်း အတည်ပြုပါသည်။</strong></p>
                 </div>
             </div>
         </div>
-    </footer>
+    </section>
+
+    <?php include 'layout/welcome_footer.php'; ?>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
