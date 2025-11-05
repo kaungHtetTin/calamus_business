@@ -17,153 +17,121 @@ ob_start();
             <div class="row">
                 <div class="col-lg-8 mx-auto">
                     <div class="mb-4">
-                        <h4>1. Partner Agreement</h4>
-                        <p>By accessing and using the Calamus Education Partner Portal, you agree to be bound by these Terms and Conditions. This agreement governs your relationship with Calamus Education as a partner promoting our educational products and services.</p>
-                        
-                        <h5>1.1 Partnership Scope</h5>
-                        <p>As a partner, you will promote Calamus Education's products including:</p>
+                        <h4>Affiliate Program Terms and Conditions</h4>
+                        <p><strong>Effective date:</strong> 11-5-2025</p>
+                        <p><strong>Company:</strong> Calamus Education</p>
+                        <p><strong>Program:</strong> Affiliate Program</p>
+                    </div>
+
+                    <div class="mb-4">
+                        <h4>1. Summary</h4>
+                        <p>This program allows approved affiliates to promote Calamus Education products using their unique referral codes. Customers who purchase with a valid code receive a discount, and the affiliate earns a commission on each confirmed sale.</p>
+                        <p>All affiliates and customers participating in the program are deemed to have accepted these terms and conditions.</p>
+                    </div>
+
+                    <div class="mb-4">
+                        <h4>2. Affiliate Registration</h4>
                         <ul>
-                            <li><strong>Easy Korean App</strong> - Korean language learning application</li>
-                            <li><strong>Easy English App</strong> - English language learning application</li>
-                            <li><strong>Learning Website</strong> - Interactive learning platform</li>
-                            <li>Other educational products and services as introduced</li>
-                        </ul>
-                        
-                        <h5>1.2 Partner Responsibilities</h5>
-                        <ul>
-                            <li>Maintain accurate and up-to-date business information</li>
-                            <li>Comply with all applicable laws and regulations</li>
-                            <li>Promote products ethically and responsibly</li>
-                            <li>Provide accurate reporting of promotional activities</li>
-                            <li>Maintain confidentiality of proprietary information</li>
+                            <li>Affiliates must register with accurate personal information including full name, phone number, email, and NRC/passport.</li>
+                            <li>Each approved affiliate will receive a unique referral code issued by the company.</li>
+                            <li>The company reserves the right to accept or reject any registration without obligation to provide reasons.</li>
                         </ul>
                     </div>
 
                     <div class="mb-4">
-                        <h4>2. Earnings & Payments</h4>
-                        <p>Partners earn commissions based on successful referrals and conversions. Payment terms are as follows:</p>
-                        
-                        <h5>2.1 Commission Structure</h5>
+                        <h4>3. Commission and Payments</h4>
                         <ul>
-                            <li>Commission rates are determined based on partnership tier and performance</li>
-                            <li>Earnings are calculated on completed transactions only</li>
-                            <li>Commission rates may be adjusted with 30 days notice</li>
-                        </ul>
-                        
-                        <h5>2.2 Payment Processing</h5>
-                        <ul>
-                            <li>Payments are processed within 3-5 business days after month-end</li>
-                            <li>Minimum payment threshold applies as specified in your agreement</li>
-                            <li>Partners must provide accurate payment information</li>
-                            <li>Payment methods include bank transfer, mobile payment, and digital wallets</li>
-                        </ul>
-                        
-                        <h5>2.3 Payment Disputes</h5>
-                        <p>Any disputes regarding payments must be reported within 30 days of the payment date. We will investigate and resolve disputes in good faith.</p>
-                    </div>
-
-                    <div class="mb-4">
-                        <h4>3. Data Protection & Privacy</h4>
-                        <p>We are committed to protecting your privacy and personal information:</p>
-                        
-                        <h5>3.1 Data Collection</h5>
-                        <ul>
-                            <li>We collect necessary information to provide partner services</li>
-                            <li>Transaction data for commission calculations</li>
-                            <li>Communication records for support purposes</li>
-                        </ul>
-                        
-                        <h5>3.2 Data Usage</h5>
-                        <ul>
-                            <li>Data is used solely for providing partner services</li>
-                            <li>We do not sell personal information to third parties</li>
-                            <li>Data may be used for platform improvements and analytics</li>
-                        </ul>
-                        
-                        <h5>3.3 Partner Data Responsibilities</h5>
-                        <ul>
-                            <li>Partners must protect customer data obtained through promotions</li>
-                            <li>Comply with applicable data protection regulations</li>
-                            <li>Report any data breaches immediately</li>
+                            <li>Affiliates earn a 10% commission for each confirmed sale made using their code.</li>
+                            <li>Commissions are calculated only after the sale is confirmed and no refund or cancellation is requested by the customer.</li>
+                            <li>Payments are made monthly via WavePay or KBZPay (other methods can be arranged).</li>
+                            <li>The minimum payout amount is 10,000 MMK. Balances below this threshold will roll over to the next month until the minimum is met.</li>
+                            <li>The company may adjust commission rates at any time with prior notice.</li>
                         </ul>
                     </div>
 
                     <div class="mb-4">
-                        <h4>4. Intellectual Property</h4>
-                        <p>All intellectual property rights remain with Calamus Education:</p>
-                        
-                        <h5>4.1 Trademarks & Branding</h5>
+                        <h4>4. Customer Discounts</h4>
                         <ul>
-                            <li>Partners may use approved marketing materials and logos</li>
-                            <li>Brand guidelines must be followed strictly</li>
-                            <li>Unauthorized use of trademarks is prohibited</li>
-                        </ul>
-                        
-                        <h5>4.2 Content Usage</h5>
-                        <ul>
-                            <li>Marketing materials are provided for promotional use only</li>
-                            <li>Content may not be modified without permission</li>
-                            <li>Attribution requirements must be maintained</li>
+                            <li>Customers using a valid referral code at checkout receive a 10% discount.</li>
+                            <li>Discounts apply only when the code is entered at the time of purchase.</li>
+                            <li>Each customer may use a referral code only once.</li>
                         </ul>
                     </div>
 
                     <div class="mb-4">
-                        <h4>5. Termination</h4>
-                        <p>Either party may terminate this agreement under the following conditions:</p>
-                        
-                        <h5>5.1 Termination by Either Party</h5>
+                        <h4>5. Sale Confirmation</h4>
+                        <p>A sale is considered confirmed only when all of the following conditions are met:</p>
                         <ul>
-                            <li>Either party may terminate with 30 days written notice</li>
-                            <li>Immediate termination for breach of agreement</li>
-                            <li>Termination for violation of terms and conditions</li>
+                            <li>Full payment has been received.</li>
+                            <li>Payment has been verified as valid by the company’s system.</li>
                         </ul>
-                        
-                        <h5>5.2 Post-Termination</h5>
-                        <ul>
-                            <li>Outstanding payments will be processed within 30 days</li>
-                            <li>Confidentiality obligations continue after termination</li>
-                            <li>Return of proprietary materials required</li>
-                        </ul>
+                        <p>The company may suspend or deny commission payments for unverified or suspicious orders.</p>
                     </div>
 
                     <div class="mb-4">
-                        <h4>6. Limitation of Liability</h4>
-                        <p>Calamus Education's liability is limited as follows:</p>
+                        <h4>6. Fraud and Abuse</h4>
+                        <p>Attempting fake sales, self-purchases with codes, or manipulating the system may result in:</p>
                         <ul>
-                            <li>We are not liable for indirect or consequential damages</li>
-                            <li>Total liability is limited to the amount of commissions paid in the previous 12 months</li>
-                            <li>We provide services "as is" without warranties</li>
+                            <li>Immediate suspension or termination from the program.</li>
+                            <li>Forfeiture of all unpaid commissions.</li>
                         </ul>
+                        <p>Affiliates must not use misleading, deceptive, illegal, or unethical advertising methods to promote their codes.</p>
+                        <p>The company reserves the right to review and verify all affiliate activities.</p>
                     </div>
 
                     <div class="mb-4">
-                        <h4>7. Updates & Modifications</h4>
-                        <p>These terms may be updated periodically:</p>
+                        <h4>7. Affiliate Responsibilities</h4>
                         <ul>
-                            <li>Significant changes will be communicated via email</li>
-                            <li>Continued use constitutes acceptance of updated terms</li>
-                            <li>Partners may terminate if they disagree with changes</li>
+                            <li>Promote Calamus Education products honestly and accurately.</li>
+                            <li>Do not represent yourself as company staff or an official partner beyond the affiliate relationship.</li>
+                            <li>Follow all marketing guidelines and comply with applicable local laws.</li>
                         </ul>
                     </div>
 
                     <div class="mb-4">
-                        <h4>8. Governing Law</h4>
-                        <p>These terms are governed by the laws of Myanmar and any disputes will be resolved through arbitration in Yangon, Myanmar.</p>
+                        <h4>8. Inactive Accounts</h4>
+                        <ul>
+                            <li>Affiliates with no confirmed sales for 3 months may be marked as inactive.</li>
+                            <li>Inactive accounts may be removed or reactivated at the company’s discretion.</li>
+                        </ul>
                     </div>
 
                     <div class="mb-4">
-                        <h4>9. Contact Information</h4>
-                        <p>For questions about these terms, please contact us:</p>
+                        <h4>9. Modifications or Suspension</h4>
                         <ul>
-                            <li><strong>Email:</strong> calamuseducation@gmail.com</li>
-                            <li><strong>Phone:</strong> 09688683805</li>
-                            <li><strong>Address:</strong> Calamus Education, Yangon, Myanmar</li>
+                            <li>The company may modify, pause, or terminate the program at any time without prior notice.</li>
+                            <li>Upon termination, commissions for confirmed sales will be paid according to standard procedures.</li>
+                        </ul>
+                    </div>
+
+                    <div class="mb-4">
+                        <h4>10. Limitation of Liability</h4>
+                        <ul>
+                            <li>The company is not responsible for lost earnings due to system downtime or technical issues.</li>
+                            <li>Delays caused by incorrect affiliate payment information are not the company’s responsibility.</li>
+                            <li>Disputes between affiliates and customers are outside the company’s liability.</li>
+                        </ul>
+                    </div>
+
+                    <div class="mb-4">
+                        <h4>11. Dispute Resolution</h4>
+                        <ul>
+                            <li>Any dispute must be submitted to the support team within 7 days after payment processing.</li>
+                            <li>For commission and sale confirmation matters, the company’s decision is final.</li>
+                        </ul>
+                    </div>
+
+                    <div class="mb-4">
+                        <h4>12. Contact</h4>
+                        <ul>
+                            <li>Email: calamuseducation@gmail.com</li>
+                            <li>Telegram / Viber: 09688683805</li>
                         </ul>
                     </div>
 
                     <div class="alert alert-info">
-                        <h6><i class="fas fa-info-circle me-2"></i>Important Notice</h6>
-                        <p class="mb-0">By continuing to use the Partner Portal, you acknowledge that you have read, understood, and agree to be bound by these Terms and Conditions.</p>
+                        <h6><i class="fas fa-info-circle me-2"></i>Agreement</h6>
+                        <p class="mb-0">By participating in this program, you confirm that you have read, understood, and agreed to all terms above.</p>
                     </div>
                 </div>
             </div>
