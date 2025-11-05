@@ -41,23 +41,8 @@ define('EMAIL_TEMPLATE_PAYOUT_NOTIFICATION', 'payout_notification');
  * @return string Base URL (e.g., https://example.com/business)
  */
 function getBaseUrl() {
-    $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http';
-    $host = $_SERVER['HTTP_HOST'];
-    
-    // Get the base path from the script directory
-    $scriptPath = dirname($_SERVER['SCRIPT_NAME']);
-    
-    // Remove 'business' if it's at the end of the path (for backward compatibility)
-    $basePath = str_replace('/business', '', $scriptPath);
-    
-    // If we're in the business directory, add it to the path
-    if (strpos($_SERVER['SCRIPT_NAME'], '/business/') !== false || strpos($_SERVER['DOCUMENT_ROOT'], '/business') !== false) {
-        $basePath = '/business';
-    } else {
-        $basePath = '';
-    }
-    
-    return $protocol . '://' . $host;
+    // Fixed base URL for production
+    return 'https://business.calamuseducation.com';
 }
 
 /**

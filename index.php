@@ -560,27 +560,27 @@ $isLoggedIn = !empty($_SESSION['partner_session_token']);
                 <ul>
                     <li>
                         <strong>Easy Korean - Korean For Myanmar</strong> <br>
-                        <a href="https://www.facebook.com/easykoreancalamus" target="_blank">https://www.facebook.com/easykoreancalamus</a>
+                        <a href="https://www.facebook.com/easykoreancalamus" target="_blank">Click Here</a>
 
                     </li>
                     <li>
                         <strong>Easy Korean - Tiktok Channel</strong> <br>
-                        <a href="https://www.tiktok.com/@ekcalamus?_t=ZS-90dm6eBXj9B" target="_blank">https://www.tiktok.com/@ekcalamus?_t=ZS-90dm6eBXj9B</a>
+                        <a href="https://www.tiktok.com/@ekcalamus?_t=ZS-90dm6eBXj9B" target="_blank">Click Here</a>
                     </li>
 
                     <li>
                         <strong>Easy English - English For Myanmar</strong> <br>
-                        <a href="https://www.facebook.com/easyenglishcalamus" target="_blank">https://www.facebook.com/easyenglishcalamus</a>
+                        <a href="https://www.facebook.com/easyenglishcalamus" target="_blank">Click Here</a>
 
                     </li>
                     <li>
                         <strong>Easy English - Tiktok Channel</strong> <br>
-                        <a href="https://www.tiktok.com/@freeenglishformyanmar?_t=ZS-90dq5yAFzHQ&_r=1" target="_blank">https://www.tiktok.com/@freeenglishformyanmar?_t=ZS-90dq5yAFzHQ&_r=1</a>
+                        <a href="https://www.tiktok.com/@freeenglishformyanmar?_t=ZS-90dq5yAFzHQ&_r=1" target="_blank">Click Here</a>
                     </li>
 
                     <li>
                         <strong>Calamus Education - Youtube Channel</strong> <br>
-                        <a href="https://www.youtube.com/@calamuseducationmyanmar5078" target="_blank">https://www.youtube.com/@calamuseducationmyanmar5078</a>
+                        <a href="https://www.youtube.com/@calamuseducationmyanmar5078" target="_blank">Click Here</a>
                     </li>
 
                     <li>
@@ -588,7 +588,7 @@ $isLoggedIn = !empty($_SESSION['partner_session_token']);
                         calamuseducation@gmail.com
                     </li>
                     <li>
-                        <strong>Phone Contact</strong> <br>
+                        <strong>Phone Contact/ Viber/ Telegram</strong> <br>
                         09 688683805
                     </li>
                     
