@@ -130,13 +130,18 @@ $isLoggedIn = !empty($_SESSION['partner_session_token']);
         .intro-section h2 {
             color: #4a5568;
             font-weight: 600;
-            margin-bottom: 1.5rem;
+            margin-bottom: 2rem;
+            text-align: center;
         }
         
         .intro-section p {
             color: #6c757d;
             font-size: 1.1rem;
             line-height: 1.8;
+        }
+        
+        .intro-section .container {
+            max-width: 900px;
         }
         
         /* Myanmar Section */
@@ -148,7 +153,7 @@ $isLoggedIn = !empty($_SESSION['partner_session_token']);
         .myanmar-section h2 {
             color: #4a5568;
             font-weight: 600;
-            margin-bottom: 3rem;
+            margin-bottom: 2rem;
             text-align: center;
         }
         
@@ -168,8 +173,8 @@ $isLoggedIn = !empty($_SESSION['partner_session_token']);
         }
         
         .feature-card .icon-wrapper {
-            width: 60px;
-            height: 60px;
+            width: 40px;
+            height: 40px;
             background: linear-gradient(135deg, #4a5568 0%, #718096 100%);
             border-radius: 12px;
             display: flex;
@@ -233,7 +238,7 @@ $isLoggedIn = !empty($_SESSION['partner_session_token']);
         }
         
         .myanmar-section .container {
-            max-width: 800px;
+            max-width: 900px;
         }
         
         /* Terms Section */
@@ -252,7 +257,7 @@ $isLoggedIn = !empty($_SESSION['partner_session_token']);
         .terms-card {
             background: #f8f9fa;
             border-radius: 12px;
-            padding: 3rem;
+            padding: 2rem;
             margin-bottom: 2rem;
             box-shadow: 0 2px 10px rgba(0,0,0,0.08);
             border: 1px solid #e9ecef;
@@ -262,7 +267,7 @@ $isLoggedIn = !empty($_SESSION['partner_session_token']);
             background: linear-gradient(135deg, #4a5568 0%, #718096 100%);
             color: white;
             padding: 1.5rem;
-            border-radius: 10px;
+            border-radius: 12px;
             margin-bottom: 2rem;
         }
         
@@ -396,6 +401,10 @@ $isLoggedIn = !empty($_SESSION['partner_session_token']);
         
         /* Responsive */
         @media (max-width: 768px) {
+            .cover-content {
+                padding: 1rem;
+            }
+            
             .cover-content h1 {
                 font-size: 2.5rem;
             }
@@ -405,11 +414,80 @@ $isLoggedIn = !empty($_SESSION['partner_session_token']);
             }
             
             .intro-section {
-                padding: 3rem 0;
+                padding: 2rem 0;
             }
             
             .myanmar-section {
-                padding: 3rem 0;
+                padding: 2rem 0;
+            }
+            
+            .feature-card {
+                padding: 1.25rem;
+                margin-bottom: 1.5rem;
+            }
+            
+            .terms-section {
+                padding: 2rem 0;
+            }
+            
+            .terms-card {
+                padding: 1.5rem;
+            }
+            
+            .terms-header {
+                padding: 1.25rem;
+                margin-bottom: 1.5rem;
+            }
+            
+            .welcome-footer {
+                padding: 2rem 0 1rem 0;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .cover-content {
+                padding: 0.75rem;
+            }
+            
+            .cover-content h1 {
+                font-size: 2rem;
+                margin-bottom: 1rem;
+            }
+            
+            .cover-content p {
+                font-size: 1rem;
+                margin-bottom: 1.5rem;
+            }
+            
+            .intro-section {
+                padding: 1.5rem 0;
+            }
+            
+            .myanmar-section {
+                padding: 1.5rem 0;
+            }
+            
+            .feature-card {
+                padding: 1rem;
+                margin-bottom: 1rem;
+            }
+            
+            
+            .terms-section {
+                padding: 1.5rem 0;
+            }
+            
+            .terms-card {
+                padding: 1rem;
+            }
+            
+            .terms-header {
+                padding: 1rem;
+                margin-bottom: 1.5rem;
+            }
+            
+            .welcome-footer {
+                padding: 1.5rem 0 1rem 0;
             }
         }
     </style>
