@@ -319,6 +319,9 @@ function getCodeStatusColor($status) {
                 <a class="nav-link <?php echo basename($_SERVER['PHP_SELF']) == 'account_status.php' ? 'active' : ''; ?>" href="account_status.php">
                     <i class="fas fa-user-shield me-2"></i>Account Status
                 </a>
+                <a class="nav-link <?php echo basename($_SERVER['PHP_SELF']) == 'marketing_assets.php' ? 'active' : ''; ?>" href="marketing_assets.php">
+                    <i class="fas fa-bullhorn me-2"></i>Marketing Assets
+                </a>
                 <a class="nav-link <?php echo basename($_SERVER['PHP_SELF']) == 'profile.php' ? 'active' : ''; ?>" href="profile.php">
                     <i class="fas fa-user me-2"></i>Profile
                 </a>
@@ -360,6 +363,9 @@ function getCodeStatusColor($status) {
                         <a class="nav-link <?php echo basename($_SERVER['PHP_SELF']) == 'account_status.php' ? 'active' : ''; ?>" href="account_status.php">
                             <i class="fas fa-user-shield me-2"></i>Account Status
                         </a>
+                        <a class="nav-link <?php echo basename($_SERVER['PHP_SELF']) == 'marketing_assets.php' ? 'active' : ''; ?>" href="marketing_assets.php">
+                            <i class="fas fa-bullhorn me-2"></i>Marketing Assets
+                        </a>
                         <a class="nav-link <?php echo basename($_SERVER['PHP_SELF']) == 'profile.php' ? 'active' : ''; ?>" href="profile.php">
                             <i class="fas fa-user me-2"></i>Profile
                         </a>
@@ -387,6 +393,7 @@ function getCodeStatusColor($status) {
                                'partner_payment_methods.php' => 'Mobile Money',
                                'earning_history.php' => 'Earning History',
                                'partner_payment_histories.php' => 'Payment History',
+                               'marketing_assets.php' => 'Marketing Assets',
                                'profile.php' => 'Profile'
                            ];
                         
