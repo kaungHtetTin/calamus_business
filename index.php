@@ -14,6 +14,7 @@ $isLoggedIn = !empty($_SESSION['partner_session_token']);
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link rel="icon" href="assets/favicon.png" type="image/png">
+    <link rel="stylesheet" href="css/theme.css">
     <link rel="stylesheet" href="css/app.css">
     <style>
         body {
@@ -22,7 +23,7 @@ $isLoggedIn = !empty($_SESSION['partner_session_token']);
         
         /* Navbar Styles */
         .welcome-navbar {
-            background: linear-gradient(135deg, #4a5568 0%, #718096 100%);
+            background: linear-gradient(135deg, #1f7a45 0%, #3a9958 100%);
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
             padding: 0.25rem 0;
             min-height: auto;
@@ -56,7 +57,7 @@ $isLoggedIn = !empty($_SESSION['partner_session_token']);
         
         .welcome-navbar .btn-outline-light:hover {
             background-color: white;
-            color: #4a5568;
+            color: #1f7a45;
         }
         
         .welcome-navbar .navbar-toggler {
@@ -128,7 +129,7 @@ $isLoggedIn = !empty($_SESSION['partner_session_token']);
         }
         
         .intro-section h2 {
-            color: #4a5568;
+            color: #1f7a45;
             font-weight: 600;
             margin-bottom: 2rem;
             text-align: center;
@@ -151,7 +152,7 @@ $isLoggedIn = !empty($_SESSION['partner_session_token']);
         }
         
         .myanmar-section h2 {
-            color: #4a5568;
+            color: #1f7a45;
             font-weight: 600;
             margin-bottom: 2rem;
             text-align: center;
@@ -175,7 +176,7 @@ $isLoggedIn = !empty($_SESSION['partner_session_token']);
         .feature-card .icon-wrapper {
             width: 40px;
             height: 40px;
-            background: linear-gradient(135deg, #4a5568 0%, #718096 100%);
+            background: linear-gradient(135deg, #1f7a45 0%, #3a9958 100%);
             border-radius: 12px;
             display: flex;
             align-items: center;
@@ -189,7 +190,7 @@ $isLoggedIn = !empty($_SESSION['partner_session_token']);
         }
         
         .feature-card h4 {
-            color: #4a5568;
+            color: #1f7a45;
             font-weight: 600;
             margin-bottom: 1rem;
             font-size: 1.25rem;
@@ -218,14 +219,14 @@ $isLoggedIn = !empty($_SESSION['partner_session_token']);
             content: '→';
             position: absolute;
             left: 0;
-            color: #4a5568;
+            color: #1f7a45;
             font-size: 1rem;
             font-weight: bold;
             top: 0;
         }
         
         .feature-card ul li a {
-            color: #4a5568;
+            color: #1f7a45;
             text-decoration: none;
             font-weight: 500;
             transition: all 0.3s ease;
@@ -233,7 +234,7 @@ $isLoggedIn = !empty($_SESSION['partner_session_token']);
         }
         
         .feature-card ul li a:hover {
-            color: #718096;
+            color: #3a9958;
             transform: translateX(5px);
         }
         
@@ -248,7 +249,7 @@ $isLoggedIn = !empty($_SESSION['partner_session_token']);
         }
         
         .terms-section h2 {
-            color: #4a5568;
+            color: #1f7a45;
             font-weight: 600;
             margin-bottom: 2rem;
             text-align: center;
@@ -264,7 +265,7 @@ $isLoggedIn = !empty($_SESSION['partner_session_token']);
         }
         
         .terms-header {
-            background: linear-gradient(135deg, #4a5568 0%, #718096 100%);
+            background: linear-gradient(135deg, #1f7a45 0%, #3a9958 100%);
             color: white;
             padding: 1.5rem;
             border-radius: 12px;
@@ -284,7 +285,7 @@ $isLoggedIn = !empty($_SESSION['partner_session_token']);
         }
         
         .terms-content h4 {
-            color: #4a5568;
+            color: #1f7a45;
             font-weight: 600;
             margin-top: 2rem;
             margin-bottom: 1rem;
@@ -321,7 +322,7 @@ $isLoggedIn = !empty($_SESSION['partner_session_token']);
             content: '•';
             position: absolute;
             left: 0;
-            color: #4a5568;
+            color: #1f7a45;
             font-weight: bold;
             font-size: 1.2rem;
         }
@@ -331,13 +332,13 @@ $isLoggedIn = !empty($_SESSION['partner_session_token']);
         }
         
         .terms-content a {
-            color: #4a5568;
+            color: #1f7a45;
             text-decoration: underline;
             transition: color 0.3s ease;
         }
         
         .terms-content a:hover {
-            color: #718096;
+            color: #3a9958;
         }
         
         .terms-content .highlight-box {
@@ -369,7 +370,7 @@ $isLoggedIn = !empty($_SESSION['partner_session_token']);
         
         /* Footer */
         .welcome-footer {
-            background: linear-gradient(135deg, #4a5568 0%, #718096 100%);
+            background: linear-gradient(135deg, #1f7a45 0%, #3a9958 100%);
             color: white;
             padding: 3rem 0 1.5rem 0;
         }
@@ -491,7 +492,7 @@ $isLoggedIn = !empty($_SESSION['partner_session_token']);
             }
         }
     </style>
-    <link rel="stylesheet" href="css/welcome.css?v=10">
+    <link rel="stylesheet" href="css/welcome.css?v=12">
 </head>
 <body class="welcome-page home-page">
     <!-- Navbar -->

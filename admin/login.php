@@ -23,6 +23,7 @@ $pageTitle = 'Admin Login';
     <title><?php echo $pageTitle; ?> - Calamus Education Partner Portal</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/theme.css">
     <link rel="stylesheet" href="../css/app.css">
     <link rel="icon" href="../assets/favicon.png" type="image/png">
     <style>
@@ -83,8 +84,8 @@ $pageTitle = 'Admin Login';
         }
         
         .form-control:focus {
-            border-color: #1a73e8;
-            box-shadow: 0 0 0 2px rgba(26, 115, 232, 0.1);
+            border-color: var(--brand-primary);
+            box-shadow: 0 0 0 2px var(--brand-primary-ring);
             outline: none;
         }
         
@@ -115,7 +116,7 @@ $pageTitle = 'Admin Login';
         }
         
         .back-link a {
-            color: #1a73e8;
+            color: var(--brand-primary);
             text-decoration: none;
             font-size: 14px;
         }
@@ -124,7 +125,7 @@ $pageTitle = 'Admin Login';
             text-decoration: underline;
         }
     </style>
-    <link rel="stylesheet" href="../css/welcome.css?v=11">
+    <link rel="stylesheet" href="../css/welcome.css?v=12">
 </head>
 <body class="welcome-page auth-page admin-auth-page">
     <main class="login-container">

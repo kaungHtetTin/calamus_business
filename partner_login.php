@@ -7,6 +7,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link rel="icon" href="assets/favicon.png" type="image/png">
+    <link rel="stylesheet" href="css/theme.css">
     <link rel="stylesheet" href="css/app.css">
     <style>
         body {
@@ -16,7 +17,7 @@
         
         /* Navbar Styles */
         .welcome-navbar {
-            background: linear-gradient(135deg, #4a5568 0%, #718096 100%);
+            background: linear-gradient(135deg, #1f7a45 0%, #3a9958 100%);
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
             padding: 0.25rem 0;
             min-height: auto;
@@ -50,7 +51,7 @@
         
         .welcome-navbar .btn-outline-light:hover {
             background-color: white;
-            color: #4a5568;
+            color: #1f7a45;
         }
         
         .welcome-navbar .navbar-toggler {
@@ -79,7 +80,7 @@
         }
         .login-header {
             background: #ffffff;
-            color: #4a5568;
+            color: #1f7a45;
             padding: 1.5rem 1.5rem 1rem 1.5rem;
             text-align: center;
             border-bottom: 1px solid #eef2f6;
@@ -94,11 +95,11 @@
             transition: all 0.2s ease;
         }
         .form-control:focus {
-            border-color: #718096;
+            border-color: #3a9958;
             box-shadow: 0 0 0 3px rgba(113, 128, 150, 0.15);
         }
         .btn-primary {
-            background: #4a5568;
+            background: #1f7a45;
             border: none;
             border-radius: 10px;
             padding: 12px 30px;
@@ -114,7 +115,7 @@
         
         /* Footer */
         .welcome-footer {
-            background: linear-gradient(135deg, #4a5568 0%, #718096 100%);
+            background: linear-gradient(135deg, #1f7a45 0%, #3a9958 100%);
             color: white;
             padding: 3rem 0 1.5rem 0;
             margin-top: 2rem;
@@ -145,7 +146,7 @@
             margin-bottom: 0.5rem;
         }
     </style>
-    <link rel="stylesheet" href="css/welcome.css?v=10">
+    <link rel="stylesheet" href="css/welcome.css?v=12">
 </head>
 <body class="welcome-page auth-page">
     <!-- Navbar -->

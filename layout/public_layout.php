@@ -62,6 +62,8 @@ if (!$isLoggedIn) {
     <title><?php echo $pageTitle ?? 'Calamus Education Partner Portal'; ?></title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/theme.css">
+    <link rel="stylesheet" href="css/app.css">
     <style>
         body {
             background-color: #f8f9fa;
@@ -84,7 +86,7 @@ if (!$isLoggedIn) {
         }
         
         .navbar-brand:hover {
-            color: #1a73e8;
+            color: var(--brand-primary);
         }
         
         .nav-link {
@@ -97,12 +99,12 @@ if (!$isLoggedIn) {
         
         .nav-link:hover {
             background-color: #f1f3f4;
-            color: #1a73e8;
+            color: var(--brand-primary);
         }
         
         .nav-link.active {
-            background-color: #e8f0fe;
-            color: #1a73e8;
+            background-color: var(--brand-primary-soft);
+            color: var(--brand-primary);
         }
         
         /* User Profile Styles */
@@ -116,7 +118,7 @@ if (!$isLoggedIn) {
         }
         
         .navbar-profile-image:hover {
-            border-color: #1a73e8;
+            border-color: var(--brand-primary);
             transform: scale(1.1);
         }
         
@@ -136,7 +138,7 @@ if (!$isLoggedIn) {
         
         .navbar-profile-placeholder:hover {
             background-color: #e8eaed;
-            border-color: #1a73e8;
+            border-color: var(--brand-primary);
             transform: scale(1.1);
         }
         
@@ -191,7 +193,7 @@ if (!$isLoggedIn) {
         
         .user-dropdown-menu .dropdown-item:hover {
             background-color: #f1f3f4;
-            color: #1a73e8;
+            color: var(--brand-primary);
             transform: translateX(4px);
         }
         
@@ -309,7 +311,7 @@ if (!$isLoggedIn) {
         
         .drawer-item:hover {
             background-color: #f1f3f4;
-            color: #1a73e8;
+            color: var(--brand-primary);
         }
         
         .drawer-item i {
@@ -376,7 +378,7 @@ if (!$isLoggedIn) {
         }
         
         .footer-links a:hover {
-            color: #1a73e8;
+            color: var(--brand-primary);
         }
         
         .footer-copyright {

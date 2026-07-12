@@ -1,9 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Myanmar:wght@400;500;600;700&display=swap');
+@import url('./theme.css');
 
 :root {
-    --welcome-primary: #1f7a45;
-    --welcome-primary-dark: #145c34;
-    --welcome-accent: #7bd43f;
+    --welcome-primary: var(--brand-primary);
+    --welcome-primary-dark: var(--brand-primary-dark);
+    --welcome-accent: var(--brand-accent);
     --welcome-soft: #f0f2f8;
     --welcome-bg: #f4f7f2;
     --welcome-surface: rgb(255 255 255 / 86%);

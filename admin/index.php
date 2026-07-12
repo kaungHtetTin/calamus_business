@@ -46,7 +46,7 @@ $currentPage = 'index';
     <title><?php echo $pageTitle; ?> - Calamus Education Partner Portal</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="css/app.css?v=4">
+    <link rel="stylesheet" href="css/app.css?v=5">
     <link rel="icon" href="../assets/favicon.png" type="image/png">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 </head>
@@ -288,14 +288,14 @@ $currentPage = 'index';
                 datasets: [{
                     label: 'Payout Amount (MMK)',
                     data: amounts,
-                    borderColor: '#1a73e8',
-                    backgroundColor: 'rgba(26, 115, 232, 0.1)',
+                    borderColor: '#1f7a45',
+                    backgroundColor: 'rgba(31, 122, 69, 0.1)',
                     borderWidth: 2,
                     fill: true,
                     tension: 0.4,
                     pointRadius: 4,
                     pointHoverRadius: 6,
-                    pointBackgroundColor: '#1a73e8',
+                    pointBackgroundColor: '#1f7a45',
                     pointBorderColor: '#fff',
                     pointBorderWidth: 2
                 }]

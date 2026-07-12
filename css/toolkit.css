@@ -1,9 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Myanmar:wght@400;500;600;700&display=swap');
+@import url('./theme.css');
 
 .app-root {
-    --color-primary: #545760;
-    --color-primary-dark: color-mix(in srgb, var(--color-primary) 82%, #000);
-    --color-primary-soft: color-mix(in srgb, var(--color-primary) 11%, transparent);
+    --color-primary: var(--brand-primary);
+    --color-primary-dark: var(--brand-primary-dark);
+    --color-primary-soft: var(--brand-primary-soft);
     --color-bg: #eef4f4;
     --color-surface: #fff;
     --color-glass: rgb(255 255 255 / 82%);
@@ -21,7 +22,7 @@
     color: var(--color-text);
     background:
         radial-gradient(circle at 8% 4%, color-mix(in srgb, var(--color-primary) 13%, transparent), transparent 28rem),
-        radial-gradient(circle at 92% 92%, rgb(56 189 181 / 10%), transparent 30rem),
+        radial-gradient(circle at 92% 92%, rgb(123 212 63 / 10%), transparent 30rem),
         var(--color-bg);
     font-family: Inter, "Noto Sans Myanmar", system-ui, sans-serif;
     font-size: 12px;

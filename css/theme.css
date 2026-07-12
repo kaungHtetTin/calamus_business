@@ -1,0 +1,14 @@
+/**
+ * Calamus brand theme — single source of truth for primary colors.
+ */
+:root {
+    --brand-primary: #1f7a45;
+    --brand-primary-dark: #145c34;
+    --brand-primary-light: #2d9a5a;
+    --brand-accent: #7bd43f;
+    --brand-gradient-end: #3a9958;
+    --brand-primary-soft: rgb(31 122 69 / 11%);
+    --brand-primary-ring: rgb(31 122 69 / 25%);
+    --brand-chart-fill: rgb(31 122 69 / 10%);
+    --brand-gradient: linear-gradient(135deg, var(--brand-primary) 0%, var(--brand-gradient-end) 100%);
+}
