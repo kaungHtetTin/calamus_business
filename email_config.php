@@ -8,24 +8,30 @@
 
 // Include the autoloader
 require_once __DIR__ . '/classes/autoload.php';
+require_once __DIR__ . '/env_loader.php';
 
 // Load PHPMailer 
 require_once __DIR__ . '/vendor/autoload.php';
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
-// Email Configuration from env or defaults
-define('EMAIL_FROM_ADDRESS', 'business@calamuseducation.com');
-define('EMAIL_FROM_NAME', 'Calamus Education');
-define('EMAIL_REPLY_TO', 'business@calamuseducation.com');
-define('EMAIL_SUPPORT_ADDRESS', 'business@calamuseducation.com');
+// Email configuration
+define('EMAIL_FROM_ADDRESS', envValue('EMAIL_FROM_ADDRESS'));
+define('EMAIL_FROM_NAME', envValue('EMAIL_FROM_NAME', 'Calamus Education'));
+define('EMAIL_REPLY_TO', envValue('EMAIL_REPLY_TO', EMAIL_FROM_ADDRESS));
+define('EMAIL_SUPPORT_ADDRESS', envValue('EMAIL_SUPPORT_ADDRESS', EMAIL_FROM_ADDRESS));
 
-// SMTP Configuration - Hostinger
-define('SMTP_HOST', 'smtp.hostinger.com');
-define('SMTP_PORT', 465);
-define('SMTP_USERNAME', 'business@calamuseducation.com');
-define('SMTP_PASSWORD', '@$Calamus5241$@');
-define('SMTP_ENCRYPTION', PHPMailer::ENCRYPTION_SMTPS); // SSL
+// SMTP configuration
+define('SMTP_HOST', envValue('SMTP_HOST'));
+define('SMTP_PORT', (int) envValue('SMTP_PORT', 465));
+define('SMTP_USERNAME', envValue('SMTP_USERNAME'));
+define('SMTP_PASSWORD', envValue('SMTP_PASSWORD'));
+define(
+    'SMTP_ENCRYPTION',
+    strtolower(envValue('SMTP_ENCRYPTION', 'ssl')) === 'tls'
+        ? PHPMailer::ENCRYPTION_STARTTLS
+        : PHPMailer::ENCRYPTION_SMTPS
+);
 
 // Email Templates
 define('EMAIL_TEMPLATE_VERIFICATION', 'verification');
@@ -41,8 +47,7 @@ define('EMAIL_TEMPLATE_PAYOUT_NOTIFICATION', 'payout_notification');
  * @return string Base URL (e.g., https://example.com/business)
  */
 function getBaseUrl() {
-    // Fixed base URL for production
-    return 'https://business.calamuseducation.com';
+    return rtrim(envValue('APP_URL', 'http://localhost/business'), '/');
 }
 
 /**

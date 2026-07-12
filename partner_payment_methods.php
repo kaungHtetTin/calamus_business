@@ -12,11 +12,10 @@ $paymentMethods = $paymentMethodsManager->getPartnerPaymentMethods($currentPartn
 
 <div class="content-section">
     <!-- Page Header -->
-    <div class="d-flex justify-content-between align-items-center mb-4">
+    <div class="admin-page-heading">
         <div>
-            <h4 class="mb-1">
-                <i class="fas fa-mobile-alt me-2"></i>Mobile Money Accounts
-            </h4>
+            <p class="eyebrow">Payout settings</p>
+            <h1>Mobile Money Accounts</h1>
             <p class="text-muted mb-0">Manage your mobile money accounts for receiving commissions</p>
         </div>
         <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addPaymentMethodModal">
@@ -25,15 +24,15 @@ $paymentMethods = $paymentMethodsManager->getPartnerPaymentMethods($currentPartn
     </div>
 
     <!-- Payment Methods Table -->
-    <div class="card">
-        <div class="card-header">
+    <div class="panel glass p-0">
+        <div class="panel-heading">
             <h5 class="card-title mb-0">
                 <i class="fas fa-list me-2"></i>Your Mobile Money Accounts
             </h5>
         </div>
-        <div class="card-body">
+        <div class="panel-body">
             <?php if (empty($paymentMethods)): ?>
-                <div class="text-center py-5">
+                <div class="empty-state">
                     <i class="fas fa-mobile-alt fa-3x text-muted mb-3"></i>
                     <h5 class="text-muted">No Mobile Money Accounts</h5>
                     <p class="text-muted">You haven't added any mobile money accounts yet.</p>
@@ -42,7 +41,7 @@ $paymentMethods = $paymentMethodsManager->getPartnerPaymentMethods($currentPartn
                     </button>
                 </div>
             <?php else: ?>
-                <div class="table-responsive">
+                <div class="table-wrap">
                     <table class="table table-hover">
                         <thead>
                             <tr>
@@ -57,7 +56,7 @@ $paymentMethods = $paymentMethodsManager->getPartnerPaymentMethods($currentPartn
                             <?php foreach ($paymentMethods as $method): ?>
                                 <tr>
                                     <td>
-                                        <span class="badge bg-primary">
+                                        <span class="status status-info">
                                             <i class="fas fa-mobile-alt me-1"></i>
                                             <?php echo htmlspecialchars($method['payment_method']); ?>
                                         </span>
@@ -68,10 +67,10 @@ $paymentMethods = $paymentMethodsManager->getPartnerPaymentMethods($currentPartn
                                     </td>
                                     <td><?php echo date('M j, Y', strtotime($method['created_at'])); ?></td>
                                     <td>
-                                        <button class="btn btn-sm btn-outline-primary me-2" onclick="editPaymentMethod(<?php echo htmlspecialchars(json_encode($method)); ?>)">
+                                        <button class="btn icon-btn small btn-outline-primary me-2" onclick="editPaymentMethod(<?php echo htmlspecialchars(json_encode($method)); ?>)" aria-label="Edit mobile money account">
                                             <i class="fas fa-edit"></i>
                                         </button>
-                                        <button class="btn btn-sm btn-outline-danger" onclick="deletePaymentMethod(<?php echo $method['id']; ?>)">
+                                        <button class="btn icon-btn small btn-outline-danger" onclick="deletePaymentMethod(<?php echo $method['id']; ?>)" aria-label="Delete mobile money account">
                                             <i class="fas fa-trash"></i>
                                         </button>
                                     </td>
@@ -88,7 +87,7 @@ $paymentMethods = $paymentMethodsManager->getPartnerPaymentMethods($currentPartn
 <!-- Add Payment Method Modal -->
 <div class="modal fade" id="addPaymentMethodModal" tabindex="-1" aria-labelledby="addPaymentMethodModalLabel" aria-hidden="true">
     <div class="modal-dialog">
-        <div class="modal-content">
+        <div class="modal-content glass">
             <div class="modal-header">
                 <h5 class="modal-title" id="addPaymentMethodModalLabel">
                     <i class="fas fa-plus me-2"></i>Add Mobile Money Account
@@ -142,7 +141,7 @@ $paymentMethods = $paymentMethodsManager->getPartnerPaymentMethods($currentPartn
 <!-- Edit Payment Method Modal -->
 <div class="modal fade" id="editPaymentMethodModal" tabindex="-1" aria-labelledby="editPaymentMethodModalLabel" aria-hidden="true">
     <div class="modal-dialog">
-        <div class="modal-content">
+        <div class="modal-content glass">
             <div class="modal-header">
                 <h5 class="modal-title" id="editPaymentMethodModalLabel">
                     <i class="fas fa-edit me-2"></i>Edit Mobile Money Account

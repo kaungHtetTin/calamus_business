@@ -11,16 +11,14 @@ class PartnerDashboard {
     }
     
     // Get partner dashboard data
-    public function getDashboardData($partnerId) {
+    public function getDashboardData($partnerId, $earningStats = null) {
         $data = [];
-        
-        // Basic partner info
-        $partner = $this->db->read("SELECT * FROM partners WHERE id = '$partnerId'")[0];
-        $data['partner'] = $partner;
-        
+
         // Get earnings data
         $earningsManager = new PartnerEarningsManager();
-        $earningStats = $earningsManager->getPartnerEarningStats($partnerId);
+        if ($earningStats === null) {
+            $earningStats = $earningsManager->getPartnerEarningStats($partnerId);
+        }
         
         // Map earnings stats to dashboard data
         $data['total_earnings'] = $earningStats['total_earnings'];
@@ -46,7 +44,7 @@ class PartnerDashboard {
         
         foreach ($allowedFields as $field) {
             if (isset($data[$field])) {
-                $value = $this->db->connect()->real_escape_string($data[$field]);
+                $value = $this->db->escape($data[$field]);
                 $updates[] = "$field = '$value'";
             }
         }

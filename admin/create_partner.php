@@ -80,9 +80,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <title><?php echo $pageTitle; ?> - Admin Dashboard</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="../css/app.css">
-    <link rel="stylesheet" href="css/app.css">
-    <link rel="icon" href="../logo.png" type="image/x-icon">
+    <link rel="stylesheet" href="css/app.css?v=4">
+    <link rel="icon" href="../assets/favicon.png" type="image/png">
 </head>
 <body>
     <!-- Admin Header -->
@@ -90,7 +89,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
     <?php include 'layout/admin_sidebar.php'; ?>
     
-    <div class="container-fluid" style="padding: 24px;">
+    <div class="container-fluid">
+        <div class="admin-page-heading">
+            <div>
+                <div class="eyebrow">Partner operations</div>
+                <h1>Create New Partner</h1>
+                <p>Add a partner account and configure initial access.</p>
+            </div>
+        </div>
         <!-- Back Link -->
         <a href="partners.php" class="back-link">
             <i class="fas fa-arrow-left me-2"></i>Back to Partners
@@ -113,7 +119,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         
         <!-- Create Partner Form -->
         <div class="info-card">
-            <h5 class="mb-4" style="color: #202124;">
+            <h5 class="card-title mb-4">
                 <i class="fas fa-user-plus me-2"></i>Create New Partner
             </h5>
             
@@ -219,7 +225,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </form>
         </div>
     </div>
-    
+
+    <?php include 'layout/admin_footer.php'; ?>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

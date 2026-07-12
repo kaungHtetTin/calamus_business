@@ -13,7 +13,7 @@ $isLoggedIn = !empty($_SESSION['partner_session_token']);
     <title>Welcome - Calamus Education Partner Portal</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link rel="icon" href="logo.png" type="image/x-icon">
+    <link rel="icon" href="assets/favicon.png" type="image/png">
     <link rel="stylesheet" href="css/app.css">
     <style>
         body {
@@ -491,13 +491,14 @@ $isLoggedIn = !empty($_SESSION['partner_session_token']);
             }
         }
     </style>
+    <link rel="stylesheet" href="css/welcome.css?v=10">
 </head>
-<body>
+<body class="welcome-page home-page">
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg welcome-navbar">
         <div class="container">
             <a class="navbar-brand" href="index.php">
-                <img src="logo.png" alt="Calamus" width="30" height="30" class="me-2">
+                <img src="assets/app_logo.png" alt="Calamus" width="30" height="30" class="me-2">
                 Calamus Education
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -506,18 +507,36 @@ $isLoggedIn = !empty($_SESSION['partner_session_token']);
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto align-items-center">
                     <li class="nav-item">
-                        <a class="nav-link" href="index.php">Welcome</a>
+                        <a class="nav-link active" href="index.php" aria-label="Home">
+                            <i class="fas fa-house mobile-nav-icon" aria-hidden="true"></i>
+                            <span class="nav-label">Welcome</span>
+                        </a>
                     </li>
                     <?php if ($isLoggedIn): ?>
                     <li class="nav-item">
-                        <a class="nav-link" href="dashboard.php">Dashboard</a>
+                        <a class="nav-link" href="dashboard.php" aria-label="Dashboard">
+                            <i class="fas fa-gauge-high mobile-nav-icon" aria-hidden="true"></i>
+                            <span class="nav-label">Dashboard</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="program_rules.php" aria-label="Program Rules">
+                            <i class="fas fa-scale-balanced mobile-nav-icon" aria-hidden="true"></i>
+                            <span class="nav-label">Program Rules</span>
+                        </a>
                     </li>
                     <?php else: ?>
                     <li class="nav-item">
-                        <a class="nav-link" href="partner_login.php">Login</a>
+                        <a class="nav-link" href="partner_login.php" aria-label="Login">
+                            <i class="fas fa-arrow-right-to-bracket mobile-nav-icon" aria-hidden="true"></i>
+                            <span class="nav-label">Login</span>
+                        </a>
                     </li>
                     <li class="nav-item">
-                        <a class="btn btn-outline-light" href="partner_register.php">Register</a>
+                        <a class="btn btn-outline-light" href="partner_register.php" aria-label="Register">
+                            <i class="fas fa-user-plus mobile-nav-icon" aria-hidden="true"></i>
+                            <span class="nav-label">Register</span>
+                        </a>
                     </li>
                     <?php endif; ?>
                     
@@ -527,20 +546,21 @@ $isLoggedIn = !empty($_SESSION['partner_session_token']);
     </nav>
 
     <!-- Cover Section -->
-    <section class="cover-section">
+    <section class="cover-section" aria-label="Calamus Education partnership program">
         <div class="container">
-            <div class="cover-content">
-                <h1>Join Our Partner Program</h1>
-                <p>Unlock unlimited earning potential by becoming a Calamus Education partner. Help students achieve their language learning goals while building your own business.</p>
-                <?php if ($isLoggedIn): ?>
-                <a href="dashboard.php" class="btn btn-light btn-lg">
-                    <i class="fas fa-tachometer-alt me-2"></i>Go to Dashboard
-                </a>
-                <?php else: ?>
-                <a href="partner_register.php" class="btn btn-light btn-lg">
-                    <i class="fas fa-handshake me-2"></i>Get Started Today
-                </a>
-                <?php endif; ?>
+            <div class="hero-visual">
+                <img src="assets/hero_background.png" alt="Partner, promote and earn with the Calamus partnership program">
+                <div class="cover-content">
+                    <?php if ($isLoggedIn): ?>
+                    <a href="dashboard.php" class="btn btn-light btn-lg">
+                        <i class="fas fa-gauge-high me-2"></i>Open Partner Dashboard
+                    </a>
+                    <?php else: ?>
+                    <a href="partner_register.php" class="btn btn-light btn-lg">
+                        <i class="fas fa-user-plus me-2"></i>Join the Program
+                    </a>
+                    <?php endif; ?>
+                </div>
             </div>
         </div>
     </section>

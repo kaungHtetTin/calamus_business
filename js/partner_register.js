@@ -242,8 +242,9 @@ function setupFormSubmission() {
 
     // Show loading state
     const submitBtn = document.getElementById("submitBtn");
-    const originalText = submitBtn.textContent;
-    submitBtn.textContent = "Registering...";
+    const originalContent = submitBtn.innerHTML;
+    submitBtn.innerHTML =
+      '<i class="fas fa-circle-notch fa-spin me-2"></i><span>Creating account...</span>';
     submitBtn.disabled = true;
 
     // Submit registration
@@ -279,7 +280,7 @@ function setupFormSubmission() {
       })
       .finally(() => {
         // Reset button state
-        submitBtn.textContent = originalText;
+        submitBtn.innerHTML = originalContent;
         submitBtn.disabled = false;
       });
   });

@@ -38,9 +38,8 @@ $currentPage = 'payout_history';
     <title><?php echo $pageTitle; ?> - Calamus Education Partner Portal</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="../css/app.css">
-    <link rel="stylesheet" href="css/app.css">
-    <link rel="icon" href="../logo.png" type="image/x-icon">
+    <link rel="stylesheet" href="css/app.css?v=4">
+    <link rel="icon" href="../assets/favicon.png" type="image/png">
 </head>
 <body>
     <!-- Admin Header -->
@@ -48,7 +47,14 @@ $currentPage = 'payout_history';
     
     <?php include 'layout/admin_sidebar.php'; ?>
 
-    <div class="container-fluid" style="padding: 24px;">
+    <div class="container-fluid">
+        <div class="admin-page-heading">
+            <div>
+                <div class="eyebrow">Payment archive</div>
+                <h1>Payout History</h1>
+                <p>Review processed partner payouts and transaction records.</p>
+            </div>
+        </div>
         <!-- Alert Messages -->
         <?php if (isset($_GET['success'])): ?>
             <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -86,7 +92,7 @@ $currentPage = 'payout_history';
         
         <!-- Filters -->
         <div class="filter-card">
-            <h5 class="mb-3" style="color: #202124;">
+            <h5 class="card-title mb-3">
                 <i class="fas fa-filter me-2"></i>Filters
             </h5>
             <form method="GET" class="row g-3">
@@ -163,7 +169,7 @@ $currentPage = 'payout_history';
                             <td>
                                 <?php
                                 $status = strtolower($history['status'] ?? 'pending');
-                                $statusClass = $status === 'received' ? 'status-paid' : ($status === 'rejected' ? 'status-pending' : 'status-pending');
+                                $statusClass = $status === 'received' ? 'status-success' : ($status === 'rejected' ? 'status-danger' : 'status-warning');
                                 ?>
                                 <span class="status-badge <?php echo $statusClass; ?>"><?php echo ucfirst($status); ?></span>
                             </td>
@@ -250,7 +256,8 @@ $currentPage = 'payout_history';
             <?php endif; ?>
         </div>
     </div>
-    
+
+    <?php include 'layout/admin_footer.php'; ?>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

@@ -1,44 +1,104 @@
 <?php
-/**
- * Admin Sidebar Layout Component
- * Reusable sidebar navigation for admin pages
- */
+$adminNavGroups = [
+    'Overview' => [
+        ['index', 'index.php', 'fa-gauge-high', 'Dashboard'],
+    ],
+    'Partner Management' => [
+        ['partners', 'partners.php', 'fa-users', 'Partners'],
+    ],
+    'Finance' => [
+        ['earning_logs', 'earning_logs.php', 'fa-money-bill-trend-up', 'Earning Logs'],
+        ['payout_logs', 'payout_logs.php', 'fa-credit-card', 'Payout Logs'],
+        ['payout_history', 'payout_history.php', 'fa-clock-rotate-left', 'Payout History'],
+    ],
+    'Communication' => [
+        ['compose_email', 'compose_email.php', 'fa-envelope', 'Compose Email'],
+    ],
+];
 ?>
-
-<div class="offcanvas offcanvas-start" tabindex="-1" id="adminSidebar" style="width: 280px; background: #202124;">
-        <div class="offcanvas-header">
-            <h5 class="offcanvas-title text-white">
-                <i class="fas fa-shield-alt me-2"></i>Admin Portal
-            </h5>
-            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-        </div>
-        <div class="offcanvas-body">
-            <div class="text-white-50 mb-3">
-                <small>Welcome, <?php echo htmlspecialchars($adminAuth->getAdminUsername()); ?></small>
+<aside class="admin-sidebar glass" aria-label="Admin navigation">
+    <a class="portal-brand" href="index.php">
+        <img src="../assets/app_logo.png" alt="Calamus Education">
+        <span>Calamus Admin</span>
+    </a>
+    <nav class="portal-nav">
+        <?php foreach ($adminNavGroups as $groupLabel => $items): ?>
+            <div class="portal-nav-group">
+                <span class="portal-nav-label"><?php echo htmlspecialchars($groupLabel); ?></span>
+                <?php foreach ($items as [$key, $href, $icon, $label]): ?>
+                    <a class="nav-link <?php echo ($currentPage ?? '') === $key ? 'active' : ''; ?>" href="<?php echo $href; ?>" title="<?php echo $label; ?>">
+                        <i class="fas <?php echo $icon; ?>"></i><span><?php echo $label; ?></span>
+                    </a>
+                <?php endforeach; ?>
             </div>
-            <nav class="nav flex-column">
-                <a class="nav-link <?php echo isset($currentPage) && $currentPage == 'index' ? 'active' : ''; ?>" href="index.php" style="color: <?php echo isset($currentPage) && $currentPage == 'index' ? '#e8f0fe' : 'rgba(255, 255, 255, 0.87)'; ?>; background: <?php echo isset($currentPage) && $currentPage == 'index' ? 'rgba(232, 240, 254, 0.1)' : 'transparent'; ?>; padding: 12px 16px; border-radius: 6px; margin-bottom: 4px; transition: all 0.2s;">
-                    <i class="fas fa-tachometer-alt me-2"></i>Dashboard
-                </a>
-                <a class="nav-link <?php echo isset($currentPage) && $currentPage == 'partners' ? 'active' : ''; ?>" href="partners.php" style="color: <?php echo isset($currentPage) && $currentPage == 'partners' ? '#e8f0fe' : 'rgba(255, 255, 255, 0.87)'; ?>; background: <?php echo isset($currentPage) && $currentPage == 'partners' ? 'rgba(232, 240, 254, 0.1)' : 'transparent'; ?>; padding: 12px 16px; border-radius: 6px; margin-bottom: 4px; transition: all 0.2s;">
-                    <i class="fas fa-users me-2"></i>Partners
-                </a>
-                <a class="nav-link <?php echo isset($currentPage) && $currentPage == 'earning_logs' ? 'active' : ''; ?>" href="earning_logs.php" style="color: <?php echo isset($currentPage) && $currentPage == 'earning_logs' ? '#e8f0fe' : 'rgba(255, 255, 255, 0.87)'; ?>; background: <?php echo isset($currentPage) && $currentPage == 'earning_logs' ? 'rgba(232, 240, 254, 0.1)' : 'transparent'; ?>; padding: 12px 16px; border-radius: 6px; margin-bottom: 4px; transition: all 0.2s;">
-                    <i class="fas fa-money-bill-wave me-2"></i>Earning Logs
-                </a>
-                <a class="nav-link <?php echo isset($currentPage) && $currentPage == 'payout_logs' ? 'active' : ''; ?>" href="payout_logs.php" style="color: <?php echo isset($currentPage) && $currentPage == 'payout_logs' ? '#e8f0fe' : 'rgba(255, 255, 255, 0.87)'; ?>; background: <?php echo isset($currentPage) && $currentPage == 'payout_logs' ? 'rgba(232, 240, 254, 0.1)' : 'transparent'; ?>; padding: 12px 16px; border-radius: 6px; margin-bottom: 4px; transition: all 0.2s;">
-                    <i class="fas fa-credit-card me-2"></i>Payout Logs
-                </a>
-                <a class="nav-link <?php echo isset($currentPage) && $currentPage == 'payout_history' ? 'active' : ''; ?>" href="payout_history.php" style="color: <?php echo isset($currentPage) && $currentPage == 'payout_history' ? '#e8f0fe' : 'rgba(255, 255, 255, 0.87)'; ?>; background: <?php echo isset($currentPage) && $currentPage == 'payout_history' ? 'rgba(232, 240, 254, 0.1)' : 'transparent'; ?>; padding: 12px 16px; border-radius: 6px; margin-bottom: 4px; transition: all 0.2s;">
-                    <i class="fas fa-history me-2"></i>Payout History
-                </a>
-                <a class="nav-link <?php echo isset($currentPage) && $currentPage == 'compose_email' ? 'active' : ''; ?>" href="compose_email.php" style="color: <?php echo isset($currentPage) && $currentPage == 'compose_email' ? '#e8f0fe' : 'rgba(255, 255, 255, 0.87)'; ?>; background: <?php echo isset($currentPage) && $currentPage == 'compose_email' ? 'rgba(232, 240, 254, 0.1)' : 'transparent'; ?>; padding: 12px 16px; border-radius: 6px; margin-bottom: 4px; transition: all 0.2s;">
-                    <i class="fas fa-envelope me-2"></i>Compose Email
-                </a>
-                <hr style="border-color: rgba(255, 255, 255, 0.1); margin: 16px 0;">
-                <a class="nav-link" href="logout.php" style="color: #d93025; padding: 12px 16px; border-radius: 6px; transition: all 0.2s;">
-                    <i class="fas fa-sign-out-alt me-2"></i>Logout
-                </a>
-            </nav>
-        </div>
+        <?php endforeach; ?>
+        <a class="nav-link logout-link" href="logout.php" title="Logout"><i class="fas fa-sign-out-alt"></i><span>Logout</span></a>
+    </nav>
+    <div class="sidebar-profile">
+        <div class="sidebar-avatar"><i class="fas fa-user-shield"></i></div>
+        <div><strong><?php echo htmlspecialchars($adminAuth->getAdminUsername()); ?></strong><small>Administrator</small></div>
     </div>
+</aside>
+
+<div class="offcanvas offcanvas-start" tabindex="-1" id="adminSidebar" aria-labelledby="adminSidebarLabel">
+    <div class="offcanvas-header drawer-header">
+        <a class="drawer-brand" href="index.php">
+            <img src="../assets/app_logo.png" alt="Calamus Education">
+            <span>
+                <strong id="adminSidebarLabel">Calamus Admin</strong>
+                <small>Administration workspace</small>
+            </span>
+        </a>
+        <button type="button" class="btn icon-btn small drawer-close" data-bs-dismiss="offcanvas" aria-label="Close navigation">
+            <i class="fas fa-xmark"></i>
+        </button>
+    </div>
+    <div class="offcanvas-body">
+        <nav class="portal-nav">
+            <?php foreach ($adminNavGroups as $groupLabel => $items): ?>
+                <div class="portal-nav-group">
+                    <span class="portal-nav-label"><?php echo htmlspecialchars($groupLabel); ?></span>
+                    <?php foreach ($items as [$key, $href, $icon, $label]): ?>
+                        <a class="nav-link <?php echo ($currentPage ?? '') === $key ? 'active' : ''; ?>" href="<?php echo $href; ?>">
+                            <i class="fas <?php echo $icon; ?>"></i><span><?php echo $label; ?></span>
+                        </a>
+                    <?php endforeach; ?>
+                </div>
+            <?php endforeach; ?>
+        </nav>
+    </div>
+    <div class="drawer-actions">
+        <div class="drawer-profile">
+            <span class="sidebar-avatar"><i class="fas fa-user-shield"></i></span>
+            <div>
+                <strong><?php echo htmlspecialchars($adminAuth->getAdminUsername()); ?></strong>
+                <small>Administrator</small>
+            </div>
+        </div>
+        <a class="btn secondary drawer-logout" href="logout.php">
+            <i class="fas fa-sign-out-alt"></i><span>Logout</span>
+        </a>
+    </div>
+</div>
+
+<main class="admin-main">
+    <header class="admin-topbar glass">
+        <div class="d-flex align-items-center gap-2 min-w-0">
+            <button class="btn icon-btn mobile-nav-toggle" type="button" data-bs-toggle="offcanvas" data-bs-target="#adminSidebar" aria-controls="adminSidebar" aria-label="Open navigation">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="topbar-title">
+                <strong><?php echo htmlspecialchars($pageTitle ?? 'Admin Dashboard'); ?></strong>
+                <small>Administration workspace</small>
+            </div>
+        </div>
+        <div class="topbar-actions">
+            <span class="topbar-chip">Welcome, <?php echo htmlspecialchars($adminAuth->getAdminUsername()); ?></span>
+            <button class="btn icon-btn theme-toggle" type="button" data-theme-toggle aria-label="Toggle color theme">
+                <i class="fas fa-moon theme-light-icon"></i>
+                <i class="fas fa-sun theme-dark-icon"></i>
+            </button>
+            <a class="btn icon-btn" href="logout.php" aria-label="Logout"><i class="fas fa-sign-out-alt"></i></a>
+        </div>
+    </header>
+    <div class="admin-content">

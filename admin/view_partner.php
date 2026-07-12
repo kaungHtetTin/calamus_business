@@ -116,42 +116,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['suspend_account'])) {
     <title><?php echo $pageTitle; ?> - Calamus Education Partner Portal</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="../css/app.css">
-    <link rel="stylesheet" href="css/app.css">
-    <style>
-        .partner-avatar {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 3px solid #e8eaed;
-        }
-        
-        .profile-placeholder {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            background: #f1f3f4;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 32px;
-            color: #5f6368;
-        }
-        
-        .action-buttons {
-            display: flex;
-            gap: 12px;
-            margin-top: 24px;
-        }
-    </style>
+    <link rel="stylesheet" href="css/app.css?v=4">
 </head>
 <body>
     <!-- Admin Header -->
     <?php include 'layout/admin_header.php'; ?>
 
     <?php include 'layout/admin_sidebar.php'; ?>
-    <div class="container-fluid" style="padding: 24px;">
+    <div class="container-fluid">
+        <div class="admin-page-heading">
+            <div>
+                <div class="eyebrow">Partner profile</div>
+                <h1>Partner Details</h1>
+                <p>Review account information, payout readiness, and access controls.</p>
+            </div>
+        </div>
         <!-- Back Button -->
         <div class="mb-3">
             <a href="partners.php" class="btn btn-sm btn-outline-secondary">
@@ -172,9 +151,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['suspend_account'])) {
                     <?php endif; ?>
                 </div>
                 <div class="flex-grow-1 ms-4">
-                    <h2 class="mb-2" style="color: #202124;"><?php echo htmlspecialchars($partner['contact_name']); ?></h2>
-                    <p class="mb-1" style="color: #5f6368;"><?php echo htmlspecialchars($partner['company_name'] ?? 'N/A'); ?></p>
-                    <p class="mb-0" style="color: #5f6368; font-size: 14px;">
+                    <h2 class="mb-2"><?php echo htmlspecialchars($partner['contact_name']); ?></h2>
+                    <p class="mb-1 text-muted"><?php echo htmlspecialchars($partner['company_name'] ?? 'N/A'); ?></p>
+                    <p class="mb-0 text-muted">
                         <i class="fas fa-envelope me-2"></i><?php echo htmlspecialchars($partner['email']); ?>
                     </p>
                 </div>
@@ -194,7 +173,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['suspend_account'])) {
         <div class="row">
             <div class="col-md-6">
                 <div class="info-card">
-                    <h5 class="mb-3" style="color: #202124;">
+                    <h5 class="card-title mb-3">
                         <i class="fas fa-info-circle me-2"></i>Basic Information
                     </h5>
                     <div class="info-row">
@@ -225,7 +204,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['suspend_account'])) {
                         <div class="info-label">Website</div>
                         <div class="info-value">
                             <?php if ($partner['website']): ?>
-                                <a href="<?php echo htmlspecialchars($partner['website']); ?>" target="_blank" style="color: #1a73e8;">
+                                <a href="<?php echo htmlspecialchars($partner['website']); ?>" target="_blank">
                                     <i class="fas fa-globe me-2"></i><?php echo htmlspecialchars($partner['website']); ?>
                                 </a>
                             <?php else: ?>
@@ -238,7 +217,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['suspend_account'])) {
             
             <div class="col-md-6">
                 <div class="info-card">
-                    <h5 class="mb-3" style="color: #202124;">
+                    <h5 class="card-title mb-3">
                         <i class="fas fa-cog me-2"></i>Account Information
                     </h5>
                     <div class="info-row">
@@ -285,7 +264,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['suspend_account'])) {
         
         <!-- Personal Information -->
         <div class="info-card">
-            <h5 class="mb-3" style="color: #202124;">
+            <h5 class="card-title mb-3">
                 <i class="fas fa-id-card me-2"></i>Personal Information
             </h5>
             <div class="row">
@@ -349,10 +328,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['suspend_account'])) {
         <!-- Description -->
         <?php if ($partner['description']): ?>
         <div class="info-card">
-            <h5 class="mb-3" style="color: #202124;">
+            <h5 class="card-title mb-3">
                 <i class="fas fa-align-left me-2"></i>Description
             </h5>
-            <p style="color: #202124; line-height: 1.6;"><?php echo nl2br(htmlspecialchars($partner['description'])); ?></p>
+            <p><?php echo nl2br(htmlspecialchars($partner['description'])); ?></p>
         </div>
         <?php endif; ?>
         
@@ -373,7 +352,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['suspend_account'])) {
         
         <!-- Payment Methods -->
         <div class="info-card">
-            <h5 class="mb-3" style="color: #202124;">
+            <h5 class="card-title mb-3">
                 <i class="fas fa-credit-card me-2"></i>Payment Methods
             </h5>
             
@@ -400,7 +379,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['suspend_account'])) {
         
         <!-- Password Reset -->
         <div class="info-card">
-            <h5 class="mb-3" style="color: #202124;">
+            <h5 class="card-title mb-3">
                 <i class="fas fa-key me-2"></i>Reset Password
             </h5>
             
@@ -423,7 +402,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['suspend_account'])) {
                 Resetting the password will terminate all active sessions for this partner. They will need to log in again with the new password.
             </div>
             
-            <form method="POST" action="view_partner.php?id=<?php echo htmlspecialchars($partner['id']); ?>" style="margin-top: 20px;">
+            <form method="POST" action="view_partner.php?id=<?php echo htmlspecialchars($partner['id']); ?>" class="mt-3">
                 <input type="hidden" name="reset_password" value="1">
                 <div class="row">
                     <div class="col-md-6">
@@ -449,7 +428,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['suspend_account'])) {
         <!-- Account Suspension -->
         <?php if (($partner['status'] ?? 'active') !== 'suspended'): ?>
         <div class="info-card">
-            <h5 class="mb-3" style="color: #202124;">
+            <h5 class="card-title mb-3">
                 <i class="fas fa-ban me-2"></i>Suspend Account
             </h5>
             
@@ -472,7 +451,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['suspend_account'])) {
                 Suspending the account will prevent the partner from accessing their account and will send them a notification email.
             </div>
             
-            <form method="POST" action="view_partner.php?id=<?php echo htmlspecialchars($partner['id']); ?>" style="margin-top: 20px;">
+            <form method="POST" action="view_partner.php?id=<?php echo htmlspecialchars($partner['id']); ?>" class="mt-3">
                 <input type="hidden" name="suspend_account" value="1">
                 <div class="mb-3">
                     <label for="suspend_message" class="form-label">Suspension Reason <span class="text-danger">*</span></label>
@@ -496,7 +475,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['suspend_account'])) {
             </a>
         </div>
     </div>
-    
+
+    <?php include 'layout/admin_footer.php'; ?>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

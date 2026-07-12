@@ -40,18 +40,8 @@ $currentPage = 'partners';
     <title><?php echo $pageTitle; ?> - Calamus Education Partner Portal</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="../css/app.css">
-    <link rel="stylesheet" href="css/app.css">
-    <link rel="icon" href="../logo.png" type="image/x-icon">
-    <style>
-        .verified-icon {
-            color: #137333;
-        }
-        
-        .unverified-icon {
-            color: #d93025;
-        }
-    </style>
+    <link rel="stylesheet" href="css/app.css?v=4">
+    <link rel="icon" href="../assets/favicon.png" type="image/png">
 </head>
 <body>
     <!-- Admin Header -->
@@ -60,7 +50,15 @@ $currentPage = 'partners';
     <?php include 'layout/admin_sidebar.php'; ?>
     
     <!-- Main Content -->
-    <div class="container-fluid" style="padding: 24px;">
+    <div class="container-fluid">
+        <div class="admin-page-heading">
+            <div>
+                <div class="eyebrow">Partner operations</div>
+                <h1>Manage Partners</h1>
+                <p>Review accounts, verification readiness, and partner access.</p>
+            </div>
+            <a href="create_partner.php" class="btn primary"><i class="fas fa-plus me-2"></i>Create Partner</a>
+        </div>
         <!-- Alert Messages -->
         <?php if (isset($_GET['success'])): ?>
             <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -98,7 +96,7 @@ $currentPage = 'partners';
         
         <!-- Search Form -->
         <div class="filter-card">
-            <h5 class="mb-3" style="color: #202124;">
+            <h5 class="card-title mb-3">
                 <i class="fas fa-search me-2"></i>Search Partners
             </h5>
             <form method="GET" class="row g-3">
@@ -154,9 +152,8 @@ $currentPage = 'partners';
                             $emailVerified = !empty($partner['email_verified']);
                             // minimal flags already ensured by query; compute for display
                             $personalInfoComplete = (!empty($partner['address']) && !empty($partner['city']) && !empty($partner['state']) && !empty($partner['national_id_card_number']));
-                            // has payment method check via a quick existence query
-                            $pmCountRes = (new Database())->read("SELECT COUNT(*) AS cnt FROM partner_payment_methods WHERE partner_id = '" . $partner['id'] . "'");
-                            $hasPaymentMethod = $pmCountRes && isset($pmCountRes[0]['cnt']) && (int)$pmCountRes[0]['cnt'] > 0;
+                            // The eligibility query already requires a payment method.
+                            $hasPaymentMethod = true;
                         ?>
                         <tr>
                             <td>#<?php echo htmlspecialchars($partner['id']); ?></td>
@@ -165,23 +162,23 @@ $currentPage = 'partners';
                             <td><?php echo htmlspecialchars($partner['email']); ?></td>
                             <td>
                                 <?php if ($emailVerified): ?>
-                                    <span class="badge bg-success">Verified</span>
+                                    <span class="status status-success">Verified</span>
                                 <?php else: ?>
-                                    <span class="badge bg-danger">Not Verified</span>
+                                    <span class="status status-danger">Not Verified</span>
                                 <?php endif; ?>
                             </td>
                             <td>
                                 <?php if ($hasPaymentMethod): ?>
-                                    <span class="badge bg-success">Added</span>
+                                    <span class="status status-success">Added</span>
                                 <?php else: ?>
-                                    <span class="badge bg-danger">Missing</span>
+                                    <span class="status status-danger">Missing</span>
                                 <?php endif; ?>
                             </td>
                             <td>
                                 <?php if ($personalInfoComplete): ?>
-                                    <span class="badge bg-success">Complete</span>
+                                    <span class="status status-success">Complete</span>
                                 <?php else: ?>
-                                    <span class="badge bg-danger">Incomplete</span>
+                                    <span class="status status-danger">Incomplete</span>
                                 <?php endif; ?>
                             </td>
                             <td><?php echo date('M d, Y', strtotime($partner['created_at'])); ?></td>
@@ -333,7 +330,8 @@ $currentPage = 'partners';
             <?php endif; ?>
         </div>
     </div>
-    
+
+    <?php include 'layout/admin_footer.php'; ?>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

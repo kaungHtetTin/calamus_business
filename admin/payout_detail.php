@@ -42,42 +42,8 @@ $currentPage = 'payout_history';
     <title><?php echo $pageTitle; ?> - Admin Dashboard</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="../css/app.css">
-    <link rel="stylesheet" href="css/app.css">
-    <link rel="icon" href="../logo.png" type="image/x-icon">
-    <style>
-        .transaction-image {
-            max-width: 100%;
-            max-height: 500px;
-            border: 2px solid #e8eaed;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: transform 0.2s;
-        }
-        
-        .transaction-image:hover {
-            transform: scale(1.05);
-        }
-        
-        .info-label {
-            font-size: 13px;
-            color: #5f6368;
-            font-weight: 500;
-            margin-bottom: 4px;
-        }
-        
-        .info-value {
-            font-size: 14px;
-            color: #202124;
-            font-weight: 400;
-        }
-        
-        .amount-badge {
-            font-size: 28px;
-            font-weight: 600;
-            color: #1a73e8;
-        }
-    </style>
+    <link rel="stylesheet" href="css/app.css?v=4">
+    <link rel="icon" href="../assets/favicon.png" type="image/png">
 </head>
 <body>
     <!-- Admin Header -->
@@ -85,7 +51,7 @@ $currentPage = 'payout_history';
     
     <?php include 'layout/admin_sidebar.php'; ?>
     
-    <div class="container-fluid" style="padding: 24px;">
+    <div class="container-fluid">
         <!-- Back Link -->
         <div class="mb-3">
             <a href="payout_history.php" class="btn btn-sm btn-outline-secondary">
@@ -94,11 +60,13 @@ $currentPage = 'payout_history';
         </div>
         
         <!-- Page Title -->
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h4 class="mb-0" style="color: #202124;">
-                <i class="fas fa-money-bill-wave me-2"></i>Payout Transaction Details
-            </h4>
-            <span class="badge bg-<?php echo $history['status'] === 'completed' ? 'success' : ($history['status'] === 'received' ? 'success' : 'warning'); ?>">
+        <div class="admin-page-heading">
+            <div>
+                <div class="eyebrow">Payment archive</div>
+                <h1>Payout Transaction Details</h1>
+                <p>Review the payment, recipient, processor, and evidence.</p>
+            </div>
+            <span class="status status-<?php echo $history['status'] === 'completed' ? 'success' : ($history['status'] === 'received' ? 'success' : 'warning'); ?>">
                 <?php echo ucfirst($history['status']); ?>
             </span>
         </div>
@@ -118,7 +86,7 @@ $currentPage = 'payout_history';
             <!-- Partner Information -->
             <div class="col-md-6">
                 <div class="info-card">
-                    <h5 class="mb-3" style="color: #202124;">
+                    <h5 class="card-title mb-3">
                         <i class="fas fa-user me-2"></i>Partner Information
                     </h5>
                     
@@ -168,7 +136,7 @@ $currentPage = 'payout_history';
             <!-- Payment Information -->
             <div class="col-md-6">
                 <div class="info-card">
-                    <h5 class="mb-3" style="color: #202124;">
+                    <h5 class="card-title mb-3">
                         <i class="fas fa-credit-card me-2"></i>Payment Information
                     </h5>
                     
@@ -207,7 +175,7 @@ $currentPage = 'payout_history';
                     <div class="mb-3">
                         <div class="info-label">Status</div>
                         <div class="info-value">
-                            <span class="badge bg-<?php echo $history['status'] === 'completed' ? 'success' : ($history['status'] === 'received' ? 'success' : 'warning'); ?>">
+                            <span class="status status-<?php echo $history['status'] === 'completed' ? 'success' : ($history['status'] === 'received' ? 'success' : 'warning'); ?>">
                                 <?php echo ucfirst($history['status']); ?>
                             </span>
                         </div>
@@ -230,7 +198,7 @@ $currentPage = 'payout_history';
         <div class="row mt-4">
             <div class="col-md-12">
                 <div class="info-card">
-                    <h5 class="mb-3" style="color: #202124;">
+                    <h5 class="card-title mb-3">
                         <i class="fas fa-user-shield me-2"></i>Processed By
                     </h5>
                     
@@ -257,7 +225,7 @@ $currentPage = 'payout_history';
         <div class="row mt-4">
             <div class="col-md-12">
                 <div class="info-card">
-                    <h5 class="mb-3" style="color: #202124;">
+                    <h5 class="card-title mb-3">
                         <i class="fas fa-image me-2"></i>Payment Screenshot
                     </h5>
                     
@@ -281,7 +249,7 @@ $currentPage = 'payout_history';
         <div class="row mt-4">
             <div class="col-md-12">
                 <div class="info-card">
-                    <h5 class="mb-3" style="color: #202124;">
+                    <h5 class="card-title mb-3">
                         <i class="fas fa-info-circle me-2"></i>Transaction Metadata
                     </h5>
                     
@@ -320,7 +288,8 @@ $currentPage = 'payout_history';
             <?php endif; ?>
         </div>
     </div>
-    
+
+    <?php include 'layout/admin_footer.php'; ?>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

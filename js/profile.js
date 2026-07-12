@@ -125,7 +125,7 @@ function uploadProfileImage(file) {
                         const buttonContainer = uploadBtn.parentNode;
                         const removeBtn = document.createElement('button');
                         removeBtn.type = 'button';
-                        removeBtn.className = 'google-btn google-btn-secondary';
+                        removeBtn.className = 'btn btn-secondary';
                         removeBtn.id = 'removeImageBtn';
                         removeBtn.textContent = 'Remove';
                         removeBtn.addEventListener('click', removeProfileImage);
@@ -247,32 +247,27 @@ function setupProfileFormSubmission() {
 
 // Show alert message
 function showAlert(message, type = 'info') {
-    // Remove existing alerts
-    $('.alert-google').remove();
-    
-    // Map type names for Google style
-    let alertType = 'info';
-    if (type === 'success') alertType = 'success';
-    else if (type === 'danger' || type === 'error') alertType = 'error';
-    else alertType = 'info';
-    
-    // Create new alert with Google styling
+    // Remove existing profile alerts
+    $('.profile-alert').remove();
+
+    const alertType = type === 'error' ? 'danger' : type;
+
     const alertHtml = `
-        <div class="alert alert-google alert-${alertType}" role="alert">
+        <div class="alert profile-alert alert-${alertType}" role="alert">
             ${message}
         </div>
     `;
     
-    // Insert alert at the top of the content wrapper
-    if ($('.content-wrapper').length > 0) {
-        $('.content-wrapper').prepend(alertHtml);
+    // Insert alert at the top of the profile content
+    if ($('.profile-content').length > 0) {
+        $('.profile-content').prepend(alertHtml);
     } else {
-        $('.profile-container').prepend(alertHtml);
+        $('.partner-profile').prepend(alertHtml);
     }
     
     // Auto-dismiss after 2 seconds
     setTimeout(function() {
-        $('.alert-google').fadeOut(300, function() {
+        $('.profile-alert').fadeOut(300, function() {
             $(this).remove();
         });
     }, 10000);

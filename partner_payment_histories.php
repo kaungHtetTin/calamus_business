@@ -11,30 +11,26 @@ $paymentStats = $paymentHistoriesManager->getPartnerPaymentStats($currentPartner
 
 <div class="content-section">
     <!-- Page Header -->
-    <div class="d-flex justify-content-between align-items-center mb-4">
+    <div class="admin-page-heading">
         <div>
-            <h4 class="mb-1">
-                <i class="fas fa-credit-card me-2"></i>Payment History
-            </h4>
+            <p class="eyebrow">Payouts</p>
+            <h1>Payment History</h1>
             <p class="text-muted mb-0">Track your payment disbursements and transaction status</p>
         </div>
-        <div class="text-end">
-            <div class="h3 mb-0 text-success"><?php echo number_format($paymentStats['total_received'], 2); ?> MMK</div>
+        <div class="heading-summary text-end">
+            <div class="h3 mb-0"><?php echo number_format($paymentStats['total_received'], 2); ?> MMK</div>
             <small class="text-muted">Total Received</small>
         </div>
     </div>
 
     <!-- Filter Section -->
-    <div class="row mb-4">
-        <div class="col-md-12">
-            <div class="card bg-light">
-                <div class="card-body">
+    <div class="filter-card glass">
                     <h6 class="card-title mb-3">
                         <i class="fas fa-filter me-2"></i>Filter Payments
                     </h6>
-                    <div class="row">
+                    <div class="filter-toolbar partner-filter-toolbar">
                         <!-- Status Filter -->
-                        <div class="col-md-3 mb-3">
+                        <div>
                             <label class="form-label">Status</label>
                             <select class="form-select" id="statusFilter">
                                 <option value="">All Status</option>
@@ -45,7 +41,7 @@ $paymentStats = $paymentHistoriesManager->getPartnerPaymentStats($currentPartner
                         </div>
                         
                         <!-- Period Filter -->
-                        <div class="col-md-3 mb-3">
+                        <div>
                             <label class="form-label">Period</label>
                             <select class="form-select" id="periodFilter">
                                 <option value="">All Time</option>
@@ -59,7 +55,7 @@ $paymentStats = $paymentHistoriesManager->getPartnerPaymentStats($currentPartner
                         </div>
                         
                         <!-- Custom Date Range -->
-                        <div class="col-md-4 mb-3" id="customDateRange" style="display: none;">
+                        <div id="customDateRange" style="display: none;">
                             <label class="form-label">Date Range</label>
                             <div class="row">
                                 <div class="col-6">
@@ -72,7 +68,7 @@ $paymentStats = $paymentHistoriesManager->getPartnerPaymentStats($currentPartner
                         </div>
                         
                         <!-- Filter Actions -->
-                        <div class="col-md-2 mb-3">
+                        <div>
                             <label class="form-label">&nbsp;</label>
                             <div class="d-flex gap-2">
                                 <button type="button" class="btn btn-primary btn-sm" id="applyFilters">
@@ -84,59 +80,40 @@ $paymentStats = $paymentHistoriesManager->getPartnerPaymentStats($currentPartner
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
-        </div>
     </div>
 
     <!-- Statistics Cards -->
-    <div class="row mb-4">
-        <div class="col-md-3 mb-4">
-            <div class="card stat-card">
-                <div class="card-body text-center">
-                    <i class="fas fa-check-circle fa-2x mb-2 text-success"></i>
-                    <div class="stat-number text-success" id="totalReceived"><?php echo number_format($paymentStats['total_received'], 2); ?> MMK</div>
-                    <div>Total Received</div>
-                </div>
-            </div>
+    <div class="metrics-grid">
+        <div class="stat-card">
+            <span class="metric-icon"><i class="fas fa-check-circle"></i></span>
+            <span class="stat-label">Total Received</span>
+            <div class="stat-number" id="totalReceived"><?php echo number_format($paymentStats['total_received'], 2); ?> MMK</div>
         </div>
-        <div class="col-md-3 mb-4">
-            <div class="card stat-card">
-                <div class="card-body text-center">
-                    <i class="fas fa-clock fa-2x mb-2 text-warning"></i>
-                    <div class="stat-number text-warning" id="totalPending"><?php echo number_format($paymentStats['total_pending'], 2); ?> MMK</div>
-                    <div>Pending</div>
-                </div>
-            </div>
+        <div class="stat-card">
+            <span class="metric-icon"><i class="fas fa-clock"></i></span>
+            <span class="stat-label">Pending</span>
+            <div class="stat-number" id="totalPending"><?php echo number_format($paymentStats['total_pending'], 2); ?> MMK</div>
         </div>
-        <div class="col-md-3 mb-4">
-            <div class="card stat-card">
-                <div class="card-body text-center">
-                    <i class="fas fa-times-circle fa-2x mb-2 text-danger"></i>
-                    <div class="stat-number text-danger" id="totalRejected"><?php echo number_format($paymentStats['total_rejected'], 2); ?> MMK</div>
-                    <div>Rejected</div>
-                </div>
-            </div>
+        <div class="stat-card">
+            <span class="metric-icon"><i class="fas fa-times-circle"></i></span>
+            <span class="stat-label">Rejected</span>
+            <div class="stat-number" id="totalRejected"><?php echo number_format($paymentStats['total_rejected'], 2); ?> MMK</div>
         </div>
-        <div class="col-md-3 mb-4">
-            <div class="card stat-card">
-                <div class="card-body text-center">
-                    <i class="fas fa-receipt fa-2x mb-2 text-info"></i>
-                    <div class="stat-number text-info" id="totalPayments"><?php echo number_format($paymentStats['total_payments']); ?></div>
-                    <div>Total Payments</div>
-                </div>
-            </div>
+        <div class="stat-card">
+            <span class="metric-icon"><i class="fas fa-receipt"></i></span>
+            <span class="stat-label">Total Payments</span>
+            <div class="stat-number" id="totalPayments"><?php echo number_format($paymentStats['total_payments']); ?></div>
         </div>
     </div>
 
     <!-- Payment History Table -->
-    <div class="card">
-        <div class="card-header">
+    <div class="panel glass p-0">
+        <div class="panel-heading">
             <h5 class="card-title mb-0">
                 <i class="fas fa-history me-2"></i>Payment History
             </h5>
         </div>
-        <div class="card-body">
+        <div class="panel-body">
             <div id="paymentHistoriesContainer">
                 <!-- Loading state -->
                 <div id="loadingState" class="text-center py-5">
@@ -147,7 +124,7 @@ $paymentStats = $paymentHistoriesManager->getPartnerPaymentStats($currentPartner
                 </div>
                 
                 <!-- Empty state (hidden initially) -->
-                <div id="emptyState" class="text-center py-5" style="display: none;">
+                <div id="emptyState" class="empty-state" style="display: none;">
                     <i class="fas fa-credit-card fa-3x text-muted mb-3"></i>
                     <h5 class="text-muted">No Payment History</h5>
                     <p class="text-muted">Your payment disbursements will appear here once processed.</p>
@@ -158,7 +135,7 @@ $paymentStats = $paymentHistoriesManager->getPartnerPaymentStats($currentPartner
                 
                 <!-- Table container (hidden initially) -->
                 <div id="tableContainer" style="display: none;">
-                    <div class="table-responsive">
+                    <div class="table-wrap">
                         <table class="table table-hover">
                             <thead>
                                 <tr>
@@ -232,82 +209,6 @@ $paymentStats = $paymentHistoriesManager->getPartnerPaymentStats($currentPartner
         </div>
     </div>
 </div>
-
-<style>
-/* Custom styles for payment history page */
-.stat-card {
-    background: linear-gradient(135deg, #4a5568 0%, #718096 100%);
-    color: white;
-    border: none;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.stat-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
-}
-
-.stat-number {
-    font-size: 1.5rem;
-    font-weight: bold;
-    margin: 0.5rem 0;
-}
-
-.table th {
-    background-color: #f8f9fa;
-    border-top: none;
-    font-weight: 600;
-    color: #495057;
-}
-
-.table td {
-    vertical-align: middle;
-    border-top: 1px solid #dee2e6;
-}
-
-.table tbody tr:hover {
-    background-color: #f8f9fa;
-}
-
-.badge {
-    font-size: 0.75rem;
-    padding: 0.375rem 0.75rem;
-}
-
-.text-success {
-    color: #28a745 !important;
-}
-
-.btn-outline-primary {
-    border-color: #4a5568;
-    color: #4a5568;
-}
-
-.btn-outline-primary:hover {
-    background-color: #4a5568;
-    border-color: #4a5568;
-    color: white;
-}
-
-.card {
-    border: none;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.card-header {
-    background-color: #f8f9fa;
-    border-bottom: 1px solid #dee2e6;
-}
-
-.btn-group .btn {
-    margin-right: 2px;
-}
-
-.btn-group .btn:last-child {
-    margin-right: 0;
-}
-</style>
 
 <script src="js/partner_payment_histories.js"></script>
 <?php include 'layout/footer.php'; ?>

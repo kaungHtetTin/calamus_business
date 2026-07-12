@@ -46,68 +46,9 @@ $currentPage = 'index';
     <title><?php echo $pageTitle; ?> - Calamus Education Partner Portal</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="../css/app.css">
-    <link rel="stylesheet" href="css/app.css">
-    <link rel="icon" href="../logo.png" type="image/x-icon">
+    <link rel="stylesheet" href="css/app.css?v=4">
+    <link rel="icon" href="../assets/favicon.png" type="image/png">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-    <style>
-        .verified-icon {
-            color: #137333;
-        }
-        
-        .unverified-icon {
-            color: #d93025;
-        }
-        
-        .chart-container {
-            background: white;
-            border: 1px solid #e8eaed;
-            border-radius: 8px;
-            padding: 24px;
-            margin-bottom: 30px;
-        }
-        
-        .chart-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-        
-        .chart-title {
-            font-size: 18px;
-            font-weight: 500;
-            color: #202124;
-            margin: 0;
-        }
-        
-        .duration-filter {
-            display: flex;
-            gap: 8px;
-        }
-        
-        .duration-btn {
-            padding: 6px 12px;
-            border: 1px solid #dadce0;
-            background: white;
-            color: #5f6368;
-            border-radius: 4px;
-            font-size: 14px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        
-        .duration-btn:hover {
-            background: #f8f9fa;
-            border-color: #1a73e8;
-        }
-        
-        .duration-btn.active {
-            background: #1a73e8;
-            color: white;
-            border-color: #1a73e8;
-        }
-    </style>
 </head>
 <body>
     <!-- Admin Header -->
@@ -116,7 +57,14 @@ $currentPage = 'index';
     
     <?php include 'layout/admin_sidebar.php'; ?>
 
-    <div class="container-fluid" style="padding: 24px;">
+    <div class="container-fluid">
+        <div class="admin-page-heading">
+            <div>
+                <div class="eyebrow">Operations overview</div>
+                <h1>Admin Dashboard</h1>
+                <p>Monitor partners, verification, and payout activity.</p>
+            </div>
+        </div>
         <!-- Alert Messages -->
         <?php if (isset($_GET['success'])): ?>
             <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -171,7 +119,7 @@ $currentPage = 'index';
         
         <!-- Search Form -->
         <div class="filter-card">
-            <h5 class="mb-3" style="color: #202124;">
+            <h5 class="card-title mb-3">
                 <i class="fas fa-search me-2"></i>Search Partners
             </h5>
             <form method="GET" class="row g-3">
@@ -316,7 +264,8 @@ $currentPage = 'index';
             <?php endif; ?>
         </div>
     </div>
-    
+
+    <?php include 'layout/admin_footer.php'; ?>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         // Chart data from PHP

@@ -3,7 +3,7 @@ $pageTitle = 'Account Status';
 include 'layout/header.php';
 ?>
 
-<style>
+<style media="not all">
 	/* Google Console-like minimal styling */
 	.status-container { background: #fafafa; }
 	.google-card { background: #fff; border: 1px solid #e8eaed; border-radius: 8px; }
@@ -31,18 +31,25 @@ include 'layout/header.php';
 	@media (max-width: 768px) { .status-grid { grid-template-columns: 1fr; } }
 </style>
 
-<div class="status-container">
-	<div class="google-card mb-3">
-		<div class="card-header">
+<div class="content-section account-status-page">
+	<div class="admin-page-heading">
+		<div>
+			<p class="eyebrow">Account readiness</p>
+			<h1>Account status</h1>
+			<p class="text-muted mb-0">Complete every requirement to receive payments</p>
+		</div>
+	</div>
+	<div class="panel glass mb-3 p-0">
+		<div class="panel-heading">
 			<div class="header-row">
 				<div>
-					<h5 class="section-title">Account status</h5>
+					<h2 class="section-title">Payment requirements</h2>
 					<p class="section-subtitle">These 5 items are required to receive payments</p>
 				</div>
 				<div class="helper">Updated just now</div>
 			</div>
 		</div>
-		<div class="card-body">
+		<div class="panel-body">
 			<?php
 			// Compute statuses
 			$emailVerified = !empty($currentPartner['email_verified']) ? 1 : 0;
@@ -63,8 +70,8 @@ include 'layout/header.php';
 							<div class="status-meta">Your email must be verified</div>
 						</div>
 					</div>
-					<div class="actions">
-						<span class="chip <?php echo $emailVerified ? 'chip-success' : 'chip-danger'; ?>"><?php echo $emailVerified ? 'Verified' : 'Not Verified'; ?></span>
+					<div class="status-actions">
+						<span class="status <?php echo $emailVerified ? 'status-success' : 'status-danger'; ?>"><?php echo $emailVerified ? 'Verified' : 'Not Verified'; ?></span>
 					</div>
 				</div>
 
@@ -76,11 +83,10 @@ include 'layout/header.php';
 							<div class="status-meta">Add at least one method</div>
 						</div>
 					</div>
-					<div class="actions">
-						<span class="chip <?php echo $hasPaymentMethod ? 'chip-success' : 'chip-danger'; ?>"><?php echo $hasPaymentMethod ? 'added' : 'missing'; ?></span>
-						
+					<div class="status-actions">
+						<span class="status <?php echo $hasPaymentMethod ? 'status-success' : 'status-danger'; ?>"><?php echo $hasPaymentMethod ? 'Added' : 'Missing'; ?></span>
+						<a href="partner_payment_methods.php" class="btn icon-btn small status-edit" aria-label="Edit payment methods"><i class="fas fa-pen"></i></a>
 					</div>
-					<a href="partner_payment_methods.php" class="google-btn ms-2"><i class="fas fa-edit"></i></a>
 				</div>
 
 				<div class="status-item">
@@ -91,11 +97,10 @@ include 'layout/header.php';
 							<div class="status-meta">Address and national ID</div>
 						</div>
 					</div>
-					<div class="actions">
-						<span class="chip <?php echo $personalInfoComplete ? 'chip-success' : 'chip-danger'; ?>"><?php echo $personalInfoComplete ? 'complete' : 'incomplete'; ?></span>
-						
+					<div class="status-actions">
+						<span class="status <?php echo $personalInfoComplete ? 'status-success' : 'status-danger'; ?>"><?php echo $personalInfoComplete ? 'Complete' : 'Incomplete'; ?></span>
+						<a href="profile.php" class="btn icon-btn small status-edit" aria-label="Edit profile"><i class="fas fa-pen"></i></a>
 					</div>
-					<a href="profile.php" class="google-btn ms-2"><i class="fas fa-edit"></i></a>
 				</div>
 
 				<div class="status-item">
@@ -106,8 +111,8 @@ include 'layout/header.php';
 							<div class="status-meta">Admin will review your info</div>
 						</div>
 					</div>
-					<div class="actions">
-						<span class="chip <?php echo $accountVerified ? 'chip-success' : 'chip-warning'; ?>"><?php echo $accountVerified ? 'verified' : 'in review'; ?></span>
+					<div class="status-actions">
+						<span class="status <?php echo $accountVerified ? 'status-success' : 'status-warning'; ?>"><?php echo $accountVerified ? 'Verified' : 'In review'; ?></span>
 					</div>
 				</div>
 
@@ -119,16 +124,16 @@ include 'layout/header.php';
 							<div class="status-meta">Your account must be active</div>
 						</div>
 					</div>
-					<div class="actions">
-						<span class="chip <?php echo $isActive === 'active' ? 'chip-success' : 'chip-danger'; ?>"><?php echo $isActive; ?></span>
+					<div class="status-actions">
+						<span class="status <?php echo $isActive === 'active' ? 'status-success' : 'status-danger'; ?>"><?php echo ucfirst($isActive); ?></span>
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
 
-	<div class="google-card">
-		<div class="card-body">
+	<div class="panel glass">
+		<div>
 			<div class="helper"><i class="fas fa-info-circle me-2"></i>To receive payments, ensure all items above are satisfied.</div>
 		</div>
 	</div>

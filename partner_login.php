@@ -6,7 +6,7 @@
     <title>Partner Login - Language Learning Platform</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link rel="icon" href="logo.png" type="image/x-icon">
+    <link rel="icon" href="assets/favicon.png" type="image/png">
     <link rel="stylesheet" href="css/app.css">
     <style>
         body {
@@ -145,13 +145,14 @@
             margin-bottom: 0.5rem;
         }
     </style>
+    <link rel="stylesheet" href="css/welcome.css?v=10">
 </head>
-<body>
+<body class="welcome-page auth-page">
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg welcome-navbar">
         <div class="container">
             <a class="navbar-brand" href="index.php">
-                <img src="logo.png" alt="Calamus" width="30" height="30" class="me-2">
+                <img src="assets/app_logo.png" alt="Calamus" width="30" height="30" class="me-2">
                 Calamus Education
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -160,80 +161,101 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto align-items-center">
                     <li class="nav-item">
-                        <a class="nav-link" href="index.php">Home</a>
+                        <a class="nav-link" href="index.php" aria-label="Home">
+                            <i class="fas fa-house mobile-nav-icon" aria-hidden="true"></i>
+                            <span class="nav-label">Home</span>
+                        </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active" href="partner_login.php">Login</a>
+                        <a class="nav-link active" href="partner_login.php" aria-label="Login">
+                            <i class="fas fa-arrow-right-to-bracket mobile-nav-icon" aria-hidden="true"></i>
+                            <span class="nav-label">Login</span>
+                        </a>
                     </li>
                     <li class="nav-item">
-                        <a class="btn btn-outline-light" href="partner_register.php">Register</a>
+                        <a class="btn btn-outline-light" href="partner_register.php" aria-label="Register">
+                            <i class="fas fa-user-plus mobile-nav-icon" aria-hidden="true"></i>
+                            <span class="nav-label">Register</span>
+                        </a>
                     </li>
                 </ul>
             </div>
         </div>
     </nav>
 
-    <div class="login-container">
+    <main class="login-container">
         <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-md-4 col-lg-4">
+            <div class="auth-shell auth-shell-login">
+                <aside class="auth-showcase">
+                    <span class="auth-kicker">CALAMUS PARTNER PROGRAM</span>
+                    <h1>Grow your income while helping students learn.</h1>
+                    <p>Access your partner workspace, monitor commissions, and manage every referral from one place.</p>
+                    <div class="auth-benefit-list">
+                        <div><i class="fas fa-chart-line"></i><span><strong>Clear earnings</strong>Track approved and pending commissions.</span></div>
+                        <div><i class="fas fa-ticket"></i><span><strong>Your unique code</strong>Give students a discount with every referral.</span></div>
+                        <div><i class="fas fa-shield-halved"></i><span><strong>Secure workspace</strong>Your partner details stay protected.</span></div>
+                    </div>
+                </aside>
+
+                <section class="auth-form-panel">
                     <div class="login-card">
                         <div class="login-header">
-                            <h3 class="mb-3">
-                                <i class="fas fa-handshake me-2"></i>
-                                Partner Login
-                            </h3>
-                            <p class="mb-0">Calamus Education Partner Login</p>
+                            <span class="auth-mobile-kicker">PARTNER ACCESS</span>
+                            <h3 class="mb-3">Welcome back</h3>
+                            <p class="mb-0">Sign in to continue to your partner dashboard.</p>
                         </div>
-                        
+
                         <div class="login-body">
                             <div id="alertContainer"></div>
-                            
+
                             <form id="loginForm">
                                 <div class="mb-3">
-                                    <label class="form-label">Email Address</label>
-                                    <input type="email" class="form-control" id="email" required>
+                                    <label class="form-label" for="email">Email Address</label>
+                                    <div class="auth-input">
+                                        <i class="fas fa-envelope" aria-hidden="true"></i>
+                                        <input type="email" class="form-control" id="email" autocomplete="email" required>
+                                    </div>
                                 </div>
-                                
+
                                 <div class="mb-3">
-                                    <label class="form-label">Password</label>
-                                    <input type="password" class="form-control" id="password" required>
+                                    <label class="form-label" for="password">Password</label>
+                                    <div class="auth-input">
+                                        <i class="fas fa-lock" aria-hidden="true"></i>
+                                        <input type="password" class="form-control" id="password" autocomplete="current-password" required>
+                                        <button type="button" class="password-toggle" data-password-toggle="password" aria-label="Show password">
+                                            <i class="fas fa-eye" aria-hidden="true"></i>
+                                        </button>
+                                    </div>
                                 </div>
-                                
-                                <div class="mb-3 form-check">
-                                    <input type="checkbox" class="form-check-input" id="remember">
-                                    <label class="form-check-label" for="remember">
-                                        Remember me
-                                    </label>
+
+                                <div class="auth-form-options">
+                                    <div class="form-check">
+                                        <input type="checkbox" class="form-check-input" id="remember">
+                                        <label class="form-check-label" for="remember">Remember me</label>
+                                    </div>
+                                    <a href="forgot_password.php">Forgot password?</a>
                                 </div>
-                                
+
                                 <button type="submit" class="btn btn-primary w-100 mb-3">
-                                    <i class="fas fa-sign-in-alt me-2"></i>Sign In
+                                    <i class="fas fa-arrow-right-to-bracket me-2"></i><span>Sign In</span>
                                 </button>
-                                
-                                <div class="text-center mb-3">
-                                    <a href="forgot_password.php" class="text-primary">
-                                        <i class="fas fa-key me-1"></i>Forgot your password?
-                                    </a>
-                                </div>
-                                
-                                <div class="text-center">
-                                    <small class="text-muted">
-                                        Don't have an account? 
-                                        <a href="partner_register.php" class="text-primary">Register here</a>
-                                    </small>
+
+                                <div class="auth-switch">
+                                    New to the partner program?
+                                    <a href="partner_register.php">Create an account</a>
                                 </div>
                             </form>
                         </div>
                     </div>
-                </div>
+                </section>
             </div>
         </div>
-    </div>
+    </main>
 
     <?php include 'layout/welcome_footer.php'; ?>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/auth-ui.js"></script>
     <script src="js/partner_login.js"></script>
 </body>
 </html>

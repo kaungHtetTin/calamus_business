@@ -39,9 +39,8 @@ $currentPage = 'earning_logs';
     <title><?php echo $pageTitle; ?> - Calamus Education Partner Portal</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="../css/app.css">
-    <link rel="stylesheet" href="css/app.css">
-    <link rel="icon" href="../logo.png" type="image/x-icon">
+    <link rel="stylesheet" href="css/app.css?v=4">
+    <link rel="icon" href="../assets/favicon.png" type="image/png">
 </head>
 <body>
     <!-- Admin Header -->
@@ -49,7 +48,14 @@ $currentPage = 'earning_logs';
     
     <?php include 'layout/admin_sidebar.php'; ?>
 
-    <div class="container-fluid" style="padding: 24px;">
+    <div class="container-fluid">
+        <div class="admin-page-heading">
+            <div>
+                <div class="eyebrow">Revenue operations</div>
+                <h1>Earning Logs</h1>
+                <p>Track partner commissions and payment status.</p>
+            </div>
+        </div>
         <!-- Alert Messages -->
         <?php if (isset($_GET['success'])): ?>
             <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -87,7 +93,7 @@ $currentPage = 'earning_logs';
         
         <!-- Filters -->
         <div class="filter-card">
-            <h5 class="mb-3" style="color: #202124;">
+            <h5 class="card-title mb-3">
                 <i class="fas fa-filter me-2"></i>Filters
             </h5>
             <form method="GET" class="row g-3">
@@ -125,7 +131,7 @@ $currentPage = 'earning_logs';
         <!-- Earnings Table -->
         <div class="logs-table">
             <div class="table-header">
-                <h2 class="mb-0" style="font-size: 18px; font-weight: 400; color: #202124;">
+                <h2 class="table-title">
                     All Earning Logs (<?php echo number_format($logsData['total']); ?>)
                 </h2>
             </div>
@@ -160,7 +166,7 @@ $currentPage = 'earning_logs';
                             <td><?php echo htmlspecialchars($log['learner_phone'] ?? 'N/A'); ?></td>
                             <td><?php echo number_format($log['price'] ?? 0, 2); ?> MMK</td>
                             <td><?php echo htmlspecialchars($log['commission_rate'] ?? 0); ?>%</td>
-                            <td style="font-weight: 500;"><?php echo number_format($log['amount_received'] ?? 0, 2); ?> MMK</td>
+                            <td><strong><?php echo number_format($log['amount_received'] ?? 0, 2); ?> MMK</strong></td>
                             <td>
                                 <?php
                                 $logStatus = $log['status'] ?? 'pending';
@@ -240,7 +246,8 @@ $currentPage = 'earning_logs';
             <?php endif; ?>
         </div>
     </div>
-    
+
+    <?php include 'layout/admin_footer.php'; ?>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

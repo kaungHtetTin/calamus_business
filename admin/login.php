@@ -24,7 +24,7 @@ $pageTitle = 'Admin Login';
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="../css/app.css">
-    <link rel="icon" href="../logo.png" type="image/x-icon">
+    <link rel="icon" href="../assets/favicon.png" type="image/png">
     <style>
         body {
             background-color: #f8f9fa;
@@ -124,40 +124,72 @@ $pageTitle = 'Admin Login';
             text-decoration: underline;
         }
     </style>
+    <link rel="stylesheet" href="../css/welcome.css?v=11">
 </head>
-<body>
-    <div class="login-container">
-        <div class="login-card">
-            <div class="login-header">
-                <h1>Admin Login</h1>
-                <p>Access the admin dashboard</p>
-            </div>
-            
-            <div id="alertContainer"></div>
-            
-            <form id="adminLoginForm">
-                <div class="mb-3">
-                    <label for="username" class="form-label">Username</label>
-                    <input type="text" class="form-control" id="username" name="username" required autofocus>
-                </div>
-                
-                <div class="mb-3">
-                    <label for="password" class="form-label">Password</label>
-                    <input type="password" class="form-control" id="password" name="password" required>
-                </div>
-                
-                <button type="submit" class="btn btn-primary">
-                    <i class="fas fa-sign-in-alt me-2"></i>Login
-                </button>
-            </form>
-            
-            <div class="back-link">
-                <a href="../partner_login.php"><i class="fas fa-arrow-left me-2"></i>Back to Partner Portal</a>
+<body class="welcome-page auth-page admin-auth-page">
+    <main class="login-container">
+        <div class="container">
+            <div class="auth-shell auth-shell-login">
+                <aside class="auth-showcase">
+                    <span class="auth-kicker">CALAMUS ADMINISTRATION</span>
+                    <h1>Manage the partner program with confidence.</h1>
+                    <p>Review partner activity, verify accounts, monitor earnings, and process payouts from one secure workspace.</p>
+                    <div class="auth-benefit-list">
+                        <div><i class="fas fa-user-check"></i><span><strong>Partner management</strong>Review and manage partner accounts.</span></div>
+                        <div><i class="fas fa-chart-column"></i><span><strong>Program oversight</strong>Monitor earnings and performance.</span></div>
+                        <div><i class="fas fa-shield-halved"></i><span><strong>Restricted access</strong>Authorized administrators only.</span></div>
+                    </div>
+                </aside>
+
+                <section class="auth-form-panel">
+                    <div class="login-card">
+                        <div class="login-header">
+                            <img class="admin-login-logo" src="../assets/app_logo.png" alt="Calamus Education">
+                            <span class="auth-mobile-kicker">ADMIN PORTAL</span>
+                            <h1>Welcome back</h1>
+                            <p>Sign in to access the administration workspace.</p>
+                        </div>
+
+                        <div class="login-body">
+                            <div id="alertContainer"></div>
+
+                            <form id="adminLoginForm">
+                                <div class="mb-3">
+                                    <label for="username" class="form-label">Username</label>
+                                    <div class="auth-input">
+                                        <i class="fas fa-user-shield" aria-hidden="true"></i>
+                                        <input type="text" class="form-control" id="username" name="username" autocomplete="username" required autofocus>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="password" class="form-label">Password</label>
+                                    <div class="auth-input">
+                                        <i class="fas fa-lock" aria-hidden="true"></i>
+                                        <input type="password" class="form-control" id="password" name="password" autocomplete="current-password" required>
+                                        <button type="button" class="password-toggle" data-password-toggle="password" aria-label="Show password">
+                                            <i class="fas fa-eye" aria-hidden="true"></i>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-arrow-right-to-bracket me-2"></i><span>Sign In</span>
+                                </button>
+                            </form>
+
+                            <div class="back-link">
+                                <a href="../partner_login.php"><i class="fas fa-arrow-left me-2"></i>Back to Partner Portal</a>
+                            </div>
+                        </div>
+                    </div>
+                </section>
             </div>
         </div>
-    </div>
+    </main>
     
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../js/auth-ui.js"></script>
     <script>
         // Setup login form
         document.getElementById('adminLoginForm').addEventListener('submit', function(e) {
@@ -172,8 +204,8 @@ $pageTitle = 'Admin Login';
             }
             
             const submitBtn = this.querySelector('button[type="submit"]');
-            const originalText = submitBtn.textContent;
-            submitBtn.textContent = 'Logging in...';
+            const originalContent = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<i class="fas fa-circle-notch fa-spin me-2"></i><span>Signing in...</span>';
             submitBtn.disabled = true;
             
             fetch('../api/admin_login.php', {
@@ -196,7 +228,7 @@ $pageTitle = 'Admin Login';
                 showAlert('Login failed. Please try again.', 'danger');
             })
             .finally(() => {
-                submitBtn.textContent = originalText;
+                submitBtn.innerHTML = originalContent;
                 submitBtn.disabled = false;
             });
         });

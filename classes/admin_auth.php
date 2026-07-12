@@ -177,44 +177,26 @@ class AdminAuth {
      * Get partners statistics
      */
     public function getPartnerStatistics() {
-        $stats = [];
-        
-        // Total partners
-        $totalQuery = "SELECT COUNT(*) as total FROM partners";
-        $result = $this->db->read($totalQuery);
-        $stats['total'] = $result[0]['total'];
-        
-        // Active partners
-        $activeQuery = "SELECT COUNT(*) as total FROM partners WHERE status = 'active'";
-        $result = $this->db->read($activeQuery);
-        $stats['active'] = $result[0]['total'];
-        
-        // Inactive partners
-        $inactiveQuery = "SELECT COUNT(*) as total FROM partners WHERE status = 'inactive'";
-        $result = $this->db->read($inactiveQuery);
-        $stats['inactive'] = $result[0]['total'];
-        
-        // Suspended partners
-        $suspendedQuery = "SELECT COUNT(*) as total FROM partners WHERE status = 'suspended'";
-        $result = $this->db->read($suspendedQuery);
-        $stats['suspended'] = $result[0]['total'];
-        
-        // Verified partners
-        $verifiedQuery = "SELECT COUNT(*) as total FROM partners WHERE email_verified = 1";
-        $result = $this->db->read($verifiedQuery);
-        $stats['verified'] = $result[0]['total'];
-        
-        // Unverified partners
-        $unverifiedQuery = "SELECT COUNT(*) as total FROM partners WHERE email_verified = 0";
-        $result = $this->db->read($unverifiedQuery);
-        $stats['unverified'] = $result[0]['total'];
-        
-        // New partners this month
-        $newThisMonthQuery = "SELECT COUNT(*) as total FROM partners WHERE YEAR(created_at) = YEAR(CURRENT_DATE()) AND MONTH(created_at) = MONTH(CURRENT_DATE())";
-        $result = $this->db->read($newThisMonthQuery);
-        $stats['new_this_month'] = $result[0]['total'];
-        
-        return $stats;
+        $query = "SELECT
+                    COUNT(*) AS total,
+                    SUM(status = 'active') AS active,
+                    SUM(status = 'inactive') AS inactive,
+                    SUM(status = 'suspended') AS suspended,
+                    SUM(email_verified = 1) AS verified,
+                    SUM(email_verified = 0) AS unverified,
+                    SUM(created_at >= DATE_FORMAT(CURDATE(), '%Y-%m-01')) AS new_this_month
+                  FROM partners";
+        $result = $this->db->read($query);
+
+        if (!$result) {
+            return [
+                'total' => 0, 'active' => 0, 'inactive' => 0,
+                'suspended' => 0, 'verified' => 0,
+                'unverified' => 0, 'new_this_month' => 0
+            ];
+        }
+
+        return array_map('intval', $result[0]);
     }
 
     /**
@@ -256,11 +238,11 @@ class AdminAuth {
         }
         
         if ($startDate) {
-            $whereClause .= " AND DATE(pe.created_at) >= '$startDate'";
+            $whereClause .= " AND pe.created_at >= '$startDate 00:00:00'";
         }
         
         if ($endDate) {
-            $whereClause .= " AND DATE(pe.created_at) <= '$endDate'";
+            $whereClause .= " AND pe.created_at < DATE_ADD('$endDate', INTERVAL 1 DAY)";
         }
         
         // Get total count
@@ -298,36 +280,27 @@ class AdminAuth {
         }
         
         if ($startDate) {
-            $whereClause .= " AND DATE(created_at) >= '$startDate'";
+            $whereClause .= " AND created_at >= '$startDate 00:00:00'";
         }
         
         if ($endDate) {
-            $whereClause .= " AND DATE(created_at) <= '$endDate'";
+            $whereClause .= " AND created_at < DATE_ADD('$endDate', INTERVAL 1 DAY)";
         }
-        
-        $stats = [];
-        
-        // Total earnings
-        $totalQuery = "SELECT SUM(amount_received) as total FROM partner_earnings $whereClause";
-        $result = $this->db->read($totalQuery);
-        $stats['total_amount'] = $result && $result[0]['total'] ? (float)$result[0]['total'] : 0.00;
-        
-        // Total transactions
-        $countQuery = "SELECT COUNT(*) as total FROM partner_earnings $whereClause";
-        $result = $this->db->read($countQuery);
-        $stats['total_transactions'] = $result ? (int)$result[0]['total'] : 0;
-        
-        // Pending earnings
-        $pendingQuery = "SELECT SUM(amount_received) as total FROM partner_earnings $whereClause AND status = 'pending'";
-        $result = $this->db->read($pendingQuery);
-        $stats['pending_amount'] = $result && $result[0]['total'] ? (float)$result[0]['total'] : 0.00;
-        
-        // Paid earnings
-        $paidQuery = "SELECT SUM(amount_received) as total FROM partner_earnings $whereClause AND status = 'paid'";
-        $result = $this->db->read($paidQuery);
-        $stats['paid_amount'] = $result && $result[0]['total'] ? (float)$result[0]['total'] : 0.00;
-        
-        return $stats;
+
+        $query = "SELECT
+                    COALESCE(SUM(amount_received), 0) AS total_amount,
+                    COUNT(*) AS total_transactions,
+                    COALESCE(SUM(CASE WHEN status = 'pending' THEN amount_received ELSE 0 END), 0) AS pending_amount,
+                    COALESCE(SUM(CASE WHEN status = 'paid' THEN amount_received ELSE 0 END), 0) AS paid_amount
+                  FROM partner_earnings $whereClause";
+        $result = $this->db->read($query);
+
+        return [
+            'total_amount' => $result ? (float) $result[0]['total_amount'] : 0.00,
+            'total_transactions' => $result ? (int) $result[0]['total_transactions'] : 0,
+            'pending_amount' => $result ? (float) $result[0]['pending_amount'] : 0.00,
+            'paid_amount' => $result ? (float) $result[0]['paid_amount'] : 0.00
+        ];
     }
     
     /**
@@ -337,22 +310,21 @@ class AdminAuth {
         $offset = ($page - 1) * $limit;
         
         // Build WHERE clause
-        $whereClause = "WHERE 1=1 ";
+        $whereClause = "WHERE pe.status = 'pending'";
         
         if ($startDate) {
-            $whereClause .= " AND DATE(created_at) >= '$startDate'";
+            $whereClause .= " AND pe.created_at >= '$startDate 00:00:00'";
         }
         
         if ($endDate) {
-            $whereClause .= " AND DATE(created_at) <= '$endDate'";
+            $whereClause .= " AND pe.created_at < DATE_ADD('$endDate', INTERVAL 1 DAY)";
         }
 
         // Get total count
-        $countQuery = "SELECT COUNT(DISTINCT partner_id) as total FROM partner_earnings $whereClause ";
+        $countQuery = "SELECT COUNT(DISTINCT pe.partner_id) as total FROM partner_earnings pe $whereClause";
         $countResult = $this->db->read($countQuery);
         $total = $countResult[0]['total'];
-        
-        $whereClause .= " AND pe.status = 'Pending'";
+
         // Get payout logs grouped by partner
         $query = "SELECT 
                     pe.partner_id,
@@ -366,6 +338,7 @@ class AdminAuth {
                  LEFT JOIN partners p ON pe.partner_id = p.id 
                  $whereClause 
                  GROUP BY pe.partner_id, p.contact_name, p.company_name, p.email, p.phone
+                 ORDER BY total_amount DESC
                  LIMIT $limit OFFSET $offset";
         
         $logs = $this->db->read($query);
@@ -384,59 +357,29 @@ class AdminAuth {
      * Get payout logs statistics
      */
     public function getPayoutLogsStatistics($startDate = null, $endDate = null) {
-        $whereClause = "WHERE 1=1";
+        $whereClause = "WHERE status = 'pending'";
         
         if ($startDate) {
-            $whereClause .= " AND DATE(created_at) >= '$startDate'";
+            $whereClause .= " AND created_at >= '$startDate 00:00:00'";
         }
         
         if ($endDate) {
-            $whereClause .= " AND DATE(created_at) <= '$endDate'";
+            $whereClause .= " AND created_at < DATE_ADD('$endDate', INTERVAL 1 DAY)";
         }
 
-         $whereClause .= " AND status = 'pending'";
-        
-        $stats = [];
-        
-        // Total payout amount (sum of all grouped amounts)
-        $totalQuery = "SELECT SUM(total_amount) as total FROM (
-            SELECT pe.partner_id, SUM(pe.amount_received) as total_amount, MAX(pe.status) as status
-            FROM partner_earnings pe 
-            $whereClause 
-            GROUP BY pe.partner_id
-        ) as grouped_earnings";
-        
-        $result = $this->db->read($totalQuery);
-        $stats['total_amount'] = $result && $result[0]['total'] ? (float)$result[0]['total'] : 0.00;
-        
-        // Total partners
-        $countQuery = "SELECT COUNT(DISTINCT partner_id) as total FROM partner_earnings $whereClause";
-        $result = $this->db->read($countQuery);
-        $stats['total_partners'] = $result ? (int)$result[0]['total'] : 0;
-        
-        // Pending payout amount
-        $pendingQuery = "SELECT SUM(total_amount) as total FROM (
-            SELECT pe.partner_id, SUM(pe.amount_received) as total_amount
-            FROM partner_earnings pe 
-            $whereClause 
-            GROUP BY pe.partner_id
-            HAVING MAX(pe.status) = 'pending'
-        ) as pending_earnings";
-        $result = $this->db->read($pendingQuery);
-        $stats['pending_amount'] = $result && $result[0]['total'] ? (float)$result[0]['total'] : 0.00;
-        
-        // Paid payout amount
-        $paidQuery = "SELECT SUM(total_amount) as total FROM (
-            SELECT pe.partner_id, SUM(pe.amount_received) as total_amount
-            FROM partner_earnings pe 
-            $whereClause 
-            GROUP BY pe.partner_id
-            HAVING MAX(pe.status) = 'paid'
-        ) as paid_earnings";
-        $result = $this->db->read($paidQuery);
-        $stats['paid_amount'] = $result && $result[0]['total'] ? (float)$result[0]['total'] : 0.00;
-        
-        return $stats;
+        $query = "SELECT
+                    COALESCE(SUM(amount_received), 0) AS total_amount,
+                    COUNT(DISTINCT partner_id) AS total_partners
+                  FROM partner_earnings $whereClause";
+        $result = $this->db->read($query);
+        $amount = $result ? (float) $result[0]['total_amount'] : 0.00;
+
+        return [
+            'total_amount' => $amount,
+            'total_partners' => $result ? (int) $result[0]['total_partners'] : 0,
+            'pending_amount' => $amount,
+            'paid_amount' => 0.00
+        ];
     }
     
     /**
@@ -464,13 +407,14 @@ class AdminAuth {
         // Year filter
         $yearFilter = '';
         if ($year === 'current') {
-            $yearFilter = " AND YEAR(pph.created_at) = YEAR(CURRENT_DATE)";
+            $yearFilter = " AND pph.created_at >= MAKEDATE(YEAR(CURDATE()), 1)
+                            AND pph.created_at < MAKEDATE(YEAR(CURDATE()) + 1, 1)";
         } elseif ($year === '2024') {
-            $yearFilter = " AND YEAR(pph.created_at) = 2024";
+            $yearFilter = " AND pph.created_at >= '2024-01-01' AND pph.created_at < '2025-01-01'";
         } elseif ($year === '2023') {
-            $yearFilter = " AND YEAR(pph.created_at) = 2023";
+            $yearFilter = " AND pph.created_at >= '2023-01-01' AND pph.created_at < '2024-01-01'";
         } elseif ($year === '2022') {
-            $yearFilter = " AND YEAR(pph.created_at) = 2022";
+            $yearFilter = " AND pph.created_at >= '2022-01-01' AND pph.created_at < '2023-01-01'";
         }
         // 'all' = no filter
         
@@ -500,11 +444,11 @@ class AdminAuth {
         }
         
         if ($startDate) {
-            $whereClause .= " AND DATE(pph.created_at) >= '$startDate'";
+            $whereClause .= " AND pph.created_at >= '$startDate 00:00:00'";
         }
         
         if ($endDate) {
-            $whereClause .= " AND DATE(pph.created_at) <= '$endDate'";
+            $whereClause .= " AND pph.created_at < DATE_ADD('$endDate', INTERVAL 1 DAY)";
         }
         
         // Get total count
@@ -546,36 +490,27 @@ class AdminAuth {
         }
         
         if ($startDate) {
-            $whereClause .= " AND DATE(created_at) >= '$startDate'";
+            $whereClause .= " AND created_at >= '$startDate 00:00:00'";
         }
         
         if ($endDate) {
-            $whereClause .= " AND DATE(created_at) <= '$endDate'";
+            $whereClause .= " AND created_at < DATE_ADD('$endDate', INTERVAL 1 DAY)";
         }
-        
-        $stats = [];
-        
-        // Total payout amount
-        $totalQuery = "SELECT SUM(amount) as total FROM partner_payment_histories $whereClause";
-        $result = $this->db->read($totalQuery);
-        $stats['total_amount'] = $result && $result[0]['total'] ? (float)$result[0]['total'] : 0.00;
-        
-        // Total transactions
-        $countQuery = "SELECT COUNT(*) as total FROM partner_payment_histories $whereClause";
-        $result = $this->db->read($countQuery);
-        $stats['total_transactions'] = $result ? (int)$result[0]['total'] : 0;
-        
-        // Pending amount
-        $pendingQuery = "SELECT SUM(amount) as total FROM partner_payment_histories WHERE status = 'pending' $whereClause";
-        $result = $this->db->read($pendingQuery);
-        $stats['pending_amount'] = $result && $result[0]['total'] ? (float)$result[0]['total'] : 0.00;
-        
-        // Received amount
-        $receivedQuery = "SELECT SUM(amount) as total FROM partner_payment_histories WHERE status = 'received' $whereClause";
-        $result = $this->db->read($receivedQuery);
-        $stats['received_amount'] = $result && $result[0]['total'] ? (float)$result[0]['total'] : 0.00;
-        
-        return $stats;
+
+        $query = "SELECT
+                    COALESCE(SUM(amount), 0) AS total_amount,
+                    COUNT(*) AS total_transactions,
+                    COALESCE(SUM(CASE WHEN status = 'pending' THEN amount ELSE 0 END), 0) AS pending_amount,
+                    COALESCE(SUM(CASE WHEN status IN ('received', 'completed') THEN amount ELSE 0 END), 0) AS received_amount
+                  FROM partner_payment_histories $whereClause";
+        $result = $this->db->read($query);
+
+        return [
+            'total_amount' => $result ? (float) $result[0]['total_amount'] : 0.00,
+            'total_transactions' => $result ? (int) $result[0]['total_transactions'] : 0,
+            'pending_amount' => $result ? (float) $result[0]['pending_amount'] : 0.00,
+            'received_amount' => $result ? (float) $result[0]['received_amount'] : 0.00
+        ];
     }
     
     /**

@@ -16,12 +16,11 @@ class PartnerPaymentHistoriesManager {
             $whereClause .= " AND status = '$status'";
         }
         
-        if ($startDate && $endDate) {
-            $whereClause .= " AND DATE(created_at) BETWEEN '$startDate' AND '$endDate'";
-        } elseif ($startDate) {
-            $whereClause .= " AND DATE(created_at) >= '$startDate'";
-        } elseif ($endDate) {
-            $whereClause .= " AND DATE(created_at) <= '$endDate'";
+        if ($startDate) {
+            $whereClause .= " AND created_at >= '$startDate 00:00:00'";
+        }
+        if ($endDate) {
+            $whereClause .= " AND created_at < DATE_ADD('$endDate', INTERVAL 1 DAY)";
         }
         
         $query = "SELECT * FROM partner_payment_histories $whereClause ORDER BY created_at DESC LIMIT $limit OFFSET $offset";
@@ -38,12 +37,11 @@ class PartnerPaymentHistoriesManager {
             $whereClause .= " AND status = '$status'";
         }
         
-        if ($startDate && $endDate) {
-            $whereClause .= " AND DATE(created_at) BETWEEN '$startDate' AND '$endDate'";
-        } elseif ($startDate) {
-            $whereClause .= " AND DATE(created_at) >= '$startDate'";
-        } elseif ($endDate) {
-            $whereClause .= " AND DATE(created_at) <= '$endDate'";
+        if ($startDate) {
+            $whereClause .= " AND created_at >= '$startDate 00:00:00'";
+        }
+        if ($endDate) {
+            $whereClause .= " AND created_at < DATE_ADD('$endDate', INTERVAL 1 DAY)";
         }
         
         $query = "SELECT COUNT(*) as total FROM partner_payment_histories $whereClause";
@@ -67,33 +65,27 @@ class PartnerPaymentHistoriesManager {
             $whereClause .= " AND status = '$status'";
         }
         
-        if ($startDate && $endDate) {
-            $whereClause .= " AND DATE(created_at) BETWEEN '$startDate' AND '$endDate'";
-        } elseif ($startDate) {
-            $whereClause .= " AND DATE(created_at) >= '$startDate'";
-        } elseif ($endDate) {
-            $whereClause .= " AND DATE(created_at) <= '$endDate'";
+        if ($startDate) {
+            $whereClause .= " AND created_at >= '$startDate 00:00:00'";
+        }
+        if ($endDate) {
+            $whereClause .= " AND created_at < DATE_ADD('$endDate', INTERVAL 1 DAY)";
         }
 
-        // Total Received
-        $query = "SELECT SUM(amount) as total FROM partner_payment_histories $whereClause AND status = 'received'";
+        $query = "SELECT
+                    COALESCE(SUM(CASE WHEN status = 'received' THEN amount ELSE 0 END), 0) AS total_received,
+                    COALESCE(SUM(CASE WHEN status = 'pending' THEN amount ELSE 0 END), 0) AS total_pending,
+                    COALESCE(SUM(CASE WHEN status = 'rejected' THEN amount ELSE 0 END), 0) AS total_rejected,
+                    COUNT(*) AS total_payments
+                  FROM partner_payment_histories $whereClause";
         $result = $this->db->read($query);
-        $stats['total_received'] = $result && $result[0]['total'] ? (float)$result[0]['total'] : 0.00;
 
-        // Total Pending
-        $query = "SELECT SUM(amount) as total FROM partner_payment_histories $whereClause AND status = 'pending'";
-        $result = $this->db->read($query);
-        $stats['total_pending'] = $result && $result[0]['total'] ? (float)$result[0]['total'] : 0.00;
-
-        // Total Rejected
-        $query = "SELECT SUM(amount) as total FROM partner_payment_histories $whereClause AND status = 'rejected'";
-        $result = $this->db->read($query);
-        $stats['total_rejected'] = $result && $result[0]['total'] ? (float)$result[0]['total'] : 0.00;
-
-        // Total Payments Count
-        $query = "SELECT COUNT(*) as total FROM partner_payment_histories $whereClause";
-        $result = $this->db->read($query);
-        $stats['total_payments'] = $result && $result[0]['total'] ? (int)$result[0]['total'] : 0;
+        if ($result) {
+            $stats['total_received'] = (float) $result[0]['total_received'];
+            $stats['total_pending'] = (float) $result[0]['total_pending'];
+            $stats['total_rejected'] = (float) $result[0]['total_rejected'];
+            $stats['total_payments'] = (int) $result[0]['total_payments'];
+        }
 
         return $stats;
     }

@@ -191,14 +191,14 @@ function createEarningRow(earning) {
     let statusBadge = '';
     if (earning.status === 'paid') {
         statusBadge = `
-            <span class="badge bg-success">
+            <span class="status status-paid">
                 <i class="fas fa-check-circle me-1"></i>
                 Paid
             </span>
         `;
     } else {
         statusBadge = `
-            <span class="badge bg-warning">
+            <span class="status status-pending">
                 <i class="fas fa-clock me-1"></i>
                 Pending
             </span>
@@ -235,7 +235,7 @@ function createEarningRow(earning) {
                 </div>
             </td>
             <td>
-                <span class="badge bg-info">
+                <span class="status status-info">
                     ${parseFloat(earning.commission_rate).toFixed(1)}%
                 </span>
             </td>

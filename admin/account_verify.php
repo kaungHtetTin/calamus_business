@@ -111,17 +111,20 @@ $currentPage = 'partners';
     <title><?php echo $pageTitle; ?> - Calamus Education Partner Portal</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="../css/app.css">
-    <link rel="stylesheet" href="css/app.css">
-    <link rel="icon" href="../logo.png" type="image/x-icon">
+    <link rel="stylesheet" href="css/app.css?v=4">
+    <link rel="icon" href="../assets/favicon.png" type="image/png">
 </head>
 <body>
     <?php include 'layout/admin_header.php'; ?>
     <?php include 'layout/admin_sidebar.php'; ?>
 
-    <div class="container-fluid" style="padding: 24px;">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-            <h2 class="mb-0">Account Verification</h2>
+    <div class="container-fluid">
+        <div class="admin-page-heading">
+            <div>
+                <div class="eyebrow">Partner compliance</div>
+                <h1>Account Verification</h1>
+                <p>Review identity, profile, and payment details.</p>
+            </div>
             <a href="partners.php" class="btn btn-outline-secondary"><i class="fas fa-arrow-left me-2"></i>Back to Partners</a>
         </div>
 
@@ -139,7 +142,7 @@ $currentPage = 'partners';
         <?php endif; ?>
 
         <!-- Partner Overview -->
-        <div class="card mb-4">
+        <div class="info-card">
             <div class="card-header">
                 <strong>Partner</strong>
             </div>
@@ -160,7 +163,7 @@ $currentPage = 'partners';
                     <div class="col-md-3">
                         <div class="text-muted">Status</div>
                         <div>
-                            <span class="badge bg-<?php echo ($partner['account_verified'] ?? 0) ? 'success' : 'warning'; ?>">
+                            <span class="status status-<?php echo ($partner['account_verified'] ?? 0) ? 'success' : 'warning'; ?>">
                                 <?php echo ($partner['account_verified'] ?? 0) ? 'Verified' : 'In Review'; ?>
                             </span>
                         </div>
@@ -172,7 +175,7 @@ $currentPage = 'partners';
         <div class="row">
             <div class="col-lg-7">
                 <!-- Personal Information -->
-                <div class="card mb-4">
+                <div class="info-card">
                     <div class="card-header"><strong>Personal Information</strong></div>
                     <div class="card-body">
                         <div class="row g-3">
@@ -222,7 +225,7 @@ $currentPage = 'partners';
                 </div>
 
                 <!-- Payment Methods -->
-                <div class="card mb-4">
+                <div class="partners-table mb-4">
                     <div class="card-header"><strong>Payment Methods</strong></div>
                     <div class="card-body p-0">
                         <div class="table-responsive">
@@ -257,7 +260,7 @@ $currentPage = 'partners';
 
             <div class="col-lg-5">
                 <!-- Actions -->
-                <div class="card mb-4">
+                <div class="info-card">
                     <div class="card-header"><strong>Actions</strong></div>
                     <div class="card-body">
                         <form method="POST" class="mb-3">
@@ -283,6 +286,7 @@ $currentPage = 'partners';
         </div>
     </div>
 
+    <?php include 'layout/admin_footer.php'; ?>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

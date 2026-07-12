@@ -139,17 +139,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <title><?php echo $pageTitle; ?> - Calamus Education Partner Portal</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="../css/app.css">
-    <link rel="stylesheet" href="css/app.css">
-    <link rel="icon" href="../logo.png" type="image/x-icon">
+    <link rel="stylesheet" href="css/app.css?v=4">
+    <link rel="icon" href="../assets/favicon.png" type="image/png">
 </head>
 <body>
     <?php include 'layout/admin_header.php'; ?>
     <?php include 'layout/admin_sidebar.php'; ?>
 
-    <div class="container-fluid" style="padding: 24px;">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-            <h2 class="mb-0">Compose Email</h2>
+    <div class="container-fluid">
+        <div class="admin-page-heading">
+            <div>
+                <div class="eyebrow">Partner communications</div>
+                <h1>Compose Email</h1>
+                <p>Send an announcement to a selected partner audience.</p>
+            </div>
             <a href="partners.php" class="btn btn-outline-secondary"><i class="fas fa-arrow-left me-2"></i>Back to Partners</a>
         </div>
 
@@ -167,7 +170,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <?php endif; ?>
 
         <?php if (!empty($details)): ?>
-            <div class="card mb-3">
+            <div class="info-card">
                 <div class="card-header"><strong>Details</strong></div>
                 <div class="card-body">
                     <ul class="mb-0">
@@ -179,7 +182,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
         <?php endif; ?>
 
-        <div class="card">
+        <div class="info-card">
             <div class="card-header"><strong>New Email</strong></div>
             <div class="card-body">
                 <form method="POST">
@@ -228,6 +231,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
     </div>
 
+    <?php include 'layout/admin_footer.php'; ?>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         function toggleSpecificPartner() {

@@ -1,4 +1,6 @@
 <?php
+require_once __DIR__ . '/../env_loader.php';
+
 /**
  * Database Connection Class
  * 
@@ -7,16 +9,19 @@
  */
 
 class Database {
-    private $host = "localhost";
-    private $username = "root";
-    private $password = "";
-    private $db = "calamus_db";
-    
-    // Production database settings (commented out)
-    // private $host = "82.180.143.139";
-    // private $username = "u608908096_kht_navy";
-    // private $password = "kHt_5241";
-    // private $db = "u608908096_easyenglish";
+    private static $connection = null;
+    private static $shutdownRegistered = false;
+    private $host;
+    private $username;
+    private $password;
+    private $db;
+
+    public function __construct() {
+        $this->host = envValue('DB_HOST', 'localhost');
+        $this->username = envValue('DB_USERNAME', 'root');
+        $this->password = envValue('DB_PASSWORD', '');
+        $this->db = envValue('DB_DATABASE', 'calamus_db');
+    }
 
     /**
      * Establish database connection
@@ -24,6 +29,10 @@ class Database {
      * @return mysqli|false Database connection or false on failure
      */
     public function connect() {
+        if (self::$connection instanceof mysqli) {
+            return self::$connection;
+        }
+
         $connection = mysqli_connect($this->host, $this->username, $this->password, $this->db);
         
         if (!$connection) {
@@ -31,13 +40,25 @@ class Database {
             return false;
         }
         
-        // Set charset to UTF-8
-        mysqli_set_charset($connection, "utf8");
+        // Set charset to full UTF-8 support.
+        mysqli_set_charset($connection, "utf8mb4");
         
         // Set timezone to UTC for consistency
         mysqli_query($connection, "SET time_zone = '+00:00'");
         
-        return $connection;
+        self::$connection = $connection;
+
+        if (!self::$shutdownRegistered) {
+            self::$shutdownRegistered = true;
+            register_shutdown_function(function () {
+                if (self::$connection instanceof mysqli) {
+                    @mysqli_close(self::$connection);
+                    self::$connection = null;
+                }
+            });
+        }
+
+        return self::$connection;
     }
 
     /**
@@ -57,7 +78,6 @@ class Database {
         
         if (!$result) {
             error_log("Database read error: " . mysqli_error($conn));
-            mysqli_close($conn);
             return false;
         }
         
@@ -67,7 +87,6 @@ class Database {
         }
         
         mysqli_free_result($result);
-        mysqli_close($conn);
         
         return $data;
     }
@@ -89,11 +108,9 @@ class Database {
         
         if (!$result) {
             error_log("Database save error: " . mysqli_error($conn));
-            mysqli_close($conn);
             return false;
         }
         
-        mysqli_close($conn);
         return true;
     }
     
@@ -110,7 +127,6 @@ class Database {
         }
         
         $lastId = mysqli_insert_id($conn);
-        mysqli_close($conn);
         
         return $lastId;
     }
@@ -129,7 +145,6 @@ class Database {
         }
         
         $escaped = mysqli_real_escape_string($conn, $string);
-        mysqli_close($conn);
         
         return $escaped;
     }
@@ -152,7 +167,6 @@ class Database {
         
         if (!$stmt) {
             error_log("Prepared statement error: " . mysqli_error($conn));
-            mysqli_close($conn);
             return false;
         }
         
@@ -170,7 +184,6 @@ class Database {
         }
         
         mysqli_stmt_close($stmt);
-        mysqli_close($conn);
         
         return $data;
     }

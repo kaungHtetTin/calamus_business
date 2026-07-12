@@ -90,9 +90,10 @@ function getFileIcon($filename) {
 
 <div class="content-section">
     <!-- Page Header -->
-    <div class="d-flex justify-content-between align-items-center mb-4">
+    <div class="admin-page-heading">
         <div>
-            <h2><i class="fas fa-bullhorn me-2"></i>Marketing Assets</h2>
+            <p class="eyebrow">Promotion library</p>
+            <h1>Marketing Assets</h1>
             <p class="text-muted mb-0">Browse and download marketing materials for your promotions</p>
         </div>
     </div>
@@ -116,18 +117,18 @@ function getFileIcon($filename) {
         <!-- English Tab -->
         <div class="tab-pane fade show active" id="english" role="tabpanel" aria-labelledby="english-tab">
             <!-- Images Section -->
-            <div class="card mb-4">
-                <div class="card-header">
+            <div class="panel glass mb-4 p-0">
+                <div class="panel-heading">
                     <h5 class="mb-0">
                         <i class="fas fa-image me-2"></i>Images
                         <span class="badge bg-secondary ms-2"><?php echo count($assets['english']['image']); ?></span>
                     </h5>
                 </div>
-                <div class="card-body">
+                <div class="panel-body">
                     <?php if (!empty($assets['english']['image'])): ?>
-                    <div class="row g-3">
+                    <div class="asset-grid">
                         <?php foreach ($assets['english']['image'] as $file): ?>
-                        <div class="col-md-3 col-sm-4 col-6">
+                        <div>
                             <div class="card h-100 asset-card">
                                 <div class="asset-preview position-relative">
                                     <?php if (in_array(strtolower(pathinfo($file['name'], PATHINFO_EXTENSION)), ['jpg', 'jpeg', 'png', 'gif', 'webp'])): ?>
@@ -171,18 +172,18 @@ function getFileIcon($filename) {
             </div>
 
             <!-- Videos Section -->
-            <div class="card mb-4">
-                <div class="card-header">
+            <div class="panel glass mb-4 p-0">
+                <div class="panel-heading">
                     <h5 class="mb-0">
                         <i class="fas fa-video me-2"></i>Videos
                         <span class="badge bg-secondary ms-2"><?php echo count($assets['english']['video']); ?></span>
                     </h5>
                 </div>
-                <div class="card-body">
+                <div class="panel-body">
                     <?php if (!empty($assets['english']['video'])): ?>
-                    <div class="row g-3">
+                    <div class="asset-grid asset-grid-video">
                         <?php foreach ($assets['english']['video'] as $file): ?>
-                        <div class="col-md-4 col-sm-6 col-12">
+                        <div>
                             <div class="card h-100 asset-card">
                                 <div class="asset-preview position-relative">
                                     <video class="card-img-top" 
@@ -226,18 +227,18 @@ function getFileIcon($filename) {
         <!-- Korea Tab -->
         <div class="tab-pane fade" id="korea" role="tabpanel" aria-labelledby="korea-tab">
             <!-- Images Section -->
-            <div class="card mb-4">
-                <div class="card-header">
+            <div class="panel glass mb-4 p-0">
+                <div class="panel-heading">
                     <h5 class="mb-0">
                         <i class="fas fa-image me-2"></i>Images
                         <span class="badge bg-secondary ms-2"><?php echo count($assets['korea']['image']); ?></span>
                     </h5>
                 </div>
-                <div class="card-body">
+                <div class="panel-body">
                     <?php if (!empty($assets['korea']['image'])): ?>
-                    <div class="row g-3">
+                    <div class="asset-grid">
                         <?php foreach ($assets['korea']['image'] as $file): ?>
-                        <div class="col-md-3 col-sm-4 col-6">
+                        <div>
                             <div class="card h-100 asset-card">
                                 <div class="asset-preview position-relative">
                                     <?php if (in_array(strtolower(pathinfo($file['name'], PATHINFO_EXTENSION)), ['jpg', 'jpeg', 'png', 'gif', 'webp'])): ?>
@@ -281,18 +282,18 @@ function getFileIcon($filename) {
             </div>
 
             <!-- Videos Section -->
-            <div class="card mb-4">
-                <div class="card-header">
+            <div class="panel glass mb-4 p-0">
+                <div class="panel-heading">
                     <h5 class="mb-0">
                         <i class="fas fa-video me-2"></i>Videos
                         <span class="badge bg-secondary ms-2"><?php echo count($assets['korea']['video']); ?></span>
                     </h5>
                 </div>
-                <div class="card-body">
+                <div class="panel-body">
                     <?php if (!empty($assets['korea']['video'])): ?>
-                    <div class="row g-3">
+                    <div class="asset-grid asset-grid-video">
                         <?php foreach ($assets['korea']['video'] as $file): ?>
-                        <div class="col-md-4 col-sm-6 col-12">
+                        <div>
                             <div class="card h-100 asset-card">
                                 <div class="asset-preview position-relative">
                                     <video class="card-img-top" 
@@ -354,30 +355,6 @@ function getFileIcon($filename) {
         </div>
     </div>
 </div>
-
-<style>
-.asset-card {
-    transition: transform 0.2s, box-shadow 0.2s;
-    border: 1px solid #e0e0e0;
-}
-
-.asset-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-}
-
-.asset-preview {
-    overflow: hidden;
-}
-
-.asset-preview img {
-    transition: transform 0.3s;
-}
-
-.asset-card:hover .asset-preview img {
-    transform: scale(1.05);
-}
-</style>
 
 <script>
 function openModal(imagePath, imageName) {

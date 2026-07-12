@@ -20,24 +20,24 @@ include 'layout/header.php';
     
     <!-- Private Code Display -->
     <?php if (!empty($currentPartner['private_code'])): ?>
-    <div class="card mb-3" style="background: linear-gradient(135deg, #4a5568 0%, #718096 100%); border: none;">
-        <div class="card-body text-white p-3">
+    <div class="panel glass private-code-panel mb-3">
+        <div class="p-3">
             <div class="row align-items-center g-3">
                 <div class="col-md-8">
                     <div class="d-flex align-items-center gap-3">
-                        <i class="fas fa-key text-white"></i>
+                        <i class="fas fa-key text-primary"></i>
                         <div class="flex-grow-1">
                             <div class="d-flex align-items-center gap-2 flex-wrap">
-                                <span class="small text-white-50">Your Private Code:</span>
-                                <code class=" text-primary px-3 py-1 rounded" style="font-size: 1.1rem;color: white; font-weight: 600; letter-spacing: 0.2em; font-family: 'Courier New', monospace;">
-                                   <span id="privateCode" style="color: white;"><?php echo htmlspecialchars($currentPartner['private_code']); ?></span>
+                                <span class="small text-muted">Your private code</span>
+                                <code class="private-code-token">
+                                   <span id="privateCode"><?php echo htmlspecialchars($currentPartner['private_code']); ?></span>
                                 </code>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-4 text-md-end">
-                    <button type="button" class="btn btn-light btn-sm" onclick="copyPrivateCode(event)" title="Copy to clipboard">
+                    <button type="button" class="btn btn-secondary btn-sm" onclick="copyPrivateCode(event)" title="Copy to clipboard">
                         <i class="fas fa-copy me-1"></i>Copy
                     </button>
                 </div>
@@ -66,17 +66,28 @@ include 'layout/header.php';
     </div>
     <?php endif; ?>
     
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2><i class="fas fa-tachometer-alt me-2"></i>Dashboard</h2>
-        <div class="text-muted">
-            <small>Welcome to your partner dashboard</small>
+    <div class="panel glass rules-banner">
+        <span class="metric-icon"><i class="fas fa-scale-balanced"></i></span>
+        <div>
+            <p class="eyebrow">Partner program</p>
+            <h2>Rules & Regulations</h2>
+            <p class="text-muted mb-0">Review commission, promotion, payment, and account requirements.</p>
+        </div>
+        <a class="btn btn-primary" href="program_rules.php">Read Rules</a>
+    </div>
+
+    <div class="admin-page-heading">
+        <div>
+            <p class="eyebrow">Partner overview</p>
+            <h1>Dashboard</h1>
+            <p class="text-muted mb-0">Welcome to your partner dashboard</p>
         </div>
     </div>
 
     <!-- Welcome Message -->
     <div class="row mb-4">
         <div class="col-12">
-            <div class="card">
+            <div class="panel glass">
                 <div class="card-body text-center">
                     <i class="fas fa-handshake fa-3x text-primary mb-3"></i>
                     <h4>Welcome to Partner Portal</h4>
@@ -103,85 +114,77 @@ include 'layout/header.php';
     </div>
  
     <!-- Earnings Overview -->
-    <div class="row mb-4">
-        <div class="col-lg-3 col-md-6 mb-3">
-            <div class="card h-100">
-                <div class="card-body">
+    <div class="metrics-grid">
+        <div class="metric-card">
+                <div>
                     <div class="d-flex align-items-center">
                         <div class="flex-shrink-0">
-                            <div class="bg-light rounded p-3">
+                            <div class="metric-icon">
                                 <i class="fas fa-wallet fa-lg text-muted"></i>
                             </div>
                         </div>
                         <div class="flex-grow-1 ms-3">
-                            <div class="h5 mb-1"><?php echo number_format($dashboardData['total_earnings'] ?? 0, 2); ?> MMK</div>
-                            <div class="text-muted small">Total Earnings</div>
+                            <strong><?php echo number_format($dashboardData['total_earnings'] ?? 0, 2); ?> MMK</strong>
+                            <small>Total Earnings</small>
                         </div>
                     </div>
                 </div>
-            </div>
         </div>
         
-        <div class="col-lg-3 col-md-6 mb-3">
-            <div class="card h-100">
-                <div class="card-body">
+        <div class="metric-card">
+                <div>
                     <div class="d-flex align-items-center">
                         <div class="flex-shrink-0">
-                            <div class="bg-light rounded p-3">
+                            <div class="metric-icon">
                                 <i class="fas fa-sun fa-lg text-muted"></i>
                             </div>
                         </div>
                         <div class="flex-grow-1 ms-3">
-                            <div class="h5 mb-1"><?php echo number_format($dashboardData['today_earnings'] ?? 0, 2); ?> MMK</div>
-                            <div class="text-muted small">Today's Earnings</div>
+                            <strong><?php echo number_format($dashboardData['today_earnings'] ?? 0, 2); ?> MMK</strong>
+                            <small>Today's Earnings</small>
                         </div>
                     </div>
                 </div>
-            </div>
         </div>
         
-        <div class="col-lg-3 col-md-6 mb-3">
-            <div class="card h-100">
-                <div class="card-body">
+        <div class="metric-card">
+                <div>
                     <div class="d-flex align-items-center">
                         <div class="flex-shrink-0">
-                            <div class="bg-light rounded p-3">
+                            <div class="metric-icon">
                                 <i class="fas fa-moon fa-lg text-muted"></i>
                             </div>
                         </div>
                         <div class="flex-grow-1 ms-3">
-                            <div class="h5 mb-1"><?php echo number_format($dashboardData['yesterday_earnings'] ?? 0, 2); ?> MMK</div>
-                            <div class="text-muted small">Yesterday's Earnings</div>
+                            <strong><?php echo number_format($dashboardData['yesterday_earnings'] ?? 0, 2); ?> MMK</strong>
+                            <small>Yesterday's Earnings</small>
                         </div>
                     </div>
                 </div>
-            </div>
         </div>
         
-        <div class="col-lg-3 col-md-6 mb-3">
-            <div class="card h-100">
-                <div class="card-body">
+        <div class="metric-card">
+                <div>
                     <div class="d-flex align-items-center">
                         <div class="flex-shrink-0">
-                            <div class="bg-light rounded p-3">
+                            <div class="metric-icon">
                                 <i class="fas fa-calendar-alt fa-lg text-muted"></i>
                             </div>
                         </div>
                         <div class="flex-grow-1 ms-3">
-                            <div class="h5 mb-1"><?php echo number_format($dashboardData['this_month_earnings'] ?? 0, 2); ?> MMK</div>
-                            <div class="text-muted small">This Month</div>
+                            <strong><?php echo number_format($dashboardData['this_month_earnings'] ?? 0, 2); ?> MMK</strong>
+                            <small>This Month</small>
                         </div>
                     </div>
                 </div>
-            </div>
         </div>
     </div>
 
 
 
     <!-- Recent Earnings -->
-    <div class="card">
-        <div class="card-header">
+    <div class="panel glass p-0">
+        <div class="panel-heading">
             <div class="d-flex justify-content-between align-items-center">
                 <h5 class="mb-0">Recent Earnings</h5>
                 <a href="earning_history.php" class="btn btn-outline-secondary btn-sm">
@@ -189,9 +192,9 @@ include 'layout/header.php';
                 </a>
             </div>
         </div>
-        <div class="card-body p-0">
+        <div>
             <?php if (!empty($dashboardData['recent_earnings'])): ?>
-            <div class="table-responsive">
+            <div class="table-wrap">
                 <table class="table table-hover mb-0">
                     <thead>
                         <tr>
@@ -232,11 +235,11 @@ include 'layout/header.php';
                             </td>
                             <td class="py-3 px-3">
                                 <?php if ($earning['status'] === 'paid'): ?>
-                                    <span class="badge bg-light text-dark border">
+                                    <span class="status status-paid">
                                         Paid
                                     </span>
                                 <?php else: ?>
-                                    <span class="badge bg-light text-dark border">
+                                    <span class="status status-pending">
                                         Pending
                                     </span>
                                 <?php endif; ?>
@@ -280,13 +283,13 @@ function copyPrivateCode(event) {
             if (btn) {
                 const originalHTML = btn.innerHTML;
                 btn.innerHTML = '<i class="fas fa-check me-2"></i>Copied!';
-                btn.classList.remove('btn-light');
+                btn.classList.remove('btn-secondary');
                 btn.classList.add('btn-success');
                 
                 setTimeout(function() {
                     btn.innerHTML = originalHTML;
                     btn.classList.remove('btn-success');
-                    btn.classList.add('btn-light');
+                    btn.classList.add('btn-secondary');
                 }, 2000);
             }
         }).catch(function(err) {
@@ -306,12 +309,12 @@ function copyPrivateCode(event) {
             if (btn) {
                 const originalHTML = btn.innerHTML;
                 btn.innerHTML = '<i class="fas fa-check me-2"></i>Copied!';
-                btn.classList.remove('btn-light');
+                btn.classList.remove('btn-secondary');
                 btn.classList.add('btn-success');
                 setTimeout(function() {
                     btn.innerHTML = originalHTML;
                     btn.classList.remove('btn-success');
-                    btn.classList.add('btn-light');
+                    btn.classList.add('btn-secondary');
                 }, 2000);
             } else {
                 alert('Private code copied to clipboard!');

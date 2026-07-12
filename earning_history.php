@@ -4,37 +4,32 @@ require_once 'classes/autoload.php';
 $pageTitle = 'Earning History';
 include 'layout/header.php';
 
-// Get earning statistics only (no earning history)
-$earningsManager = new PartnerEarningsManager();
-$earningStats = $earningsManager->getPartnerEarningStats($currentPartner['id']);
+// The shared header already loads this aggregate for the topbar.
+$earningStats = $earningStats ?? (new PartnerEarningsManager())->getPartnerEarningStats($currentPartner['id']);
 ?>
 
 <div class="content-section">
     <!-- Page Header -->
-    <div class="d-flex justify-content-between align-items-center mb-4">
+    <div class="admin-page-heading">
         <div>
-            <h4 class="mb-1">
-                <i class="fas fa-chart-line me-2"></i>Earning History
-            </h4>
+            <p class="eyebrow">Revenue</p>
+            <h1>Earning History</h1>
             <p class="text-muted mb-0">Track your earnings from completed transactions</p>
         </div>
-        <div class="text-end">
-            <div class="h3 mb-0 text-success"><?php echo number_format($earningStats['total_earnings'], 2); ?> MMK</div>
+        <div class="heading-summary text-end">
+            <div class="h3 mb-0" id="headingTotalEarnings"><?php echo number_format($earningStats['total_earnings'], 2); ?> MMK</div>
             <small class="text-muted">Total Earnings</small>
         </div>
     </div>
 
     <!-- Filter Section -->
-    <div class="row mb-4">
-        <div class="col-md-12">
-            <div class="card bg-light">
-                <div class="card-body">
+    <div class="filter-card glass">
                     <h6 class="card-title mb-3">
                         <i class="fas fa-filter me-2"></i>Filter Earnings
                     </h6>
-                    <div class="row">
+                    <div class="filter-toolbar partner-filter-toolbar">
                         <!-- Status Filter -->
-                        <div class="col-md-3 mb-3">
+                        <div>
                             <label class="form-label">Status</label>
                             <select class="form-select" id="statusFilter">
                                 <option value="">All Status</option>
@@ -44,7 +39,7 @@ $earningStats = $earningsManager->getPartnerEarningStats($currentPartner['id']);
                         </div>
                         
                         <!-- Period Filter -->
-                        <div class="col-md-3 mb-3">
+                        <div>
                             <label class="form-label">Period</label>
                             <select class="form-select" id="periodFilter">
                                 <option value="">All Time</option>
@@ -58,7 +53,7 @@ $earningStats = $earningsManager->getPartnerEarningStats($currentPartner['id']);
                         </div>
                         
                         <!-- Custom Date Range -->
-                        <div class="col-md-4 mb-3" id="customDateRange" style="display: none;">
+                        <div id="customDateRange" style="display: none;">
                             <label class="form-label">Date Range</label>
                             <div class="row">
                                 <div class="col-6">
@@ -71,7 +66,7 @@ $earningStats = $earningsManager->getPartnerEarningStats($currentPartner['id']);
                         </div>
                         
                         <!-- Filter Actions -->
-                        <div class="col-md-2 mb-3">
+                        <div>
                             <label class="form-label">&nbsp;</label>
                             <div class="d-flex gap-2">
                                 <button type="button" class="btn btn-primary btn-sm" id="applyFilters">
@@ -83,50 +78,35 @@ $earningStats = $earningsManager->getPartnerEarningStats($currentPartner['id']);
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
-        </div>
     </div>
 
     <!-- Statistics Cards -->
-    <div class="row mb-4">
-        <div class="col-md-4 mb-4">
-            <div class="card stat-card">
-                <div class="card-body text-center">
-                    <i class="fas fa-dollar-sign fa-2x mb-2"></i>
-                    <div class="stat-number" id="totalEarnings"><?php echo number_format($earningStats['total_earnings'], 2); ?> MMK</div>
-                    <div>Total Earnings</div>
-                </div>
-            </div>
+    <div class="metrics-grid metrics-grid-three">
+        <div class="stat-card">
+            <span class="metric-icon"><i class="fas fa-dollar-sign"></i></span>
+            <span class="stat-label">Total Earnings</span>
+            <div class="stat-number" id="totalEarnings"><?php echo number_format($earningStats['total_earnings'], 2); ?> MMK</div>
         </div>
-        <div class="col-md-4 mb-4">
-            <div class="card stat-card">
-                <div class="card-body text-center">
-                    <i class="fas fa-receipt fa-2x mb-2"></i>
-                    <div class="stat-number" id="totalTransactions"><?php echo number_format($earningStats['total_transactions']); ?></div>
-                    <div>Total Transactions</div>
-                </div>
-            </div>
+        <div class="stat-card">
+            <span class="metric-icon"><i class="fas fa-receipt"></i></span>
+            <span class="stat-label">Total Transactions</span>
+            <div class="stat-number" id="totalTransactions"><?php echo number_format($earningStats['total_transactions']); ?></div>
         </div>
-        <div class="col-md-4 mb-4">
-            <div class="card stat-card">
-                <div class="card-body text-center">
-                    <i class="fas fa-calendar-alt fa-2x mb-2"></i>
-                    <div class="stat-number" id="thisMonthEarnings"><?php echo number_format($earningStats['this_month_earnings'], 2); ?> MMK</div>
-                    <div>This Month</div>
-                </div>
-            </div>
+        <div class="stat-card">
+            <span class="metric-icon"><i class="fas fa-calendar-alt"></i></span>
+            <span class="stat-label">This Month</span>
+            <div class="stat-number" id="thisMonthEarnings"><?php echo number_format($earningStats['this_month_earnings'], 2); ?> MMK</div>
         </div>
     </div>
 
     <!-- Earning History Table -->
-    <div class="card">
-        <div class="card-header">
+    <div class="panel glass p-0">
+        <div class="panel-heading">
             <h5 class="card-title mb-0">
                 <i class="fas fa-history me-2"></i>Recent Earnings
             </h5>
         </div>
-        <div class="card-body">
+        <div class="panel-body">
             <!-- Loading state -->
             <div id="loadingState" class="text-center py-5">
                 <div class="spinner-border text-primary" role="status">
@@ -136,7 +116,7 @@ $earningStats = $earningsManager->getPartnerEarningStats($currentPartner['id']);
             </div>
             
             <!-- Empty state (hidden initially) -->
-            <div id="emptyState" class="text-center py-5" style="display: none;">
+            <div id="emptyState" class="empty-state" style="display: none;">
                 <i class="fas fa-chart-line fa-3x text-muted mb-3"></i>
                 <h5 class="text-muted">No Earnings Yet</h5>
                 <p class="text-muted">Your earnings will appear here once transactions are completed and payments are processed.</p>
@@ -147,7 +127,7 @@ $earningStats = $earningsManager->getPartnerEarningStats($currentPartner['id']);
             
             <!-- Table container (hidden initially) -->
             <div id="tableContainer" style="display: none;">
-                <div class="table-responsive">
+                <div class="table-wrap">
                     <table class="table table-hover">
                         <thead>
                             <tr>
@@ -195,81 +175,6 @@ $earningStats = $earningsManager->getPartnerEarningStats($currentPartner['id']);
         </div>
     </div>
 </div>
-
-<style>
-/* Custom styles for earning history page */
-.stat-card {
-    background: linear-gradient(135deg, #4a5568 0%, #718096 100%);
-    color: white;
-    border: none;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.stat-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
-}
-
-.stat-number {
-    font-size: 1.5rem;
-    font-weight: bold;
-    margin: 0.5rem 0;
-}
-
-.table th {
-    background-color: #f8f9fa;
-    border-top: none;
-    font-weight: 600;
-    color: #495057;
-}
-
-.table td {
-    vertical-align: middle;
-    border-top: 1px solid #dee2e6;
-}
-
-.table tbody tr:hover {
-    background-color: #f8f9fa;
-}
-
-.badge {
-    font-size: 0.75rem;
-    padding: 0.375rem 0.75rem;
-}
-
-.text-success {
-    color: #28a745 !important;
-}
-
-.btn-outline-primary {
-    border-color: #4a5568;
-    color: #4a5568;
-}
-
-.btn-outline-primary:hover {
-    background-color: #4a5568;
-    border-color: #4a5568;
-    color: white;
-}
-
-.card {
-    border: none;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.card-header {
-    background-color: #f8f9fa;
-    border-bottom: 1px solid #dee2e6;
-}
-
-code {
-    background-color: #f8f9fa;
-    padding: 0.25rem 0.5rem;
-    border-radius: 0.25rem;
-    font-size: 0.875rem;
-}
-</style>
 
 <script src="js/earning_history.js"></script>
 <?php include 'layout/footer.php'; ?>

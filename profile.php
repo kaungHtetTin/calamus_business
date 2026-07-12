@@ -3,7 +3,7 @@ $pageTitle = 'Profile Settings';
 include 'layout/header.php';
 ?>
 
-<style>
+<style media="not all">
 /* Google-Style Minimal Profile Page */
 .profile-container {
     background: #fafafa;
@@ -290,20 +290,23 @@ include 'layout/header.php';
 }
 </style>
 
-<div class="profile-container">
+<div class="content-section partner-profile">
     <!-- Profile Header -->
-    <div class="profile-header">
-        <h1>Profile settings</h1>
-        <p>Manage your account information and security settings</p>
+    <div class="admin-page-heading">
+        <div>
+            <p class="eyebrow">Account</p>
+            <h1>Profile settings</h1>
+            <p class="text-muted mb-0">Manage your account information and security settings</p>
+        </div>
     </div>
 
-    <div class="content-wrapper">
+    <div class="profile-content">
         <!-- Profile Image Section -->
-        <div class="google-card">
-            <div class="card-header">
+        <div class="panel glass profile-panel">
+            <div class="panel-heading">
                 <h5>Profile picture</h5>
             </div>
-            <div class="card-body">
+            <div class="panel-body">
                 <div class="row align-items-center">
                     <div class="col-md-4 text-center mb-3 mb-md-0">
                         <div class="profile-image-preview">
@@ -320,19 +323,19 @@ include 'layout/header.php';
                         </div>
                     </div>
                     <div class="col-md-8">
-                        <div class="google-form-group">
+                        <div class="form-group">
                             <label>Upload new picture</label>
                             <input type="file" class="form-control" id="profileImageInput" accept="image/*">
-                            <div class="help-text">
+                            <div class="form-text">
                                 JPG, PNG, GIF, WebP up to 5MB
                             </div>
                         </div>
                         <div class="d-flex gap-2 flex-wrap mt-2">
-                            <button type="button" class="google-btn google-btn-outline" id="uploadImageBtn" disabled>
+                            <button type="button" class="btn btn-outline-primary" id="uploadImageBtn" disabled>
                                 Upload
                             </button>
                             <?php if (!empty($currentPartner['profile_image'])): ?>
-                            <button type="button" class="google-btn google-btn-secondary" id="removeImageBtn">
+                            <button type="button" class="btn btn-secondary" id="removeImageBtn">
                                 Remove
                             </button>
                             <?php endif; ?>
@@ -343,17 +346,17 @@ include 'layout/header.php';
         </div>
     
     <!-- Profile Information Section -->
-        <div class="google-card">
-            <div class="card-header">
+        <div class="panel glass profile-panel">
+            <div class="panel-heading">
                 <h5>Personal information</h5>
             </div>
-        <div class="card-body">
+        <div class="panel-body">
             <!-- Private Code Display -->
                 <div class="private-code-section mb-4">
                 <div class="row align-items-center">
                     <div class="col-md-8">
-                            <strong style="font-size: 14px; color: #202124;">Partner code</strong>
-                            <p style="font-size: 13px; color: #5f6368; margin: 4px 0 0 0;">
+                            <strong>Partner code</strong>
+                            <p class="text-muted small mb-0 mt-1">
                                 Use this code to generate promotion links
                             </p>
                     </div>
@@ -361,7 +364,7 @@ include 'layout/header.php';
                             <div class="private-code-value" id="privateCodeDisplay">
                                 <?php echo htmlspecialchars($currentPartner['private_code'] ?? 'N/A'); ?>
                             </div>
-                            <button type="button" class="google-btn google-btn-secondary mt-2" onclick="copyPrivateCode()">
+                            <button type="button" class="btn btn-secondary mt-2" onclick="copyPrivateCode()">
                                 Copy code
                             </button>
                     </div>
@@ -371,14 +374,14 @@ include 'layout/header.php';
             <form id="profile-form" method="POST" action="api/update_profile.php" enctype="multipart/form-data">
                 <div class="row">
                     <div class="col-md-6">
-                            <div class="google-form-group">
+                            <div class="form-group">
                                 <label>Contact name</label>
                                 <input type="text" class="form-control" id="contact_name" name="contact_name" 
                                        value="<?php echo htmlspecialchars($currentPartner['contact_name']); ?>" required>
                             </div>
                     </div>
                     <div class="col-md-6">
-                            <div class="google-form-group">
+                            <div class="form-group">
                                 <label>Company name</label>
                                 <input type="text" class="form-control" id="company_name" name="company_name" 
                                        value="<?php echo htmlspecialchars($currentPartner['company_name']); ?>">
@@ -387,14 +390,14 @@ include 'layout/header.php';
                 </div>
                 <div class="row">
                     <div class="col-md-6">
-                            <div class="google-form-group">
+                            <div class="form-group">
                                 <label>Phone number</label>
                                 <input type="tel" class="form-control" id="phone" name="phone" 
                                        value="<?php echo htmlspecialchars($currentPartner['phone']); ?>">
                             </div>
                         </div>
                         <div class="col-md-6">
-                            <div class="google-form-group">
+                            <div class="form-group">
                                 <label>Social Media Link</label>
                                 <input type="url" class="form-control" id="website" name="website" 
                                        value="<?php echo htmlspecialchars($currentPartner['website']); ?>">
@@ -405,24 +408,24 @@ include 'layout/header.php';
                     <div class="row mt-2">
                         <div class="col-12">
                             <hr>
-                            <h6 style="font-weight:500;color:#202124;">Address information</h6>
+                            <h6 class="form-section-title">Address information</h6>
                         </div>
                         <div class="col-md-12">
-                            <div class="google-form-group">
+                            <div class="form-group">
                                 <label>Address</label>
                                 <input type="text" class="form-control" id="address" name="address" 
                                        value="<?php echo htmlspecialchars($currentPartner['address'] ?? ''); ?>">
                             </div>
                         </div>
                         <div class="col-md-6">
-                            <div class="google-form-group">
+                            <div class="form-group">
                                 <label>City</label>
                                 <input type="text" class="form-control" id="city" name="city" 
                                        value="<?php echo htmlspecialchars($currentPartner['city'] ?? ''); ?>">
                             </div>
                         </div>
                         <div class="col-md-6">
-                            <div class="google-form-group">
+                            <div class="form-group">
                                 <label>State</label>
                                 <input type="text" class="form-control" id="state" name="state" 
                                        value="<?php echo htmlspecialchars($currentPartner['state'] ?? ''); ?>">
@@ -434,11 +437,11 @@ include 'layout/header.php';
                     <div class="row mt-2">
                         <div class="col-12">
                             <hr>
-                            <h6 style="font-weight:500;color:#202124;">National ID card</h6>
-                            <div class="help-text">Upload clear images of the front and back of your national ID card.</div>
+                            <h6 class="form-section-title">National ID card</h6>
+                            <div class="form-text">Upload clear images of the front and back of your national ID card.</div>
                         </div>
                         <div class="col-md-6">
-                            <div class="google-form-group">
+                            <div class="form-group">
                                 <label>National ID card number</label>
                                 <input type="text" class="form-control" id="national_id_card_number" name="national_id_card_number" 
                                        value="<?php echo htmlspecialchars($currentPartner['national_id_card_number'] ?? ''); ?>">
@@ -446,7 +449,7 @@ include 'layout/header.php';
                         </div>
                         <div class="col-md-6"></div>
                         <div class="col-md-6">
-                            <div class="google-form-group">
+                            <div class="form-group">
                                 <label>Front image</label>
                                 <input type="file" class="form-control" id="national_id_card_front_image" name="national_id_card_front_image" accept="image/*">
                                 <?php if (!empty($currentPartner['national_id_card_front_image'])): ?>
@@ -459,7 +462,7 @@ include 'layout/header.php';
                             </div>
                         </div>
                         <div class="col-md-6">
-                            <div class="google-form-group">
+                            <div class="form-group">
                                 <label>Back image</label>
                                 <input type="file" class="form-control" id="national_id_card_back_image" name="national_id_card_back_image" accept="image/*">
                                 <?php if (!empty($currentPartner['national_id_card_back_image'])): ?>
@@ -474,7 +477,7 @@ include 'layout/header.php';
                     </div>
 
                     <div class="text-end mt-4">
-                        <button type="submit" class="google-btn google-btn-primary">
+                        <button type="submit" class="btn btn-primary">
                             Save
                         </button>
                     </div>
@@ -483,14 +486,14 @@ include 'layout/header.php';
         </div>
         
         <!-- Password Change Section -->
-        <div class="google-card" id="password-change">
-            <div class="card-header">
+        <div class="panel glass profile-panel" id="password-change">
+            <div class="panel-heading">
                 <h5>Password</h5>
             </div>
-            <div class="card-body">
+            <div class="panel-body">
                 <div class="password-section">
                     <form id="password-change-form">
-                        <div class="google-form-group">
+                        <div class="form-group">
                             <label>Current password</label>
                             <div class="input-group-google">
                                 <input type="password" class="form-control" id="currentPassword" name="currentPassword" required>
@@ -498,9 +501,9 @@ include 'layout/header.php';
                                     <i class="fas fa-eye" id="currentPasswordIcon"></i>
                                 </button>
                             </div>
-                            <div class="" id="currentPasswordError" style="color: #d93025; font-size: 13px; margin-top: 4px; display: none;"></div>
+                            <div class="profile-field-error" id="currentPasswordError" style="display: none;"></div>
                         </div>
-                        <div class="google-form-group">
+                        <div class="form-group">
                             <label>New password</label>
                             <div class="input-group-google">
                                 <input type="password" class="form-control" id="newPassword" name="newPassword" required minlength="8">
@@ -508,13 +511,13 @@ include 'layout/header.php';
                                     <i class="fas fa-eye" id="newPasswordIcon"></i>
                                 </button>
                             </div>
-                            <div class="help-text">
+                            <div class="form-text">
                                 Use at least 8 characters
                             </div>
-                            <div class="" id="newPasswordError" style="color: #d93025; font-size: 13px; margin-top: 4px; display: none;"></div>
+                            <div class="profile-field-error" id="newPasswordError" style="display: none;"></div>
                         </div>
                         
-                        <div class="google-form-group">
+                        <div class="form-group">
                             <label>Confirm password</label>
                             <div class="input-group-google">
                                 <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" required minlength="8">
@@ -522,7 +525,7 @@ include 'layout/header.php';
                                     <i class="fas fa-eye" id="confirmPasswordIcon"></i>
                                 </button>
                             </div>
-                            <div class="" id="confirmPasswordError" style="color: #d93025; font-size: 13px; margin-top: 4px; display: none;"></div>
+                            <div class="profile-field-error" id="confirmPasswordError" style="display: none;"></div>
                         </div>
                         
                         <!-- Password Strength Indicator -->
@@ -530,12 +533,12 @@ include 'layout/header.php';
                             <div class="strength-bar">
                                 <div class="strength-fill" id="strengthBar"></div>
                             </div>
-                            <div style="font-size: 12px; color: #5f6368;" id="strengthText">Password strength</div>
+                            <div class="text-muted small mt-2" id="strengthText">Password strength</div>
                         </div>
 
                     </form>
                     <div class="mt-4">
-                        <button type="button" class="google-btn google-btn-primary" id="changePasswordBtn">
+                        <button type="button" class="btn btn-primary" id="changePasswordBtn">
                             Change password
                         </button>
                     </div>

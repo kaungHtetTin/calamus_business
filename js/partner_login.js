@@ -65,8 +65,8 @@ function setupLoginForm() {
         
         // Show loading state
         const submitBtn = loginForm.querySelector('button[type="submit"]');
-        const originalText = submitBtn.textContent;
-        submitBtn.textContent = 'Logging in...';
+        const originalContent = submitBtn.innerHTML;
+        submitBtn.innerHTML = '<i class="fas fa-circle-notch fa-spin me-2"></i><span>Signing in...</span>';
         submitBtn.disabled = true;
         
         fetch('api/login.php?endpoint=login', {
@@ -96,7 +96,7 @@ function setupLoginForm() {
         })
         .finally(() => {
             // Reset button state
-            submitBtn.textContent = originalText;
+            submitBtn.innerHTML = originalContent;
             submitBtn.disabled = false;
         });
     });

@@ -116,15 +116,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <title><?php echo $pageTitle; ?> - Admin Dashboard</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="../css/app.css">
-    <link rel="stylesheet" href="css/app.css">
-    <link rel="icon" href="../logo.png" type="image/x-icon">
+    <link rel="stylesheet" href="css/app.css?v=4">
+    <link rel="icon" href="../assets/favicon.png" type="image/png">
 </head>
 <body>
     <?php include 'layout/admin_header.php'; ?>
     <?php include 'layout/admin_sidebar.php'; ?>
     
     <div class="container-fluid admin-container">
+        <div class="admin-page-heading">
+            <div>
+                <div class="eyebrow">Payout queue</div>
+                <h1>Process Payout</h1>
+                <p>Confirm payment details and attach transaction evidence.</p>
+            </div>
+        </div>
         <!-- Back Link -->
         <a href="payout_logs.php" class="back-link">
             <i class="fas fa-arrow-left me-2"></i>Back to Payout Logs
@@ -189,7 +195,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <div class="col-md-6">
                     <div class="info-label">Status</div>
                     <div class="info-value">
-                        <span class="badge bg-<?php echo $partner['status'] === 'active' ? 'success' : ($partner['status'] === 'pending' ? 'warning' : 'danger'); ?>">
+                        <span class="status status-<?php echo $partner['status'] === 'active' ? 'success' : ($partner['status'] === 'pending' ? 'warning' : 'danger'); ?>">
                             <?php echo ucfirst($partner['status']); ?>
                         </span>
                     </div>
@@ -295,6 +301,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <?php endif; ?>
     </div>
 
+    <?php include 'layout/admin_footer.php'; ?>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

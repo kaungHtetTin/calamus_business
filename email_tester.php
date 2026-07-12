@@ -2,23 +2,28 @@
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
-require 'vendor/autoload.php'; // if installed via composer
-// or require 'PHPMailer/src/PHPMailer.php'; etc. if manual
+require __DIR__ . '/vendor/autoload.php';
+require __DIR__ . '/env_loader.php';
 
 $mail = new PHPMailer(true);
 
 try {
     $mail->isSMTP();
-    $mail->Host = 'smtp.hostinger.com';
+    $mail->Host = envValue('SMTP_HOST');
     $mail->SMTPAuth = true;
-    $mail->Username = 'business@calamuseducation.com'; // your Hostinger email
-    $mail->Password = 'Wyne75707@@';       // your email password
-    $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS; // for SSL (port 465)
-    $mail->Port = 465;                       // or use 587 with STARTTLS
+    $mail->Username = envValue('SMTP_USERNAME');
+    $mail->Password = envValue('SMTP_PASSWORD');
+    $mail->SMTPSecure = strtolower(envValue('SMTP_ENCRYPTION', 'ssl')) === 'tls'
+        ? PHPMailer::ENCRYPTION_STARTTLS
+        : PHPMailer::ENCRYPTION_SMTPS;
+    $mail->Port = (int) envValue('SMTP_PORT', 465);
 
     //Recipients
-    $mail->setFrom('business@calamuseducation.com', 'Kaung Htet Tin');
-    $mail->addAddress('kaunghtettin17204@gmail.com');
+    $mail->setFrom(
+        envValue('EMAIL_FROM_ADDRESS'),
+        envValue('EMAIL_FROM_NAME', 'Calamus Education')
+    );
+    $mail->addAddress(envValue('EMAIL_TEST_RECIPIENT'));
 
     //Content
     $mail->isHTML(true);

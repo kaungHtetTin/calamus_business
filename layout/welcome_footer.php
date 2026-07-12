@@ -4,7 +4,7 @@
             <div class="row">
                 <div class="col-md-3 mb-4 mb-md-0">
                     <h5>
-                        <img src="logo.png" alt="Calamus" width="30" height="30" class="me-2">
+                        <img src="assets/app_logo.png" alt="Calamus" width="30" height="30" class="me-2">
                         Calamus Education
                     </h5>
                     <p class="text-white-50 small">Empowering language learning through quality education.</p>

@@ -6,7 +6,7 @@
     <title>Partner Registration</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link rel="icon" href="logo.png" type="image/x-icon">
+    <link rel="icon" href="assets/favicon.png" type="image/png">
     <link rel="stylesheet" href="css/app.css">
     <style>
         body {
@@ -161,13 +161,14 @@
             margin-bottom: 0.5rem;
         }
     </style>
+    <link rel="stylesheet" href="css/welcome.css?v=10">
 </head>
-<body>
+<body class="welcome-page auth-page">
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg welcome-navbar">
         <div class="container">
             <a class="navbar-brand" href="index.php">
-                <img src="logo.png" alt="Calamus" width="30" height="30" class="me-2">
+                <img src="assets/app_logo.png" alt="Calamus" width="30" height="30" class="me-2">
                 Calamus Education
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -176,37 +177,62 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto align-items-center">
                     <li class="nav-item">
-                        <a class="nav-link" href="index.php">Home</a>
+                        <a class="nav-link" href="index.php" aria-label="Home">
+                            <i class="fas fa-house mobile-nav-icon" aria-hidden="true"></i>
+                            <span class="nav-label">Home</span>
+                        </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="partner_login.php">Login</a>
+                        <a class="nav-link" href="partner_login.php" aria-label="Login">
+                            <i class="fas fa-arrow-right-to-bracket mobile-nav-icon" aria-hidden="true"></i>
+                            <span class="nav-label">Login</span>
+                        </a>
                     </li>
                     <li class="nav-item">
-                        <a class="btn btn-outline-light" href="partner_register.php">Register</a>
+                        <a class="btn btn-outline-light" href="partner_register.php" aria-label="Register">
+                            <i class="fas fa-user-plus mobile-nav-icon" aria-hidden="true"></i>
+                            <span class="nav-label">Register</span>
+                        </a>
                     </li>
                 </ul>
             </div>
         </div>
     </nav>
 
-    <div class="registration-container">
+    <main class="registration-container">
         <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-lg-8">
+            <div class="auth-shell auth-shell-register">
+                <aside class="auth-showcase">
+                    <span class="auth-kicker">BECOME A PARTNER</span>
+                    <h1>Turn your audience into a growing business.</h1>
+                    <p>Join the Calamus partner network and earn commission by connecting students with quality language courses.</p>
+                    <div class="auth-benefit-list">
+                        <div><i class="fas fa-percent"></i><span><strong>Earn commission</strong>Receive commission from confirmed referrals.</span></div>
+                        <div><i class="fas fa-tags"></i><span><strong>Student benefits</strong>Your code gives referred students a discount.</span></div>
+                        <div><i class="fas fa-gauge-high"></i><span><strong>Simple dashboard</strong>Track performance and payouts in one place.</span></div>
+                    </div>
+                </aside>
+                <section class="auth-form-panel">
                     <div class="registration-card">
                         <div class="registration-header">
+                            <span class="auth-mobile-kicker">PARTNER APPLICATION</span>
                             <h2 class="mb-3">
-                                <i class="fas fa-handshake me-2"></i>
-                                Partner Registration
+                                Create your account
                             </h2>
-                            <p class="mb-0">Join our affiliate program and start earning commissions</p>
+                            <p class="mb-0">Complete two quick steps to join the partner program.</p>
                         </div>
                         
                         <div class="registration-body">
                             <!-- Step Indicator -->
                             <div class="step-indicator">
-                                <div class="step active" id="step1">1</div>
-                                <div class="step" id="step2">2</div>
+                                <div class="step-item">
+                                    <div class="step active" id="step1">1</div>
+                                    <span>Partner details</span>
+                                </div>
+                                <div class="step-item">
+                                    <div class="step" id="step2">2</div>
+                                    <span>Security</span>
+                                </div>
                             </div>
                             
                             <!-- Registration Form -->
@@ -265,15 +291,29 @@
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="mb-3">
-                                                <label class="form-label">Password *</label>
-                                                <input type="password" class="form-control" id="password" required minlength="8">
-                                                <div class="form-text">Minimum 8 characters</div>
+                                                <label class="form-label" for="password">Password *</label>
+                                                <div class="auth-input">
+                                                    <i class="fas fa-lock" aria-hidden="true"></i>
+                                                    <input type="password" class="form-control" id="password" autocomplete="new-password" required minlength="8">
+                                                    <button type="button" class="password-toggle" data-password-toggle="password" aria-label="Show password">
+                                                        <i class="fas fa-eye" aria-hidden="true"></i>
+                                                    </button>
+                                                </div>
+                                                <div class="password-requirement" data-password-requirement>
+                                                    <i class="fas fa-circle-check"></i> At least 8 characters
+                                                </div>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="mb-3">
-                                                <label class="form-label">Confirm Password *</label>
-                                                <input type="password" class="form-control" id="confirm_password" required>
+                                                <label class="form-label" for="confirm_password">Confirm Password *</label>
+                                                <div class="auth-input">
+                                                    <i class="fas fa-lock" aria-hidden="true"></i>
+                                                    <input type="password" class="form-control" id="confirm_password" autocomplete="new-password" required>
+                                                    <button type="button" class="password-toggle" data-password-toggle="confirm_password" aria-label="Show password">
+                                                        <i class="fas fa-eye" aria-hidden="true"></i>
+                                                    </button>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -299,14 +339,15 @@
                             </form>
                         </div>
                     </div>
-                </div>
+                </section>
             </div>
         </div>
-    </div>
+    </main>
 
     <?php include 'layout/welcome_footer.php'; ?>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/auth-ui.js"></script>
     <script src="js/partner_register.js"></script>
 </body>
 </html>

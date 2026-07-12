@@ -1,12 +1,7 @@
-# Database connection files (contains sensitive credentials)
-connect.php
-classes/Database.php
-
-# Email configuration files (contains sensitive SMTP credentials)
-email_config.php
-
 # Environment and configuration files
 .env
+.env.*
+!.env.example
 config.php
 database.php
 

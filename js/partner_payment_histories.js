@@ -168,7 +168,7 @@ class PartnerPaymentHistories {
                     </div>
                 </td>
                 <td>
-                    <span class="badge ${statusClass}">
+                    <span class="status ${statusClass}">
                         <i class="${statusIcon} me-1"></i>
                         ${statusText}
                     </span>
@@ -203,10 +203,10 @@ class PartnerPaymentHistories {
     
     getStatusClass(status) {
         switch(status) {
-            case 'received': return 'bg-success';
-            case 'pending': return 'bg-warning';
-            case 'rejected': return 'bg-danger';
-            default: return 'bg-secondary';
+            case 'received': return 'status-success';
+            case 'pending': return 'status-warning';
+            case 'rejected': return 'status-danger';
+            default: return 'status-neutral';
         }
     }
     
@@ -345,7 +345,7 @@ class PartnerPaymentHistories {
                                 <tr>
                                     <td><strong>Status:</strong></td>
                                     <td>
-                                        <span class="badge ${this.getStatusClass(payment.status)}">
+                                        <span class="status ${this.getStatusClass(payment.status)}">
                                             <i class="${this.getStatusIcon(payment.status)} me-1"></i>
                                             ${this.getStatusText(payment.status)}
                                         </span>
