@@ -3,7 +3,7 @@
  * Standalone announcement landing page (mobile only).
  * Update $joinLink below with your target URL.
  */
-$joinLink = 'https://business.calamueducation.com';
+$joinLink = 'https://business.calamuseducation.com';
 $pageTitle = 'Announcement';
 ?>
 <!DOCTYPE html>
@@ -48,7 +48,10 @@ $pageTitle = 'Announcement';
         .announcement-hero img {
             display: block;
             width: 100%;
+            min-height: 56.25vw;
             height: auto;
+            object-fit: cover;
+            object-position: center top;
         }
 
         .announcement-join-wrap {
